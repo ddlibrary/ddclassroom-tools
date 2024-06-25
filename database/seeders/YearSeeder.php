@@ -16,7 +16,7 @@ class YearSeeder extends Seeder
             // Years
             ['id' => 1, 'name' => 2022],
             ['id' => 2, 'name' => 2023],
-            ['id' => 2, 'name' => 2024],
+            ['id' => 3, 'name' => 2024],
         ];
 
         Year::upsert($years, ['id']);
