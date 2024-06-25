@@ -6,6 +6,7 @@ use App\Http\Requests\User\CreateUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Models\User;
 use App\Models\UserType;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -24,7 +25,6 @@ class UserController extends Controller
 
     public function store(CreateUserRequest $request)
     {
-
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -35,7 +35,7 @@ class UserController extends Controller
 
         // Upload user photo
         if ($request->hasFile('photo')) {
-            $user->photo = 'profile-photos/'.$this->upload($request);
+            $user->photo = 'profile-photos/' . $this->upload($request);
             $user->save();
         }
 
@@ -49,7 +49,6 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
-
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
@@ -57,14 +56,24 @@ class UserController extends Controller
             'is_active' => $request->is_active == 1 ? true : false,
         ]);
 
-        if($request->password){
+        if ($request->password) {
             $user->password = Hash::make($request->password);
             $user->save();
         }
 
         // Upload user photo
         if ($request->hasFile('photo')) {
-            $user->photo = 'profile-photos/'.$this->upload($request);
+
+            $existingFilePath = $user->photo;
+
+            if ($existingFilePath) {
+
+                $explodeFile = explode("storage/", $existingFilePath);
+
+                Storage::delete('public/'.end($explodeFile));
+            }
+
+            $user->photo = 'profile-photos/' . $this->upload($request);
             $user->save();
         }
 
@@ -74,7 +83,7 @@ class UserController extends Controller
     public function upload($request)
     {
         if ($request->hasFile('photo')) {
-            $filename = time().'-'.$request->photo->getClientOriginalName();
+            $filename = time() . '-' . $request->photo->getClientOriginalName();
             $request->photo->storeAs('profile-photos', $filename, 'public');
 
             return $filename;
