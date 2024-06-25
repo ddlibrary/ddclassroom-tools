@@ -22,7 +22,7 @@ class GradeSeeder extends Seeder
             ['id' => 6, 'name' => 'Grade 6', 'total_subjects' => 11, 'number' => 6, 'is_active' => false],
             ['id' => 7, 'name' => 'Grade 7', 'total_subjects' => 11, 'number' => 7, 'is_active' => true],
             ['id' => 8, 'name' => 'Grade 8', 'total_subjects' => 11, 'number' => 8, 'is_active' => true],
-            ['id' => 9, 'name' => 'Grade 9', 'total_subjects' => 11, 'number' => 9, 'is_active' => false],
+            ['id' => 9, 'name' => 'Grade 9', 'total_subjects' => 11, 'number' => 9, 'is_active' => true],
             ['id' => 10, 'name' => 'Grade 10', 'total_subjects' => 11, 'number' => 10, 'is_active' => false],
             ['id' => 11, 'name' => 'Grade 11', 'total_subjects' => 11, 'number' => 11, 'is_active' => false],
             ['id' => 12, 'name' => 'Grade 12', 'total_subjects' => 11, 'number' => 12, 'is_active' => false],
