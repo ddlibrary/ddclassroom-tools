@@ -49,7 +49,7 @@ class User extends Authenticatable
     public function getPhotoAttribute($value)
     {
         if ($value) {
-            return asset($value);
+            return asset("storage/$value");
         }
 
         return null;
