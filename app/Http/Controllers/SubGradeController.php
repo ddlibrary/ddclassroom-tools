@@ -18,10 +18,7 @@ class SubGradeController extends Controller
         if ($request->name) {
             $name = $request->name;
             $query->where(function ($query) use ($name) {
-                $query->where('name', 'like', "%$name%")
-                    ->orWhere('full_name', 'like', "%$name%")
-                    ->orWhere('location', 'like', "%$name%")
-                    ->orWhere('level', $name);
+                $query->whereAny(['name', 'full_name', 'location', 'level'], 'like', "%$name%");
             });
         }
 
@@ -57,7 +54,7 @@ class SubGradeController extends Controller
         }
 
         $data = [
-            'name' => $grade->name.' '.$request->level,
+            'name' => $grade->name . ' ' . $request->level,
             'full_name' => $fullName,
             'level' => $request->level,
             'location' => $request->location,
@@ -66,9 +63,7 @@ class SubGradeController extends Controller
             'is_active' => $request->is_active,
         ];
 
-        $request->id
-        ? SubGrade::where('id', $request->id)->update($data)
-        : SubGrade::insert($data);
+        $request->id ? SubGrade::where('id', $request->id)->update($data) : SubGrade::insert($data);
 
         return redirect('sub-grades');
     }
@@ -76,7 +71,6 @@ class SubGradeController extends Controller
     // Delete result
     public function destroy(SubGrade $subGrade)
     {
-
         $subGrade->delete();
 
         return redirect('sub-grades');
