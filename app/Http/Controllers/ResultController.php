@@ -16,10 +16,7 @@ class ResultController extends Controller
         if ($request->name) {
             $name = $request->name;
             $query->where(function ($query) use ($name) {
-                $query->where('name', 'like', "%$name%")
-                    ->orWhere('result', 'like', "%$name%")
-                    ->orWhere('from', $name)
-                    ->orWhere('to', $name);
+                $query->whereAny(['name', 'result', 'from', 'to'], 'like', "%$name%");
             });
         }
 
@@ -63,7 +60,6 @@ class ResultController extends Controller
     // Delete result
     public function destroy(Result $result)
     {
-
         $result->delete();
 
         return redirect('results');
