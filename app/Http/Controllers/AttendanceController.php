@@ -25,10 +25,7 @@ class AttendanceController extends Controller
             $query->where(function ($query) use ($name) {
 
                 $query->whereHas('student', function ($query) use ($name) {
-                    $query->where('name', 'like', "%$name%")
-                        ->orWhere('username', 'like', "%$name%")
-                        ->orWhere('father_name', 'like', "%$name%")
-                        ->orWhere('email', 'like', "$name%");
+                    $query->whereAny(['name', 'username', 'father_name', 'email', 'id_number'], 'like', "%$name%");
                 });
             });
         }
