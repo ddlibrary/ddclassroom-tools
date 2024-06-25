@@ -28,7 +28,7 @@ class ScoreController extends Controller
 
     public function index(Request $request)
     {
-        $query = Score::query()->with(['student:id,name,father_name,uuid', 'subject:id,name', 'subGrade:id,name', 'teacher:id,name']);
+        $query = Score::query()->with(['student:id,name,fa_name,father_name,fa_father_name,uuid', 'subject:id,name', 'subGrade:id,name', 'teacher:id,name']);
 
         if ($request->search) {
             $name = $request->search;
@@ -51,7 +51,7 @@ class ScoreController extends Controller
             $query->where('sub_grade_id', $request->grade_id);
         }
 
-        $scores = $query->paginate();
+        $scores = $query->paginate(300);
         $grades = SubGrade::whereIsActive(true)->get();
         $subjects = Subject::all(['id', 'name']);
         $years = Year::all(['id', 'name']);

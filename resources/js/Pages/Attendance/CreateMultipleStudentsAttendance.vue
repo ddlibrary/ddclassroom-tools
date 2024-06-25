@@ -6,13 +6,28 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class=" overflow-hidden shadow-sm sm:rounded-lg">
 
+                    <h2 class="text-base font-semibold leading-7 text-gray-900">Create student attendace
+
+                        <a href="/assets/samples/student-attendance-format.xlsx">
+                            <button
+                                class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 float-right focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 32 32"
+                                    stroke-width="1.5" stroke="currentColor" class="w-5 h-5 inline-block">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                </svg>
+                                Sample
+                            </button>
+                        </a>
+                    </h2>
                     <!-- Create Student -->
                     <form @submit.prevent="submit">
                         <div class="space-y-12">
 
                             <div class="border-b border-gray-900/10 pb-12">
-                                <h2 class="text-base font-semibold leading-7 text-gray-900">Create student attendance</h2>
-                                <p class="mt-1 text-sm leading-6 text-gray-600">You can create attendance via Excel File.
+                                <p class="mt-1 text-sm leading-6 text-gray-600">You can create attendance via Excel
+                                    File.
                                 </p>
 
                                 <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -195,8 +210,8 @@
             forceFormData: true,
             onFinish: (res) => {
 
-                    Swal.fire(`Created`,
-                        `Students have been successfully created.`)
+                Swal.fire(`Created`,
+                    `Students have been successfully created.`)
             },
         })
     }

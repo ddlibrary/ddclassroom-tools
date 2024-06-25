@@ -150,7 +150,7 @@
                         </td>
 
                         <td class="px-6 py-4 whitespace-nowrap">
-                            {{ score . student . name }} - {{ score . student . father_name }}
+                            {{ score . student . fa_name }} - {{ score . student . fa_father_name }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             {{ score . sub_grade . name }}
