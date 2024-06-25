@@ -16,9 +16,7 @@ class HomeController extends Controller
     {
         $year = 2024;
 
-        $subGradeIds = Enrollment::where('year', $year)
-            ->groupBy('sub_grade_id')
-            ->pluck('sub_grade_id');
+        $subGradeIds = Enrollment::where('year', $year)->groupBy('sub_grade_id')->pluck('sub_grade_id');
 
         $where = [
             'year' => $year,
