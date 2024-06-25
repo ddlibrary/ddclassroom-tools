@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AttendanceDetail extends Model
 {
-    use HasFactory, BelongsToUser, BelongsToSubGrade, BelongsToStudent, BelongsToSubject;
+    use BelongsToStudent, BelongsToSubGrade, BelongsToSubject, BelongsToUser, HasFactory;
 
     protected $guarded = [];
 }

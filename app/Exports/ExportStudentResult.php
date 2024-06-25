@@ -9,9 +9,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class ExportStudentResult implements FromView, ShouldAutoSize
 {
-    public function __construct(private array $data)
-    {
-    }
+    public function __construct(private array $data) {}
 
     public function view(): View
     {
@@ -19,8 +17,8 @@ class ExportStudentResult implements FromView, ShouldAutoSize
         $gradeId = $this->data['grade_id'];
         $results = StudentResult::with(['student:id,name,father_name,uuid', 'middleResult:id,name', 'finalResult:id,name', 'result:id,name', 'teacher:id,name'])
             ->where('year', $year)
-            ->where(function($query) use ($gradeId){
-                if($gradeId){
+            ->where(function ($query) use ($gradeId) {
+                if ($gradeId) {
                     $query->where('sub_grade_id', $gradeId);
                 }
             })

@@ -73,7 +73,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Farsi First
                                             Name</label>
                                         <div class="mt-2">
-                                            <input type="text" v-model="form.name" name="fa-first-name" id="fa-first-name"
+                                            <input type="text" v-model="form.fa_name" name="fa-first-name" id="fa-first-name"
                                                 autocomplete="given-name"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                             <p class="mt-2 text-sm text-red-500" v-if="errors.fa_name">{{ errors . fa_name }}

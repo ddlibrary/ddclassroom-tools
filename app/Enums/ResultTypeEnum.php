@@ -11,6 +11,6 @@ enum ResultTypeEnum: int
     case FinalSuccess = 3;
 
     case FinalConditional = 4;
-    
+
     case FinalFailed = 5;
 }

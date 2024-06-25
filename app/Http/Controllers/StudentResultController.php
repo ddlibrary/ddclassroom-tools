@@ -25,14 +25,11 @@ class StudentResultController extends Controller
         if ($request->search) {
             $name = $request->search;
             $query->where(function ($query) use ($name) {
-
-                $query->whereHas('student', function ($query) use ($name) {
-                    $query->where('name', 'like', "%$name%")
-                        ->orWhere('username', 'like', "%$name%")
-                        ->orWhere('father_name', 'like', "%$name%")
-                        ->orWhere('email', 'like', "$name%");
-                })
-                ->orWhere('result_name', 'like', $name.'%');
+                $query
+                    ->whereHas('student', function ($query) use ($name) {
+                        $query->whereAny(['name', 'username', 'father_name', 'email', 'id_number'], 'like', "%$name%");
+                    })
+                    ->orWhere('result_name', 'like', $name.'%');
             });
         }
         if ($request->grade_id) {
@@ -47,7 +44,6 @@ class StudentResultController extends Controller
 
         $grades = SubGrade::whereIsActive(true)->get();
         $years = Year::all(['id', 'name']);
-
 
         return inertia('ResultCard/Index', ['scores' => $scores, 'grades' => $grades, 'years' => $years]);
     }
@@ -127,7 +123,7 @@ class StudentResultController extends Controller
 
     public function storeMultipleStudentsScore(CreateMultipleStudentsScoreRequest $request)
     {
-        Excel::import(new StudentScoreImport, $request->file);
+        Excel::import(new StudentScoreImport(), $request->file);
     }
 
     public function getStudentResultAsExcel(Request $request)

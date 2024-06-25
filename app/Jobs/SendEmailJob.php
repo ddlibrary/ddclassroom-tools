@@ -20,8 +20,7 @@ class SendEmailJob implements ShouldQueue
      */
     public function __construct(
         public Student $student,
-    ) {
-    }
+    ) {}
 
     /**
      * Execute the job.

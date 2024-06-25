@@ -22,13 +22,7 @@ class StudentController extends Controller
         if ($request->search) {
             $name = $request->search;
             $query->where(function ($query) use ($name) {
-                $query
-                    ->where('name', 'like', "%$name%")
-                    ->orWhere('last_name', 'like', "%$name%")
-                    ->orWhere('username', 'like', "%$name%")
-                    ->orWhere('father_name', 'like', "%$name%")
-                    ->orWhere('email', 'like', "$name%")
-                    ->orWhere('phone', 'like', "%$name%");
+                $query->whereAny(['name', 'last_name', 'username', 'father_name', 'fa_name', 'fa_last_name', 'fa_father_name', 'email', 'phone', 'id_number'], 'like', "%$name%");
             });
         }
         if ($request->grade_id) {
@@ -56,6 +50,10 @@ class StudentController extends Controller
             'name' => $request->name,
             'last_name' => $request->last_name,
             'father_name' => $request->father_name,
+            'fa_name' => $request->fa_name,
+            'fa_last_name' => $request->fa_last_name,
+            'fa_father_name' => $request->fa_father_name,
+            'id_number' => $request->id_number,
             'phone' => $request->phone,
             'photo' => $request->photo,
             'username' => $request->username,
@@ -71,7 +69,7 @@ class StudentController extends Controller
 
         // Upload student photo
         if ($request->hasFile('photo')) {
-            $student->photo = 'student-photos/' . $this->upload($request);
+            $student->photo = 'student-photos/'.$this->upload($request);
             $student->save();
         }
 
@@ -89,7 +87,7 @@ class StudentController extends Controller
     public function upload($request)
     {
         if ($request->hasFile('photo')) {
-            $filename = time() . '-' . $request->photo->getClientOriginalName();
+            $filename = time().'-'.$request->photo->getClientOriginalName();
             $request->photo->storeAs('student-photos', $filename, 'public');
 
             return $filename;
@@ -121,7 +119,7 @@ class StudentController extends Controller
 
         // Upload student photo
         if ($request->hasFile('photo')) {
-            $student->photo = 'student-photos/' . $this->upload($request);
+            $student->photo = 'student-photos/'.$this->upload($request);
             $student->save();
         }
 

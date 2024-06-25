@@ -11,9 +11,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class ExportShoqa implements FromView, ShouldAutoSize
 {
-    public function __construct(private array $data)
-    {
-    }
+    public function __construct(private array $data) {}
 
     public function view(): View
     {

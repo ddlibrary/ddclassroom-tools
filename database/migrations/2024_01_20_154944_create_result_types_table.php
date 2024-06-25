@@ -15,7 +15,7 @@ return new class extends Migration
             $table->tinyIncrements('id');
             $table->string('name');
             $table->enum('exam', ['midterm', 'final']);
-            
+
             $table->timestamps();
         });
     }

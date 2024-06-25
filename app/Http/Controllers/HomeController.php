@@ -11,14 +11,12 @@ use Inertia\Inertia;
 class HomeController extends Controller
 {
     use ResultTypeTrait;
-    
+
     public function index()
     {
         $year = 2024;
 
-        $subGradeIds = Enrollment::where('year', $year)
-            ->groupBy('sub_grade_id')
-            ->pluck('sub_grade_id');
+        $subGradeIds = Enrollment::where('year', $year)->groupBy('sub_grade_id')->pluck('sub_grade_id');
 
         $where = [
             'year' => $year,

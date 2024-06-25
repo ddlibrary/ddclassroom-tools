@@ -29,11 +29,11 @@ class ShoqaController extends Controller
     public function getShoqaAsExcel(Request $request)
     {
         if ($request->grade_id && $request->year && $request->subject_id && $request->type && $request->export_type) {
-            if($request->export_type == 'score'){
+            if ($request->export_type == 'score') {
 
                 return Excel::download(new ExportShoqa($request->all()), 'student-result.xlsx');
             }
-            
+
             return Excel::download(new ExportAttendanceShoqa($request->all()), 'student-attendance-result.xlsx');
         }
     }

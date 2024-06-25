@@ -23,12 +23,8 @@ class AttendanceController extends Controller
         if ($request->search) {
             $name = $request->search;
             $query->where(function ($query) use ($name) {
-
                 $query->whereHas('student', function ($query) use ($name) {
-                    $query->where('name', 'like', "%$name%")
-                        ->orWhere('username', 'like', "%$name%")
-                        ->orWhere('father_name', 'like', "%$name%")
-                        ->orWhere('email', 'like', "$name%");
+                    $query->whereAny(['name', 'username', 'father_name', 'email', 'id_number'], 'like', "%$name%");
                 });
             });
         }
@@ -48,10 +44,7 @@ class AttendanceController extends Controller
         $grades = SubGrade::whereIsActive(true)->get();
         $years = Year::all(['id', 'name']);
 
-        $types = [
-            ['id' => 1, 'name' => 'Middle Exam'],
-            ['id' => 2, 'name' => 'Final Exam'],
-        ];
+        $types = [['id' => 1, 'name' => 'Middle Exam'], ['id' => 2, 'name' => 'Final Exam']];
 
         return inertia('Attendance/Index', ['scores' => $scores, 'years' => $years, 'grades' => $grades, 'attendanceTypes' => $types]);
     }
@@ -131,6 +124,6 @@ class AttendanceController extends Controller
 
     public function storeMultipleStudentsAttendance(CreateMultipleAttendanceRequest $request)
     {
-        Excel::import(new StudentAttendanceImport, $request->file);
+        Excel::import(new StudentAttendanceImport(), $request->file);
     }
 }

@@ -18,8 +18,7 @@ class StudentEmail extends Mailable
      */
     public function __construct(
         public Student $student,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the message envelope.
@@ -27,7 +26,7 @@ class StudentEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "معلومات مودل شاگرد - مکتب درخت دانش",
+            subject: 'معلومات مودل شاگرد - مکتب درخت دانش',
         );
     }
 

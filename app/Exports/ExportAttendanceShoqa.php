@@ -11,9 +11,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class ExportAttendanceShoqa implements FromView, ShouldAutoSize
 {
-    public function __construct(private array $data)
-    {
-    }
+    public function __construct(private array $data) {}
 
     public function view(): View
     {
@@ -33,9 +31,9 @@ class ExportAttendanceShoqa implements FromView, ShouldAutoSize
 
         $attendanceDetail = AttendanceDetail::select(
             [
-                'id','teacher_id','sub_grade_id', 'type', 'created_at'
+                'id', 'teacher_id', 'sub_grade_id', 'type', 'created_at',
             ])
-            ->with(['teacher:id,name','subGrade:id,name'])
+            ->with(['teacher:id,name', 'subGrade:id,name'])
             ->where($where)
             ->first();
 
