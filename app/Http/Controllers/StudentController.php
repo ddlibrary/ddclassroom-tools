@@ -69,7 +69,7 @@ class StudentController extends Controller
 
         // Upload student photo
         if ($request->hasFile('photo')) {
-            $student->photo = 'student-photos/' . $this->upload($request);
+            $student->photo = 'student-photos/'.$this->upload($request);
             $student->save();
         }
 
@@ -87,7 +87,7 @@ class StudentController extends Controller
     public function upload($request)
     {
         if ($request->hasFile('photo')) {
-            $filename = time() . '-' . $request->photo->getClientOriginalName();
+            $filename = time().'-'.$request->photo->getClientOriginalName();
             $request->photo->storeAs('student-photos', $filename, 'public');
 
             return $filename;
@@ -119,7 +119,7 @@ class StudentController extends Controller
 
         // Upload student photo
         if ($request->hasFile('photo')) {
-            $student->photo = 'student-photos/' . $this->upload($request);
+            $student->photo = 'student-photos/'.$this->upload($request);
             $student->save();
         }
 

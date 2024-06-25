@@ -29,6 +29,4 @@ class SubjectSeeder extends Seeder
 
         Subject::upsert($subjects, ['id']);
     }
-    
-
 }

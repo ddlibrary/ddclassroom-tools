@@ -14,7 +14,7 @@ trait ResultNameTrait
             } elseif ($grade->total_subjects > ($studentResult->subject_passed) && $studentResult->result_id != 5) {
                 return ResultCardEnum::TrayAgain->value;
             }
-        }elseif ($type == 2) {
+        } elseif ($type == 2) {
             if ($grade->total_subjects > ($studentResult->final_subject_passed + 3) || $studentResult->final_result_id == 5) {
                 return ResultCardEnum::Repeat->value;
             } elseif ($grade->total_subjects > ($studentResult->final_subject_passed) && $studentResult->final_result_id != 5) {

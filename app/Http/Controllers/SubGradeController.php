@@ -54,7 +54,7 @@ class SubGradeController extends Controller
         }
 
         $data = [
-            'name' => $grade->name . ' ' . $request->level,
+            'name' => $grade->name.' '.$request->level,
             'full_name' => $fullName,
             'level' => $request->level,
             'location' => $request->location,

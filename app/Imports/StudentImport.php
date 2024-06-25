@@ -43,7 +43,7 @@ class StudentImport implements ToModel, WithHeadingRow
                 'country_id' => $countryId,
                 'sub_grade_id' => request()->grade_id,
                 'password' => $row['password'],
-                'name_in_system' => $row['name']." ".$row['father_name'],
+                'name_in_system' => $row['name'].' '.$row['father_name'],
                 'is_active' => true,
             ]);
 

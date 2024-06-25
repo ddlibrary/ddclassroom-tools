@@ -65,8 +65,5 @@ class StudentResultCardController extends Controller
         return view('students.student-result-card', compact('student', 'subjects', 'results', 'responsible'));
     }
 
-    public function resultCards()
-    {
-
-    }
+    public function resultCards() {}
 }

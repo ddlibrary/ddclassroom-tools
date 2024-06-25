@@ -29,7 +29,7 @@ class StudentResultController extends Controller
                     ->whereHas('student', function ($query) use ($name) {
                         $query->whereAny(['name', 'username', 'father_name', 'email', 'id_number'], 'like', "%$name%");
                     })
-                    ->orWhere('result_name', 'like', $name . '%');
+                    ->orWhere('result_name', 'like', $name.'%');
             });
         }
         if ($request->grade_id) {

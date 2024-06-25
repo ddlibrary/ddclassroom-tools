@@ -60,7 +60,7 @@ class StudentAttendanceImport implements ToModel, WithHeadingRow
                     'permission' => $attendance->permission + $details->permission,
                     'patient' => $attendance->patient + $details->patient,
                 ]);
-                
+
             } else {
                 $att = Attendance::create([
                     'type' => $type,

@@ -16,15 +16,15 @@ use Illuminate\Support\Str;
 
 class Student extends Model
 {
-    use HasOneScore,
-        HasManyScore,
-        BelongsToCountry,
+    use BelongsToCountry,
         BelongsToSubGrade,
-        HasOneResponsible,
         HasManyEnrollment,
-        HasOneStudentResult,
+        HasManyScore,
         HasOneAttendanceDetail,
-        HasOneStudentAttendance;
+        HasOneResponsible,
+        HasOneScore,
+        HasOneStudentAttendance,
+        HasOneStudentResult;
 
     public static function boot()
     {

@@ -22,7 +22,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ScoreController extends Controller
 {
-    use ResultTrait, ResultNameTrait, ResultTypeTrait;
+    use ResultNameTrait, ResultTrait, ResultTypeTrait;
 
     public function index(Request $request)
     {
