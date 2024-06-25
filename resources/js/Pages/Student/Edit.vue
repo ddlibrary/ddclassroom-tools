@@ -52,6 +52,7 @@
                                         </div>
                                     </div>
 
+
                                     <!-- Father Name -->
                                     <div class="sm:col-span-3">
                                         <label for="father_name"
@@ -63,6 +64,64 @@
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                             <p class="mt-2 text-sm text-red-500" v-if="errors.father_name">
                                                 {{ errors . father_name }}</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Farsi Name -->
+                                    <div class="sm:col-span-3">
+                                        <label for="fa-first-name"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Farsi First
+                                            Name</label>
+                                        <div class="mt-2">
+                                            <input type="text" v-model="form.name" name="fa-first-name" id="fa-first-name"
+                                                autocomplete="given-name"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.fa_name">{{ errors . fa_name }}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Farsi Last Name -->
+                                    <div class="sm:col-span-3">
+                                        <label for="fa_last_name"
+                                            class="block text-sm font-medium leading-6 text-gray-900">
+                                            Farsi Last Name</label>
+                                        <div class="mt-2">
+                                            <input id="fa_last_name" v-model="form.fa_last_name" name="fa_last_name"
+                                                type="text" autocomplete="fa_last_name"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.fa_last_name">
+                                                {{ errors . fa_last_name }}</p>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- Farsi Father Name -->
+                                    <div class="sm:col-span-3">
+                                        <label for="fa_father_name"
+                                            class="block text-sm font-medium leading-6 text-gray-900">
+                                            Farsi Father Name</label>
+
+                                        <div class="mt-2">
+                                            <input id="fa_father_name" v-model="form.fa_father_name" name="fa_father_name"
+                                                type="text" autocomplete="fa_father_name"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.fa_father_name">
+                                                {{ errors . fa_father_name }}</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Moodle ID -->
+                                    <div class="sm:col-span-3">
+                                        <label for="id_number"
+                                            class="block text-sm font-medium leading-6 text-gray-900">
+                                            Moodle ID</label>
+                                        <div class="mt-2">
+                                            <input id="id_number" v-model="form.id_number"
+                                                name="id_number" type="text" autocomplete="id_number"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.id_number">
+                                                {{ errors . id_number }}</p>
                                         </div>
                                     </div>
 
@@ -311,8 +370,11 @@
     const form = reactive({
         id: props.student.id,
         name: props.student.name,
+        fa_name: props.student.fa_name,
         last_name: props.student.last_name,
+        fa_last_name: props.student.fa_last_name,
         father_name: props.student.father_name,
+        fa_father_name: props.student.fa_father_name,
         phone: props.student.phone,
         photo: props.student.photo,
         username: props.student.username,
@@ -321,6 +383,7 @@
         grade_id: props.student.sub_grade_id,
         password: props.student.password,
         name_in_system: props.student.name_in_system,
+        id_number: props.student.id_number,
         school: props.student.school,
         password: props.student.password,
         is_active: true,

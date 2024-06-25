@@ -26,7 +26,6 @@ class StudentImport implements ToModel, WithHeadingRow
             }
 
             $countryId = null;
-            $subGradeId = null;
 
             $country = Country::whereName($row['country'])->value('id');
             if ($country) {
@@ -35,20 +34,16 @@ class StudentImport implements ToModel, WithHeadingRow
 
             $student = Student::create([
                 'name' => $row['name'],
-                'last_name' => $row['last_name'],
                 'father_name' => $row['father_name'],
-                'fa_father_name' => $row['fa_father_name'],
-                'fa_last_name' => $row['fa_last_name'],
                 'fa_name' => $row['fa_name'],
-                'phone' => isset($row['phone']) ? $row['phone'] : null,
+                'fa_father_name' => $row['fa_father_name'],
                 'username' => $row['username'],
                 'email' => $email,
-                'id_number' => $row['id_number'],
+                'id_number' => $row['moodle_id'],
                 'country_id' => $countryId,
                 'sub_grade_id' => request()->grade_id,
                 'password' => $row['password'],
-                'name_in_system' => $row['name_in_system'],
-                'school' => $row['school'],
+                'name_in_system' => $row['name']." ".$row['father_name'],
                 'is_active' => true,
             ]);
 
