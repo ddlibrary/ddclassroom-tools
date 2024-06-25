@@ -14,7 +14,7 @@
 
     <AuthenticatedLayout>
         <div class="bg-gray-100 p-4">
-            <h3 class="text-base font-semibold leading-6 text-gray-900">2023</h3>
+            <h3 class="text-base font-semibold leading-6 text-gray-900">2024</h3>
             <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
                 <div v-if="generalView"
                     class="overflow-hidden rounded-lg bg-blue-200 px-4 py-5 shadow sm:p-6">
@@ -28,7 +28,7 @@
 
                         <div
                             class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium bg-green-100 text-green-800 md:mt-2 lg:mt-0">
-                            
+
                             {{  generalView['total_students'] }}
                         </div>
                     </dd>
@@ -103,7 +103,7 @@
 
                         <div
                             class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium bg-green-100 text-green-800 md:mt-2 lg:mt-0">
-                            
+
                             {{  subGrade.total_students }}
                         </div>
                     </dd>

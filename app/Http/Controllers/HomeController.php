@@ -11,7 +11,7 @@ use Inertia\Inertia;
 class HomeController extends Controller
 {
     use ResultTypeTrait;
-    
+
     public function index()
     {
         $year = 2024;
