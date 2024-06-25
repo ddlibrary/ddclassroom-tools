@@ -59,6 +59,64 @@
                                         </div>
                                     </div>
 
+                                    <!-- Farsi Name -->
+                                    <div class="sm:col-span-3">
+                                        <label for="fa-first-name"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Farsi First
+                                            Name</label>
+                                        <div class="mt-2">
+                                            <input type="text" v-model="form.fa_name" name="fa-first-name" id="fa-first-name"
+                                                autocomplete="given-name"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.fa_name">{{ errors . fa_name }}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Farsi Last Name -->
+                                    <div class="sm:col-span-3">
+                                        <label for="fa_last_name"
+                                            class="block text-sm font-medium leading-6 text-gray-900">
+                                            Farsi Last Name</label>
+                                        <div class="mt-2">
+                                            <input id="fa_last_name" v-model="form.fa_last_name" name="fa_last_name"
+                                                type="text" autocomplete="fa_last_name"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.fa_last_name">
+                                                {{ errors . fa_last_name }}</p>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- Farsi Father Name -->
+                                    <div class="sm:col-span-3">
+                                        <label for="fa_father_name"
+                                            class="block text-sm font-medium leading-6 text-gray-900">
+                                            Farsi Father Name</label>
+
+                                        <div class="mt-2">
+                                            <input id="fa_father_name" v-model="form.fa_father_name" name="fa_father_name"
+                                                type="text" autocomplete="fa_father_name"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.fa_father_name">
+                                                {{ errors . fa_father_name }}</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Moodle ID -->
+                                    <div class="sm:col-span-3">
+                                        <label for="id_number"
+                                            class="block text-sm font-medium leading-6 text-gray-900">
+                                            Moodle ID</label>
+                                        <div class="mt-2">
+                                            <input id="id_number" v-model="form.id_number"
+                                                name="id_number" type="text" autocomplete="id_number"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.id_number">
+                                                {{ errors . id_number }}</p>
+                                        </div>
+                                    </div>
+
                                     <!-- Name In System -->
                                     <div class="sm:col-span-3">
                                         <label for="name_in_system"
@@ -299,6 +357,9 @@
         name: null,
         last_name: null,
         father_name: null,
+        fa_name: null,
+        fa_last_name: null,
+        fa_father_name: null,
         phone: null,
         photo: null,
         username: null,
@@ -310,6 +371,7 @@
         school: null,
         password: null,
         is_active: true,
+        id_number: null,
     })
 
     function submit() {
