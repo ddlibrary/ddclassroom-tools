@@ -23,6 +23,7 @@ class CreateStudentRequest extends FormRequest
     {
         return [
             'name' => 'required',
+            'fa_name' => 'required',
             'country_id' => 'required',
             'grade_id' => 'required',
             'username' => 'required',
