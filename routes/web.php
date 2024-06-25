@@ -16,11 +16,6 @@ use App\Http\Controllers\SubGradeController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\YearController;
-use App\Models\Attendance;
-use App\Models\AttendanceDetail;
-use App\Models\AttendanceMaxScore;
-use App\Models\Student;
-use App\Models\SubGrade;
 use Illuminate\Support\Facades\Route;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 
@@ -34,21 +29,7 @@ use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-// Route::get('test', function(){
-//     $attendances = AttendanceDetail::with(['student', 'subject'])->whereIn('sub_grade_id',[7,8])->orderBy('subject_id')->get();
-//     foreach($attendances as $attendance){
-//         if($attendance->total_class_hours != ($attendance->present + $attendance->absent + $attendance->permission + $attendance->patient)){
-//             echo "<p style='direction:rtl'>".$attendance->student->id .": ". "(".$attendance->subject->name. " ". $attendance->subGrade->name.")".$attendance->student->fa_name. "[<span style='color:red'>".$attendance->total_class_hours ."</span> - ".  $attendance->present + $attendance->absent + $attendance->permission + $attendance->patient."]<p>";
-//         }
-//     }
-// });
 
-Route::get('test', function(){
-
-
-    $student = Student::where('id', 370)->orderBy('id','desc')->first();
-    return view('students.email-student-handbook', compact('student'));
-});
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [HomeController::class, 'index']);
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
