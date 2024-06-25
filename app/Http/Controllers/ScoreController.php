@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Enums\UserTypeEnum;
 use App\Http\Requests\Score\CreateMultipleStudentsScoreRequest;
-use App\Http\Requests\Score\CreateScoreRequest;
 use App\Http\Requests\ScoreRequest;
 use App\Imports\StudentScoreImport;
 use App\Models\Score;
-use App\Models\Student;
 use App\Models\StudentResult;
 use App\Models\SubGrade;
 use App\Models\Subject;
@@ -193,7 +191,7 @@ class ScoreController extends Controller
 
             if($studentResult->middle == $studentResult->final){
                 $studentResultName = $resultName;
-                $studentExam = 'final'; 
+                $studentExam = 'final';
             }
 
             $studentResult->update([
@@ -203,7 +201,7 @@ class ScoreController extends Controller
                 'result_type_id' => $this->resultType($studentResultName, $studentExam),
             ]);
 
-            
+
 
             DB::commit();
 
