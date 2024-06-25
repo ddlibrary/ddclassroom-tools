@@ -32,11 +32,7 @@ class ScoreController extends Controller
             $name = $request->search;
             $query->where(function ($query) use ($name) {
                 $query->whereHas('student', function ($query) use ($name) {
-                    $query
-                        ->where('name', 'like', "%$name%")
-                        ->orWhere('username', 'like', "%$name%")
-                        ->orWhere('father_name', 'like', "%$name%")
-                        ->orWhere('email', 'like', "$name%");
+                    $query->whereAny(['name', 'username', 'father_name', 'email', 'id_number'], 'like', "%$name%");
                 });
             });
         }
@@ -139,28 +135,13 @@ class ScoreController extends Controller
 
             $studentResult = StudentResult::where($where)->first();
 
-            $middle = Score::where($where)
-                ->where('type', 1)
-                ->sum('total');
-            $final = Score::where($where)
-                ->where('type', 2)
-                ->sum('total');
-            $total = Score::where($where)
-                ->where('type', 3)
-                ->sum('total');
+            $middle = Score::where($where)->where('type', 1)->sum('total');
+            $final = Score::where($where)->where('type', 2)->sum('total');
+            $total = Score::where($where)->where('type', 3)->sum('total');
 
-            $middlePassed = Score::where($where)
-                ->where('type', 1)
-                ->where('total', '>=', 16)
-                ->count();
-            $finalPassed = Score::where($where)
-                ->where('type', 2)
-                ->where('total', '>=', 24)
-                ->count();
-            $totalPassed = Score::where($where)
-                ->where('type', 3)
-                ->where('total', '>=', 40)
-                ->count();
+            $middlePassed = Score::where($where)->where('type', 1)->where('total', '>=', 16)->count();
+            $finalPassed = Score::where($where)->where('type', 2)->where('total', '>=', 24)->count();
+            $totalPassed = Score::where($where)->where('type', 3)->where('total', '>=', 40)->count();
 
             $middlePercentage = $this->getScorePercentage($middle, $totalMidtermScore);
             $finalPercentage = $this->getScorePercentage($final, $totalFinalScore);
@@ -181,7 +162,6 @@ class ScoreController extends Controller
                 'subject_passed' => $totalPassed,
             ]);
 
-
             $middleResultName = $this->resultStatus($grade, $studentResult, 1);
             $finalResultName = $this->resultStatus($grade, $studentResult, 2);
             $resultName = $this->resultStatus($grade, $studentResult, 3);
@@ -189,7 +169,7 @@ class ScoreController extends Controller
             $studentResultName = $middleResultName;
             $studentExam = 'midterm';
 
-            if($studentResult->middle == $studentResult->final){
+            if ($studentResult->middle == $studentResult->final) {
                 $studentResultName = $resultName;
                 $studentExam = 'final';
             }
@@ -201,10 +181,7 @@ class ScoreController extends Controller
                 'result_type_id' => $this->resultType($studentResultName, $studentExam),
             ]);
 
-
-
             DB::commit();
-
         } catch (Exception $exception) {
             DB::rollback();
 
