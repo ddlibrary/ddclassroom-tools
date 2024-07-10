@@ -28,7 +28,7 @@
                 <td style="width: 50% !important; vertical-align:middle !important; height:100px !important" colspan="5">
                     <img src="{{ public_path('images/logo.webp')}}"  height="70px;">
                 </td>
-                <td style="width: 50% !important; vertical-align:middle !important; height:100px !important" colspan="5">
+                <td style="width: 50% !important; vertical-align:middle !important; height:100px !important" colspan="6">
                     <h4 height="20px">
                         امتحان: ( {{ $type == 1 ? 'چهارنیم ماه' : 'سالانه'}} )
                     </h4>
@@ -36,7 +36,7 @@
                         نام معلم: (..........)
                     </h4>
                     <h4 height="20px">
-                        صنف: ( {{$grade->name}} )    
+                        صنف: ( {{$grade->name}} )
                     </h4>
                     <h4 height="20px">
                         مضمون: ({{ $subject->name }} )
@@ -48,21 +48,22 @@
             </tr>
         </table>
         <table style="width: 8.5in !important;direction: rtl !important;">
-            <tr> 
-                <th style="text-align: left;border:1px solid #000 !important;text-weight:bold !important;">مجموع 60</th>
-                <th style="text-align: left;border:1px solid #000 !important;text-weight:bold !important;">ارزیابی 10
+            <tr>
+                <th style="text-align: left;border:1px solid #000 !important;text-weight:bold !important;">مجموع {{ $total }}</th>
+                <th style="text-align: left;border:1px solid #000 !important;text-weight:bold !important;">ارزیابی {{ $evaluation }}
                 </th>
-                <th style="text-align: left;border:1px solid #000 !important;text-weight:bold !important;">کارخانگی 5
+                <th style="text-align: left;border:1px solid #000 !important;text-weight:bold !important;">کارخانگی {{ $homework }}
                 </th>
-                <th style="text-align: left;border:1px solid #000 !important;text-weight:bold !important;">فعالیت 5</th>
-                <th style="text-align: left;border:1px solid #000 !important;text-weight:bold !important;">حاضری 6</th>
-                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">تقریری 10
+                <th style="text-align: left;border:1px solid #000 !important;text-weight:bold !important;">فعالیت {{ $activity }}</th>
+                <th style="text-align: left;border:1px solid #000 !important;text-weight:bold !important;">حاضری {{ $attendance }}</th>
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">تقریری {{ $oral }}
                 </th>
-                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">تحریری 24
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">تحریری {{ $written }}
                 </th>
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">نام پدر
                 </th>
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">نام</th>
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">نمبر اساس</th>
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">شماره</th>
             </tr>
             @foreach ($enrollments as $enrollment)
@@ -94,8 +95,9 @@
                     <td style="text-align: center;border:1px solid #000 !important">
                         {{ $enrollment->student->fa_name }}
                     </td>
-
-
+                    <td style="text-align: center;border:1px solid #000 !important">
+                        {{ $enrollment->student->id_number }}
+                    </td>
                     <td style="text-align: center;border:1px solid #000 !important">
                         {{ $loop->iteration }}
                     </td>
