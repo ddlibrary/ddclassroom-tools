@@ -5,6 +5,7 @@ namespace App\Exports;
 use App\Models\Enrollment;
 use App\Models\SubGrade;
 use App\Models\Subject;
+use App\Services\SubjectScore;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -22,6 +23,18 @@ class ExportShoqa implements FromView, ShouldAutoSize
 
         $subject = Subject::where('id', $subjectId)->first();
         $subGrade = SubGrade::where('id', $subGradeId)->first();
+
+
+        $subjectScore = new SubjectScore($type);
+
+        $oral = $subjectScore->getOral();
+        $written = $subjectScore->getWritten();
+        $attendance = $subjectScore->getAttendance();
+        $evaluation = $subjectScore->getEvaluation();
+        $homework = $subjectScore->getHomework();
+        $activity = $subjectScore->getActivity();
+        $total = $subjectScore->getTotal();
+
 
         $enrollments = Enrollment::with([
             'student' => function ($query) use ($year, $subjectId, $subGradeId, $type) {
@@ -44,6 +57,13 @@ class ExportShoqa implements FromView, ShouldAutoSize
             'type' => $type,
             'year' => $year,
             'grade' => $subGrade,
+            'oral' => $oral,
+            'written' => $written,
+            'attendance' => $attendance,
+            'evaluation' => $evaluation,
+            'homework' => $homework,
+            'activity' => $activity,
+            'total' => $total,
         ]);
     }
 }
