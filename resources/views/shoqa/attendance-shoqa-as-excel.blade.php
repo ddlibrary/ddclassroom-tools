@@ -32,7 +32,7 @@
                         </div>
                         <div>
                             <h4 height="20px">
-                                امتحان: ( 
+                                امتحان: (
                                     @if($attendanceDetail && $attendanceDetail->type == 1)
                                         چهارنیم ماهه
                                     @elseif ($attendanceDetail && $attendanceDetail->type == 2)
@@ -44,7 +44,7 @@
                                 نام معلم: ({{ $attendanceDetail?->teacher?->name}})
                             </h4>
                             <h4 height="20px">
-                                صنف: ({{ $attendanceDetail?->subGrade?->name}})    
+                                صنف: ({{ $attendanceDetail?->subGrade?->name}})
                             </h4>
                             <h4 height="20px">
                                 مضمون: ({{ $subject->name }} )
@@ -58,7 +58,7 @@
             </tr>
         </table>
         <table style="width: 8.5in !important;direction: rtl !important;">
-            <tr> 
+            <tr>
                 <th style="text-align: left;border:1px solid #000 !important;text-weight:bold !important;">ملاحضات
                 </th>
                 <th style="text-align: left;border:1px solid #000 !important;text-weight:bold !important;">مریضی
@@ -67,11 +67,12 @@
                 <th style="text-align: left;border:1px solid #000 !important;text-weight:bold !important;">غیر حاضر</th>
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">حاضر
                 </th>
-                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">مجموع ساعات درسی 
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">مجموع ساعات درسی
                 </th>
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">نام پدر
                 </th>
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">نام</th>
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">نمبر اساس</th>
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">شماره</th>
             </tr>
             @foreach ($enrollments as $enrollment)
@@ -100,8 +101,9 @@
                     <td style="text-align: center;border:1px solid #000 !important">
                         {{ $enrollment->student->name }}
                     </td>
-
-
+                    <td style="text-align: center;border:1px solid #000 !important">
+                        {{ $enrollment->student->id_number }}
+                    </td>
                     <td style="text-align: center;border:1px solid #000 !important">
                         {{ $loop->iteration }}
                     </td>
