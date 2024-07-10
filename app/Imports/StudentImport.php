@@ -12,15 +12,16 @@ class StudentImport implements ToModel, WithHeadingRow
 {
     public function model(array $row)
     {
-        if (isset($row['name'])) {
+        if (isset($row['name']) && isset($row['moodle_id'])) {
 
             $name = $row['name'];
             $email = $row['email'];
+            $moodleId = $row['moodle_id'];
             if ($name == 'NULL' || $name == null) {
                 return [];
             }
-            if (Student::whereEmail($email)->exists()) {
-                info("This email already exist: $email");
+            if (Student::whereIdNumber($moodleId)->exists()) {
+                info("This student already exist with moodle id: $moodleId");
 
                 return [];
             }
@@ -39,7 +40,7 @@ class StudentImport implements ToModel, WithHeadingRow
                 'fa_father_name' => $row['fa_father_name'],
                 'username' => $row['username'],
                 'email' => $email,
-                'id_number' => $row['moodle_id'],
+                'id_number' => $moodleId,
                 'country_id' => $countryId,
                 'sub_grade_id' => request()->grade_id,
                 'password' => $row['password'],

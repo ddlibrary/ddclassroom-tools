@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->string('address')->nullable();
             $table->string('school')->nullable();
+            $table->string('miradore')->nullable();
             $table->string('uuid')->unique();
             $table->boolean('is_active')->default(true);
 

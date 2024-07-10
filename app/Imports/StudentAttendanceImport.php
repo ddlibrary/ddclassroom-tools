@@ -14,11 +14,11 @@ class StudentAttendanceImport implements ToModel, WithHeadingRow
     {
         if (isset($row['name'])) {
             $name = $row['name'];
-            $fatherName = $row['father_name'];
-            if (($name == 'NULL' || $name == null) && ($fatherName == 'NULL' || $fatherName == null)) {
+            $moodleId = $row['moodle_id'];
+            if ($moodleId == 'NULL' || $moodleId == null) {
                 return [];
             }
-            $student = Student::where(['fa_name' => $name, 'fa_father_name' => $fatherName])->first();
+            $student = Student::whereIdNumber($moodleId)->first();
             if (! $student) {
                 info("This student is not exist: $name");
 
