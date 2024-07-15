@@ -125,32 +125,6 @@
 
     defineProps(['subjects', 'grades', 'years', 'examTypes']);
 
-    function exportShoqa(type) {
-        let gradeElement = document.getElementById("grade");
-        let gradeOption = gradeElement.options[gradeElement.selectedIndex];
-        let gradeName = gradeOption.textContent;
-
-        let subjectElement = document.getElementById("subject");
-        let subjectOption = subjectElement.options[subjectElement.selectedIndex];
-        let subjectName = subjectOption.textContent;
-
-        axios({
-                url: `/get-shoqa-as-excel?year=${form.year}&grade_id=${form.grade_id}&subject_id=${form.subject_id}&type=${form.type}&export_type=${type}`,
-                method: 'get',
-                responseType: 'blob', // Important
-            })
-            .then(response => {
-                const url = window.URL.createObjectURL(new Blob([response.data]));
-                const link = document.createElement('a');
-                link.href = url;
-                let fileName = type == 'score' ? 'شقه نمرات ': 'ضوابط حاضری ';
-                link.setAttribute('download', `${fileName} ${subjectName} - صنف ${gradeName} - سال-${form.year}.xlsx`);
-                document.body.appendChild(link);
-                link.click();
-            })
-            .catch(error => {});
-    }
-
     const url = ref('');
     function navigate(type){
         url.value = `/get-shoqa-as-excel?year=${form.year}&grade_id=${form.grade_id}&subject_id=${form.subject_id}&type=${form.type}&export_type=${type}`;

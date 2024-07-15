@@ -20,10 +20,8 @@
 </head>
 
 <body>
-
-
-    <div style="width: 8.5in !important;direction: rtl !important;">
-        <table style="width: 8.5in !important;direction: rtl !important;">
+    <div style="direction: rtl !important;">
+        <table style="direction: rtl !important;">
             <tr>
                 <td style="width: 50% !important; vertical-align:middle !important; height:100px !important" colspan="5">
                     <img src="{{ public_path('images/logo.webp')}}"  height="70px;">
@@ -47,15 +45,15 @@
                 </td>
             </tr>
         </table>
-        <table style="width: 8.5in !important;direction: rtl !important;">
+        <table style=";direction: rtl !important;">
             <tr>
-                <th style="text-align: left;border:1px solid #000 !important;text-weight:bold !important;">مجموع {{ $total }}</th>
-                <th style="text-align: left;border:1px solid #000 !important;text-weight:bold !important;">ارزیابی {{ $evaluation }}
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">مجموع {{ $total }}</th>
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">ارزیابی {{ $evaluation }}
                 </th>
-                <th style="text-align: left;border:1px solid #000 !important;text-weight:bold !important;">کارخانگی {{ $homework }}
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">کارخانگی {{ $homework }}
                 </th>
-                <th style="text-align: left;border:1px solid #000 !important;text-weight:bold !important;">فعالیت {{ $activity }}</th>
-                <th style="text-align: left;border:1px solid #000 !important;text-weight:bold !important;">حاضری {{ $attendance }}</th>
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">فعالیت {{ $activity }}</th>
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">حاضری {{ $attendance }}</th>
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">تقریری {{ $oral }}
                 </th>
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">تحریری {{ $written }}

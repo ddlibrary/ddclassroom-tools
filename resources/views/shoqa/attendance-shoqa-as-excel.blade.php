@@ -18,42 +18,31 @@
     </style>
 
 </head>
-
 <body>
-
-
     <div style="width: 8.5in !important;direction: rtl !important;">
         <table style="width: 8.5in !important;direction: rtl !important;">
             <tr>
-                <td style="width: 100% !important; vertical-align:middle !important; height:100px !important" colspan="9">
-                    <div style="display: flex">
-                        <div>
-                            <img src="{{ public_path('images/logo.webp')}}"  height="70px;">
-                        </div>
-                        <div>
-                            <h4 height="20px">
-                                امتحان: (
-                                    @if($attendanceDetail && $attendanceDetail->type == 1)
-                                        چهارنیم ماهه
-                                    @elseif ($attendanceDetail && $attendanceDetail->type == 2)
-                                        سالانه
-                                    @endif
-                                 )
-                            </h4>
-                            <h4 height="20px">
-                                نام معلم: ({{ $attendanceDetail?->teacher?->name}})
-                            </h4>
-                            <h4 height="20px">
-                                صنف: ({{ $attendanceDetail?->subGrade?->name}})
-                            </h4>
-                            <h4 height="20px">
-                                مضمون: ({{ $subject->name }} )
-                            </h4>
-                            <h4 height="20px">
-                                تاریخ: ({{ $attendanceDetail?->created_at}})
-                            </h4>
-                        </div>
-                    </div>
+                <td style="width: 50% !important; vertical-align:middle !important; height:100px !important"
+                    colspan="5">
+                    <img src="{{ public_path('images/logo.webp') }}" height="70px;">
+                </td>
+                <td style="width: 50% !important; vertical-align:middle !important; height:100px !important"
+                    colspan="5">
+                    <h4 height="20px">
+                        امتحان: ( {{ $type == 1 ? 'چهارنیم ماه' : 'سالانه' }} )
+                    </h4>
+                    <h4 height="20px">
+                        نام معلم: (..........)
+                    </h4>
+                    <h4 height="20px">
+                        صنف: ( {{ $grade->name }} )
+                    </h4>
+                    <h4 height="20px">
+                        مضمون: ({{ $subject->name }} )
+                    </h4>
+                    <h4 height="20px">
+                        تاریخ: ({{ $year }})
+                    </h4>
                 </td>
             </tr>
         </table>
@@ -67,12 +56,14 @@
                 <th style="text-align: left;border:1px solid #000 !important;text-weight:bold !important;">غیر حاضر</th>
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">حاضر
                 </th>
-                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">مجموع ساعات درسی
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">مجموع ساعات
+                    درسی
                 </th>
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">نام پدر
                 </th>
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">نام</th>
-                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">نمبر اساس</th>
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">نمبر اساس
+                </th>
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">شماره</th>
             </tr>
             @foreach ($enrollments as $enrollment)
@@ -96,10 +87,10 @@
                         {{ $enrollment->student?->attendanceDetail?->total_class_hours }}
                     </td>
                     <td style="text-align: center;border:1px solid #000 !important">
-                        {{ $enrollment->student->father_name }}
+                        {{ $enrollment->student->fa_father_name }}
                     </td>
                     <td style="text-align: center;border:1px solid #000 !important">
-                        {{ $enrollment->student->name }}
+                        {{ $enrollment->student->fa_name }}
                     </td>
                     <td style="text-align: center;border:1px solid #000 !important">
                         {{ $enrollment->student->id_number }}
