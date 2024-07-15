@@ -70,6 +70,10 @@
                         </th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Moodle ID
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Grade
                         </th>
                         <th scope="col"
@@ -113,11 +117,14 @@
 
                         <!-- score thumbnail -->
                         <td class="px-6 py-4 whitespace-nowrap">
-                            {{ score . student.name }}
+                            {{ score.student.fa_name }}
                         </td>
 
                         <td class="px-6 py-4 whitespace-nowrap">
-                            {{ score . student.father_name }}
+                            {{ score.student.fa_father_name }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            {{ score.student.id_number }}
                         </td>
 
                         <td class="px-6 py-4 whitespace-nowrap">
