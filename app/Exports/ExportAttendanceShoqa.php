@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use App\Models\AttendanceDetail;
 use App\Models\Enrollment;
+use App\Models\SubGrade;
 use App\Models\Subject;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
@@ -19,6 +20,7 @@ class ExportAttendanceShoqa implements FromView, ShouldAutoSize
         $subjectId = $this->data['subject_id'];
         $subGradeId = $this->data['grade_id'];
         $type = $this->data['type'];
+        $subGrade = SubGrade::where('id', $subGradeId)->first();
 
         $subject = Subject::where('id', $subjectId)->first();
 
@@ -51,6 +53,9 @@ class ExportAttendanceShoqa implements FromView, ShouldAutoSize
             'attendanceDetail' => $attendanceDetail,
             'enrollments' => $enrollments,
             'subject' => $subject,
+            'year' => $year,
+            'grade' => $subGrade,
+            'type' => $type
         ]);
     }
 }

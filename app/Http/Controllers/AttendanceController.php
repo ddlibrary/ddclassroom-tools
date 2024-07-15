@@ -18,13 +18,13 @@ class AttendanceController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Attendance::query()->with(['student:id,name,father_name,uuid', 'subGrade:id,full_name', 'teacher:id,name']);
+        $query = Attendance::query()->with(['student:id,fa_name,fa_father_name,uuid,id_number', 'subGrade:id,full_name', 'teacher:id,name']);
 
         if ($request->search) {
             $name = $request->search;
             $query->where(function ($query) use ($name) {
                 $query->whereHas('student', function ($query) use ($name) {
-                    $query->whereAny(['name', 'username', 'father_name', 'email', 'id_number'], 'like', "%$name%");
+                    $query->whereAny(['name', 'username', 'father_name', 'fa_name', 'fa_father_name', 'email', 'id_number'], 'like', "%$name%");
                 });
             });
         }
