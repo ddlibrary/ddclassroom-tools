@@ -12,15 +12,14 @@ class StudentAttendanceImport implements ToModel, WithHeadingRow
 {
     public function model(array $row)
     {
-        if (isset($row['name'])) {
-            $name = $row['name'];
+        if (isset($row['moodle_id'])) {
             $moodleId = $row['moodle_id'];
             if ($moodleId == 'NULL' || $moodleId == null) {
                 return [];
             }
             $student = Student::whereIdNumber($moodleId)->first();
             if (! $student) {
-                info("This student is not exist: $name");
+                info("This student is not exist: Moodle Id $moodleId");
 
                 return [];
             }
@@ -45,7 +44,7 @@ class StudentAttendanceImport implements ToModel, WithHeadingRow
                 'present' => isset($row['present']) ? $row['present'] : 0,
                 'absent' => isset($row['absent']) ? $row['absent'] : 0,
                 'permission' => isset($row['permission']) ? $row['permission'] : 0,
-                'patient' => isset($row['patient']) ? $row['patient'] : 0,
+                'patient' => 0,
             ]);
 
             $attendance = Attendance::where($where)
@@ -62,7 +61,7 @@ class StudentAttendanceImport implements ToModel, WithHeadingRow
                 ]);
 
             } else {
-                $att = Attendance::create([
+                Attendance::create([
                     'type' => $type,
                     'year' => request()->year,
                     'student_id' => $student->id,
@@ -73,7 +72,7 @@ class StudentAttendanceImport implements ToModel, WithHeadingRow
                     'present' => isset($row['present']) ? $row['present'] : 0,
                     'absent' => isset($row['absent']) ? $row['absent'] : 0,
                     'permission' => isset($row['permission']) ? $row['permission'] : 0,
-                    'patient' => isset($row['patient']) ? $row['patient'] : 0,
+                    'patient' => 0, //isset($row['patient']) ? $row['patient'] : 0,
                 ]);
 
             }
