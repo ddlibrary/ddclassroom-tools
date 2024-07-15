@@ -27,7 +27,7 @@ class SubGradeSeeder extends Seeder
             ['id' => 11, 'name' => 'Grade 9 A', 'full_name' => 'Grade 9 A (Afghanistan)', 'location' => 'Afghanistan', 'year' => '2024', 'level' => 'A', 'grade_id' => 9, 'is_active' => true],
             ['id' => 12, 'name' => 'Grade 9 B', 'full_name' => 'Grade 9 B (Afghanistan)', 'location' => 'Afghanistan', 'year' => '2024', 'level' => 'B', 'grade_id' => 9, 'is_active' => true],
             ['id' => 13, 'name' => 'Grade 9 C', 'full_name' => 'Grade 9 C (Afghanistan)', 'location' => 'Afghanistan', 'year' => '2024', 'level' => 'C', 'grade_id' => 9, 'is_active' => true],
-            ['id' => 14, 'name' => 'Grade 9 D', 'full_name' => 'Grade 9 D (Afghanistan)', 'location' => 'Afghanistan', 'year' => '2024', 'level' => 'D', 'grade_id' => 8, 'is_active' => true],
+            ['id' => 14, 'name' => 'Grade 9 D', 'full_name' => 'Grade 9 D (Afghanistan)', 'location' => 'Afghanistan', 'year' => '2024', 'level' => 'D', 'grade_id' => 9, 'is_active' => true],
         ];
 
         SubGrade::upsert($subGrades, ['id']);
