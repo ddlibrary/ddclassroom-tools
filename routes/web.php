@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AttendanceLogController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\HandBookController;
@@ -57,6 +58,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('student-attendance.send-score', 'sendScore')->name('student-attendance.send-attendance');
         Route::get('student-attendance/create/multiple', 'createMultipleStudentAttendance');
         Route::post('store-multiple-students-attendance', 'storeMultipleStudentsAttendance')->name('student-attendance.store-multiple-student-attendance');
+    });
+
+    Route::controller(AttendanceLogController::class)->group(function () {
+        Route::get('student-attendance-log', 'index')->name('student-attendance-log.index');
+        Route::post('student-attendance-log.send-score', 'sendScore')->name('student-attendance-log.send-attendance');
+        Route::get('student-attendance-log/create/multiple', 'createMultipleStudentAttendance');
+        Route::post('store-multiple-students-attendance-log', 'storeMultipleStudentsAttendanceLog')->name('student-attendance-log.store-multiple-student-attendance');
     });
 
     Route::resource('subjects', SubjectController::class);
