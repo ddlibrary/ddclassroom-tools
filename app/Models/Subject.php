@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Relations\HasManyAttendanceLog;
 use App\Models\Relations\HasOneScore;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Subject extends Model
 {
-    use HasFactory, HasOneScore;
+    use HasFactory, HasOneScore, HasManyAttendanceLog;
 
     protected $guarded = [];
 
