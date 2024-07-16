@@ -30,6 +30,7 @@ use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('test', [AttendanceLogController::class, 'studentAttendance']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [HomeController::class, 'index']);
@@ -65,6 +66,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('student-attendance-log.send-score', 'sendScore')->name('student-attendance-log.send-attendance');
         Route::get('student-attendance-log/create/multiple', 'createMultipleStudentAttendance');
         Route::post('store-multiple-students-attendance-log', 'storeMultipleStudentsAttendanceLog')->name('student-attendance-log.store-multiple-student-attendance');
+        Route::get('students-attendance-log-reports', 'studentAttendanceLogReports')->name('student-attendance-log.students-attendance-log-reports');
     });
 
     Route::resource('subjects', SubjectController::class);
