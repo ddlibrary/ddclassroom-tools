@@ -74,6 +74,12 @@ const navigation = [
         icon: CalendarIcon,
         current: false,
     },
+    {
+        name: "Attendance Log",
+        href: "/student-attendance-log",
+        icon: CalendarIcon,
+        current: false,
+    },
     { name: "Shoqa", href: "/shoqa", icon: ChartPieIcon, current: false },
 ];
 const teams = [
