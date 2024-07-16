@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('subject_id');
             $table->unsignedTinyInteger('month_id')->index();
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->boolean('first_term')->default(true)->comment('True: first term, False: second term');
             $table->timestamps();
 
             // Foreign Keys
