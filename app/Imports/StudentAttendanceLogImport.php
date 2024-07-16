@@ -1,10 +1,12 @@
 <?php
-
 namespace App\Imports;
+ini_set('max_execution_time', 120);
 
 use App\Models\AttendanceLog;
+use App\Models\AttendanceMissingEmail;
 use App\Models\Student;
 use App\Models\Subject;
+use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
@@ -17,15 +19,22 @@ class StudentAttendanceLogImport implements ToModel, WithHeadingRow
             if ($email == 'NULL' || $email == null) {
                 return [];
             }
-            $student = Student::whereEmail($email)->first();
-            if (! $student) {
-                info("This student is not exist: Moodle Id $email");
+            // Use cache to pre-load students and subjects
+            $student = Cache::remember("student_email_{$email}", 3600, function () use ($email) {
+                return Student::whereEmail($email)->first();
+            });
 
+            if (!$student) {
+                AttendanceMissingEmail::updateOrCreate(['email' => $email], ['created_at' => now()]);
                 return [];
             }
-            $subject = (isset($row['course_name'])) ? $row['course_name'] : null;
 
-            $subjectId = Subject::where('en_name', 'like', substr($subject, 0, 4)."%")->value('id');
+            $subject = isset($row['course_name']) ? $row['course_name'] : null;
+            $subjectId = Cache::remember("subject_name_" . substr($subject, 0, 4), 3600, function () use ($subject) {
+                return Subject::where('en_name', 'like', substr($subject, 0, 4) . '%')->value('id');
+            });
+
+
             if($subjectId){
 
                 AttendanceLog::insert([
@@ -35,6 +44,7 @@ class StudentAttendanceLogImport implements ToModel, WithHeadingRow
                     'subject_id' => $subjectId,
                     'sub_grade_id' => $student->sub_grade_id,
                     'status' => $row['status'],
+                    'first_term' => request()->term == 1 ? true : false,
                     'user_id' => auth()->id(),
                     'created_at' => now(),
                     'updated_at' => now(),
