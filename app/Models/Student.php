@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Relations\BelongsToCountry;
 use App\Models\Relations\BelongsToSubGrade;
+use App\Models\Relations\HasManyAttendanceLog;
 use App\Models\Relations\HasManyEnrollment;
 use App\Models\Relations\HasManyScore;
 use App\Models\Relations\HasOneAttendanceDetail;
@@ -24,6 +25,7 @@ class Student extends Model
         HasOneResponsible,
         HasOneScore,
         HasOneStudentAttendance,
+        HasManyAttendanceLog,
         HasOneStudentResult;
 
     public static function boot()
