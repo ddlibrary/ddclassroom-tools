@@ -93,7 +93,7 @@ const navigation = [
             },
             {
                 name: "Attendance Log Report",
-                href: "/student-attendance-log-report",
+                href: "/students-attendance-log-reports",
                 icon: DocumentDuplicateIcon,
                 current: false,
             },
