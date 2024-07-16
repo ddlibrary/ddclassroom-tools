@@ -46,17 +46,54 @@ const showingNavigationDropdown = ref(false);
 
 const navigation = [
     { name: "Dashboard", href: "/", icon: HomeIcon, current: false },
-    { name: "Students", href: "/students", icon: UsersIcon, current: false },
-    { name: "Handbooks", href: "/handbooks", icon: FolderIcon, current: false },
     {
-        name: "Student Result",
-        href: "/student-result",
+        name: "Student",
+        href: "/",
         icon: DocumentDuplicateIcon,
         current: false,
         children: [
             {
+                name: "Student List",
+                href: "/students",
+                icon: DocumentDuplicateIcon,
+                current: false,
+            },
+            {
+                name: "Handbooks",
+                href: "/handbooks",
+                icon: DocumentDuplicateIcon,
+                current: false,
+            },
+            {
                 name: "Student Result",
                 href: "/student-result",
+                icon: DocumentDuplicateIcon,
+                current: false,
+            },
+        ],
+    },
+
+    {
+        name: "Attendance",
+        href: "/",
+        icon: DocumentDuplicateIcon,
+        current: false,
+        children: [
+            {
+                name: "Attendance List",
+                href: "/student-attendance",
+                icon: DocumentDuplicateIcon,
+                current: false,
+            },
+            {
+                name: "Attendance Log",
+                href: "/student-attendance-log",
+                icon: DocumentDuplicateIcon,
+                current: false,
+            },
+            {
+                name: "Attendance Log Report",
+                href: "/student-attendance-log-report",
                 icon: DocumentDuplicateIcon,
                 current: false,
             },
@@ -68,18 +105,7 @@ const navigation = [
         icon: DocumentDuplicateIcon,
         current: false,
     },
-    {
-        name: "Attendance",
-        href: "/student-attendance",
-        icon: CalendarIcon,
-        current: false,
-    },
-    {
-        name: "Attendance Log",
-        href: "/student-attendance-log",
-        icon: CalendarIcon,
-        current: false,
-    },
+
     { name: "Shoqa", href: "/shoqa", icon: ChartPieIcon, current: false },
 ];
 const teams = [
