@@ -54,13 +54,27 @@
                             </select>
                         </div>
                     </div>
+                    <div class="sm:col-span-2">
+                        <div class="mt-1 rounded-md shadow-sm flex">
+                            <select name="country_id" v-model="form.country_id"
+                                class="focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
+                                <option value="">...Country...</option>
+                                <option v-for="country in countries" :value="country.id" :key="country">{{ country.name }}</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="sm:col-span-2 right">
                     <div class="mt-1 rounded-md shadow-sm flex">
                         <Link href="/student-attendance-log/create/multiple"
-            class="pointer-events-auto float-right mb-2 rounded-md bg-indigo-600 px-3 py-2 text-[0.8125rem] font-semibold leading-5 text-white hover:bg-indigo-500">
-        Upload Attendance
-        </Link>
+                                class="pointer-events-auto float-right mb-2 rounded-md bg-indigo-600 px-3 py-2 text-[0.8125rem] font-semibold leading-5 text-white hover:bg-indigo-500">
+                            Upload Attendance
+                        </Link>
+
+                        <div @click="exportAttendanceLog()"
+                                class="pointer-events-auto ml-4 float-right mb-2 rounded-md bg-indigo-600 px-3 py-2 text-[0.8125rem] font-semibold leading-5 text-white hover:bg-indigo-500">
+                            Export as Excel
+                        </div>
                     </div>
                 </div>
             </div>
@@ -131,7 +145,8 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             {{ student.id_number }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap"
+                        :class="student.attendance_logs_count == 0 ? 'text-red-600': ''">
                             {{ student.attendance_logs_count }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -150,7 +165,7 @@
                         :class="Math.floor(student.absent_count * 100 / student.attendance_logs_count)>=20 ? 'text-red-600': ''"
                         >
 
-                            {{ Math.floor(student.absent_count * 100 / student.attendance_logs_count) }}%
+                            {{ student.attendance_logs_count>0 ? Math.floor(student.absent_count * 100 / student.attendance_logs_count) : '0'}}%
                         </td>
 
                     </tr>
@@ -197,7 +212,7 @@
         watch
     } from 'vue';
 
-    defineProps(['students', 'errors', 'years', 'grades', 'months', 'subjects']);
+    defineProps(['students', 'errors', 'years', 'countries', 'grades', 'months', 'subjects']);
 
     function submit(id) {
         if (confirm('Are you sure to delete this student?')) {
@@ -210,12 +225,45 @@
 
     const form = reactive({
         search : null,
-        type: '',
         year : '',
         sub_grade_id : '',
         month_id : '',
         subject_id : '',
+        country_id : '',
     });
+
+    function exportAttendanceLog() {
+        const params = {
+            year: form.year,
+            sub_grade_id: form.sub_grade_id,
+            subject_id: form.subject_id,
+            month_id: form.month_id,
+            country_id: form.country_id,
+            search: form.search,
+        };
+
+        fetch(`/get-attendance-log-report-as-excel?${new URLSearchParams(params)}`, {
+            method: 'GET',
+            headers: {
+            'Content-Type': 'application/vnd.ms-excel',
+            'Content-Disposition': 'attachment; filename="attendance_log.xlsx"',
+            },
+        })
+        .then((response) => response.blob())
+        .then((blob) => {
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'گزارش-حاضری.xlsx');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+            console.error('Error exporting attendance log:', error);
+            });
+    }
 
     watch(form, debounce(() => {
         router.get(route('student-attendance-log.students-attendance-log-reports'), form, {
