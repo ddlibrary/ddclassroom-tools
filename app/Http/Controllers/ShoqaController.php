@@ -31,7 +31,6 @@ class ShoqaController extends Controller
     {
         if ($request->grade_id && $request->year && $request->subject_id && $request->type && $request->export_type) {
             $grade = SubGrade::with('grade')->whereId($request->grade_id)->first();
-            info($grade);
             $className = $grade?->grade?->number.$grade->level;
             $subjectName = Subject::whereId($request->subject_id)->value('name');
 
