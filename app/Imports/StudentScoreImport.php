@@ -13,16 +13,15 @@ class StudentScoreImport implements ToModel, WithHeadingRow
 {
     public function model(array $row)
     {
-        if (isset($row['name'])) {
+        if (isset($row['moodle_id'])) {
 
-            $name = $row['name'];
             $moodleId = $row['moodle_id'];
             if ($moodleId == 'NULL' || $moodleId == null) {
                 return [];
             }
             $student = Student::whereIdNumber($moodleId)->first();
             if (! $student) {
-                info("This student is not exist:name $name");
+                info("This student is not exist:id $moodleId");
 
                 return [];
             }
