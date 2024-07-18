@@ -67,6 +67,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('student-attendance-log/create/multiple', 'createMultipleStudentAttendance');
         Route::post('store-multiple-students-attendance-log', 'storeMultipleStudentsAttendanceLog')->name('student-attendance-log.store-multiple-student-attendance');
         Route::get('students-attendance-log-reports', 'studentAttendanceLogReports')->name('student-attendance-log.students-attendance-log-reports');
+        Route::get('get-attendance-log-report-as-excel', 'getAttendanceLogReportAsExcel');
     });
 
     Route::resource('subjects', SubjectController::class);
