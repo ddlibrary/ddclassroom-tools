@@ -125,10 +125,36 @@
 
     defineProps(['subjects', 'grades', 'years', 'examTypes']);
 
-    const url = ref('');
-    function navigate(type){
-        url.value = `/get-shoqa-as-excel?year=${form.year}&grade_id=${form.grade_id}&subject_id=${form.subject_id}&type=${form.type}&export_type=${type}`;
-        window.location.href = url.value;
+    function navigate(type) {
+        const params = {
+            year: form.year,
+            grade_id: form.grade_id,
+            subject_id: form.subject_id,
+            type: form.type,
+            export_type: type,
+        };
+
+        fetch(`/get-shoqa-as-excel?${new URLSearchParams(params)}`, {
+            method: 'GET',
+            headers: {
+            'Content-Type': 'application/vnd.ms-excel',
+            'Content-Disposition': 'attachment; filename="shoqa_report.xlsx"',
+            },
+        })
+        .then((response) => response.blob())
+        .then((blob) => {
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'shoqa_report.xlsx');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+            console.error('Error exporting Shoqa report:', error);
+        });
     }
 
     const form = reactive({
