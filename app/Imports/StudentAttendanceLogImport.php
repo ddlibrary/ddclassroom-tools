@@ -30,8 +30,8 @@ class StudentAttendanceLogImport implements ToModel, WithHeadingRow
             }
 
             $subject = isset($row['course_name']) ? $row['course_name'] : null;
-            $subjectId = Cache::remember("subject_name_" . substr($subject, 0, 4), 3600, function () use ($subject) {
-                return Subject::where('en_name', 'like', substr($subject, 0, 4) . '%')->value('id');
+            $subjectId = Cache::remember("subject_name_" . substr($subject, 4, 7), 3600, function () use ($subject) {
+                return Subject::where('en_name', 'like', substr($subject, 4, 7) . '%')->value('id');
             });
 
 
