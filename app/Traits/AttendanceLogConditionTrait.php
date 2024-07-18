@@ -18,7 +18,7 @@ trait AttendanceLogConditionTrait
         if ($request->sub_grade_id) {
             $query->where('sub_grade_id', $request->sub_grade_id);
         }
-        if ($request->term) {
+        if (isset($request->term) && $request->term) {
             $query->where('first_term', $request->term == 1 ? true : false);
         }
 
