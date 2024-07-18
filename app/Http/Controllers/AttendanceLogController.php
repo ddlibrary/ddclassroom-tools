@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportAttendanceLogReport;
 use App\Http\Requests\Attendance\CreateMultipleAttendanceLogRequest;
 use App\Imports\StudentAttendanceLogImport;
 use App\Models\Attendance;
 use App\Models\AttendanceDetail;
 use App\Models\AttendanceLog;
+use App\Models\Country;
 use App\Models\Month;
 use App\Models\Student;
 use App\Models\SubGrade;
@@ -102,8 +104,9 @@ class AttendanceLogController extends Controller
         $years = Year::all(['id', 'name']);
         $months = Month::all(['id', 'name']);
         $subjects = Subject::all(['id', 'name']);
+        $countries = Country::all(['id', 'name']);
 
-        return inertia('AttendanceLog/Report', ['students' => $students, 'months' => $months, 'years' => $years, 'grades' => $grades, 'subjects' => $subjects]);
+        return inertia('AttendanceLog/Report', ['students' => $students, 'countries' => $countries, 'months' => $months, 'years' => $years, 'grades' => $grades, 'subjects' => $subjects]);
     }
 
     public function createMultipleStudentAttendance()
@@ -157,37 +160,8 @@ class AttendanceLogController extends Controller
             ]);
 
 
-        $students = $query->get();
+            $students = $query->get();
 
-        // $details = AttendanceDetail::create([
-        //     'type' => $type,
-        //     'year' => request()->year,
-        //     'student_id' => $student->id,
-        //     'subject_id' => request()->subject_id,
-        //     'sub_grade_id' => $student->sub_grade_id,
-        //     'teacher_id' => request()->teacher_id,
-        //     'user_id' => auth()->id(),
-        //     'total_class_hours' => isset($row['total_class_hours']) ? $row['total_class_hours'] : 0,
-        //     'present' => isset($row['present']) ? $row['present'] : 0,
-        //     'absent' => isset($row['absent']) ? $row['absent'] : 0,
-        //     'permission' => isset($row['permission']) ? $row['permission'] : 0,
-        //     'patient' => 0,
-        // ]);
-
-        // $attendance = Attendance::where($where)
-        //     ->where('type', $type)
-        //     ->first();
-        // if ($attendance) {
-
-        //     $attendance->update([
-        //         'total_class_hours' => $attendance->total_class_hours + $details->total_class_hours,
-        //         'present' => $attendance->present + $details->present,
-        //         'absent' => $attendance->absent + $details->absent,
-        //         'permission' => $attendance->permission + $details->permission,
-        //         'patient' => $attendance->patient + $details->patient,
-        //     ]);
-
-        // } else {
             Attendance::where('id', '>=', 1)->delete();
             AttendanceDetail::where('id', '>=', 1)->delete();
             foreach ($students as $student) {
@@ -256,5 +230,9 @@ class AttendanceLogController extends Controller
         // }
 
         return $students;
+    }
+
+    public function getAttendanceLogReportAsExcel(Request $request) {
+        return Excel::download(new ExportAttendanceLogReport($request->all()), "گزارش-حاضری-صنف.xlsx");
     }
 }
