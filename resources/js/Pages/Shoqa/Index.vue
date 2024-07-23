@@ -123,7 +123,7 @@
     } from 'vue';
     import axios from 'axios';
 
-    defineProps(['subjects', 'grades', 'years', 'examTypes']);
+    const props = defineProps(['subjects', 'grades', 'years', 'examTypes']);
 
     function navigate(type) {
         const params = {
@@ -146,7 +146,8 @@
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', 'shoqa_report.xlsx');
+            const fileName = getFileName(type)
+            link.setAttribute('download', `${fileName}.xlsx`);
             document.body.appendChild(link);
             link.click();
             link.remove();
@@ -163,4 +164,11 @@
         grade_id: '',
         type: '',
     });
+
+    function getFileName(type) {
+        const subjectName = props.subjects.find(subject => subject.id == form.subject_id)?.en_name
+        const gradeLabel = props.grades.find(grade => grade.id == form.grade_id)?.full_name
+
+        return `${subjectName}-${gradeLabel}`
+    }
 </script>
