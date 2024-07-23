@@ -23,45 +23,53 @@
     <div style="direction: rtl !important;">
         <table style="direction: rtl !important;">
             <tr>
-                <td style="width: 50% !important; vertical-align:middle !important; height:100px !important" colspan="5">
-                    <img src="{{ public_path('images/logo.webp')}}"  height="70px;">
+                <td colspan="9" rowspan="5">
+                    <img src="{{ public_path('images/logo.png') }}" height="70px;">
                 </td>
-                <td style="width: 50% !important; vertical-align:middle !important; height:100px !important" colspan="6">
-                    <h4 height="20px">
-                        امتحان: ( {{ $type == 1 ? 'چهارنیم ماه' : 'سالانه'}} )
-                    </h4>
-                    <h4 height="20px">
-                        نام معلم: (..........)
-                    </h4>
-                    <h4 height="20px">
-                        صنف: ( {{$grade->name}} )
-                    </h4>
-                    <h4 height="20px">
-                        مضمون: ({{ $subject->name }} )
-                    </h4>
-                    <h4 height="20px">
-                        تاریخ: ({{$year}})
-                    </h4>
-                </td>
+                <td  style="text-align: right"> ( {{ $type == 1 ? 'چهارنیم ماه' : 'سالانه' }} )</td>
+                <td>امتحان</td>
             </tr>
-        </table>
-        <table style=";direction: rtl !important;">
             <tr>
-                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">مجموع {{ $total }}</th>
-                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">ارزیابی {{ $evaluation }}
+                <td ></td>
+                <td>نام معلم</td>
+            </tr>
+            <tr>
+                <td  style="text-align: right">( {{ $grade->name }} )</td>
+                <td>صنف</td>
+            </tr>
+            <tr>
+                <td style="text-align: right" >({{ $subject->name }} )</td>
+                <td>مضمون</td>
+            </tr>
+            <tr>
+                <td style="text-align: right"> ({{ $year }})</td>
+                <td>تاریخ</td>
+            </tr>
+
+            <tr>
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">مجموع
+                    {{ $total }}</th>
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">ارزیابی
+                    {{ $evaluation }}
                 </th>
-                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">کارخانگی {{ $homework }}
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">کارخانگی
+                    {{ $homework }}
                 </th>
-                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">فعالیت {{ $activity }}</th>
-                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">حاضری {{ $attendance }}</th>
-                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">تقریری {{ $oral }}
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">فعالیت
+                    {{ $activity }}</th>
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">حاضری
+                    {{ $attendance }}</th>
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">تقریری
+                    {{ $oral }}
                 </th>
-                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">تحریری {{ $written }}
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">تحریری
+                    {{ $written }}
                 </th>
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">نام پدر
                 </th>
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">نام</th>
-                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">نمبر اساس</th>
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">نمبر اساس
+                </th>
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">شماره</th>
             </tr>
             @foreach ($enrollments as $enrollment)
