@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\SubjectMinScoreEnum;
 use App\Enums\UserTypeEnum;
 use App\Http\Requests\Score\CreateMultipleStudentsScoreRequest;
+use App\Http\Requests\Score\CreateStudentsScoreRequest;
 use App\Http\Requests\ScoreRequest;
 use App\Imports\StudentScoreImport;
 use App\Models\Score;
@@ -12,6 +14,7 @@ use App\Models\SubGrade;
 use App\Models\Subject;
 use App\Models\User;
 use App\Models\Year;
+use App\Services\SubjectScore;
 use App\Traits\ResultNameTrait;
 use App\Traits\ResultTrait;
 use App\Traits\ResultTypeTrait;
@@ -59,13 +62,32 @@ class ScoreController extends Controller
         $grades = SubGrade::whereIsActive(true)->get();
         $subjects = Subject::all(['id', 'name']);
         $years = Year::all(['id', 'name']);
+        $types = [['id' => 1, 'name' => 'Midterm Exam'], ['id' => 2, 'name' => 'Final Exam']];
 
-        return inertia('Score/Create', ['subjects' => $subjects, 'teachers' => $teachers, 'grades' => $grades, 'years' => $years]);
+        $midterScores = new SubjectScore(1);
+        $finalScores = new SubjectScore(2);
+
+        $midtermSuccessScore = SubjectMinScoreEnum::Middle->value;
+        $finalSuccessScore = SubjectMinScoreEnum::Final->value;
+
+        return inertia('Score/Create', [
+            'subjects' => $subjects,
+            'types' => $types,
+            'teachers' => $teachers,
+            'grades' => $grades,
+            'years' => $years,
+            'midtermScores' => $midterScores->getAll(),
+            'finalScores' => $finalScores->getAll(),
+            'midtermSuccessScore' => $midtermSuccessScore,
+            'finalSuccessScore' => $finalSuccessScore,
+        ]);
     }
 
-    public function store(Request $request)
+    public function store(CreateStudentsScoreRequest $request)
     {
         dd($request->all());
+        return $request->all();
+        return back();
     }
 
     public function edit($id)
