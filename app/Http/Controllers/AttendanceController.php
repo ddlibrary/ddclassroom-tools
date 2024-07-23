@@ -44,7 +44,7 @@ class AttendanceController extends Controller
         $grades = SubGrade::whereIsActive(true)->get();
         $years = Year::all(['id', 'name']);
 
-        $types = [['id' => 1, 'name' => 'Middle Exam'], ['id' => 2, 'name' => 'Final Exam']];
+        $types = [['id' => 1, 'name' => 'Midterm Exam'], ['id' => 2, 'name' => 'Final Exam']];
 
         return inertia('Attendance/Index', ['scores' => $scores, 'years' => $years, 'grades' => $grades, 'attendanceTypes' => $types]);
     }
