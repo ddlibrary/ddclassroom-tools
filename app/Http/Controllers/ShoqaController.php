@@ -18,7 +18,7 @@ class ShoqaController extends Controller
         $subjects = Subject::whereIsActive(true)->get();
         $years = Year::all(['id', 'name']);
         $types = [
-            ['id' => 1, 'name' => 'Middle Exam'],
+            ['id' => 1, 'name' => 'Midterm Exam'],
             ['id' => 2, 'name' => 'Final Exam'],
             ['id' => 3, 'name' => 'Final'],
         ];
@@ -29,12 +29,19 @@ class ShoqaController extends Controller
     public function getShoqaAsExcel(Request $request)
     {
         if ($request->grade_id && $request->year && $request->subject_id && $request->type && $request->export_type) {
+            $grade = SubGrade::with('grade')->whereId($request->grade_id)->first();
+            $className = $grade?->grade?->number.$grade->level;
+            $subjectName = Subject::whereId($request->subject_id)->value('name');
+
             if ($request->export_type == 'score') {
 
-                return Excel::download(new ExportShoqa($request->all()), 'student-result.xlsx');
+                $response = Excel::download(new ExportShoqa($request->all()), "shoqa.xlsx", \Maatwebsite\Excel\Excel::XLSX);
+                ob_end_clean();
+
+                return $response;
             }
 
-            return Excel::download(new ExportAttendanceShoqa($request->all()), 'student-attendance-result.xlsx');
+            return Excel::download(new ExportAttendanceShoqa($request->all()), "ضوابط-حاضری-$subjectName-صنف-$className.xlsx");
         }
     }
 }

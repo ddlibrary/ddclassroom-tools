@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AttendanceLogController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\HandBookController;
@@ -29,6 +30,7 @@ use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('test', [AttendanceLogController::class, 'studentAttendance']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [HomeController::class, 'index']);
@@ -59,6 +61,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('store-multiple-students-attendance', 'storeMultipleStudentsAttendance')->name('student-attendance.store-multiple-student-attendance');
     });
 
+    Route::controller(AttendanceLogController::class)->group(function () {
+        Route::get('student-attendance-log', 'index')->name('student-attendance-log.index');
+        Route::post('student-attendance-log.send-score', 'sendScore')->name('student-attendance-log.send-attendance');
+        Route::get('student-attendance-log/create/multiple', 'createMultipleStudentAttendance');
+        Route::post('store-multiple-students-attendance-log', 'storeMultipleStudentsAttendanceLog')->name('student-attendance-log.store-multiple-student-attendance');
+        Route::get('students-attendance-log-reports', 'studentAttendanceLogReports')->name('student-attendance-log.students-attendance-log-reports');
+        Route::get('get-attendance-log-report-as-excel', 'getAttendanceLogReportAsExcel');
+    });
+
     Route::resource('subjects', SubjectController::class);
     Route::resource('countries', CountryController::class);
     Route::resource('years', YearController::class);
@@ -84,6 +95,7 @@ Route::controller(StudentResultCardController::class)->group(function () {
 Route::controller(ScoreController::class)->group(function () {
     Route::get('student-score', 'index')->name('student-score.index');
     Route::get('student-score/create', 'create')->name('student-score.create');
+    Route::get('student-score/create-scores', 'createScores')->name('student-score.create-scores');
     Route::get('student-score/{score}/edit', 'edit');
     Route::post('student-score', 'store')->name('student-score.store');
     Route::put('student-score/{score}', 'update')->name('student-score.update');

@@ -38,6 +38,11 @@ class SubjectScore
         $this->scoreConfig = $this->type == 1 ? $this->midtermScoreConfig : $this->finalScoreConfig;
     }
 
+    public function getAll(): array
+    {
+        return $this->scoreConfig;
+    }
+
     public function getOral(): int
     {
         return $this->scoreConfig['oral'];

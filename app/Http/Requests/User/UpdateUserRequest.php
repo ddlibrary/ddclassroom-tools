@@ -3,7 +3,7 @@
 namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rules\Password;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -26,7 +26,14 @@ class UpdateUserRequest extends FormRequest
             'name' => ['required', 'string'],
             'email' => ['required', 'email', 'unique:users,email,'.$this->user->id],
             'is_active' => ['required', 'boolean'],
-            'password' => ['nullable', Rules\Password::defaults()],
+            'password' => ['nullable',
+                'string',
+                Password::min(10)
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+                    ->uncompromised(),
+            ],
         ];
     }
 }

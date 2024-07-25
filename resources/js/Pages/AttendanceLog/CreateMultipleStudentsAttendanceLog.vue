@@ -32,73 +32,7 @@
 
                                 <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
-                                    <!-- Grade -->
-                                    <div class="sm:col-span-1">
-                                        <label for="grade_id"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Grade
-                                        </label>
-                                        <div class="mt-2">
-                                            <select v-model="form.grade_id" name="grade" id="grade"
-                                                autocomplete="grade"
-                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                                <option value="">...</option>
-                                                <option v-for="grade in grades" :value="grade.id"
-                                                    :key="grade">{{ grade . full_name }}</option>
-                                            </select>
-                                            <p class="mt-2 text-sm text-red-500" v-if="errors.grade_id">
-                                                {{ errors . grade_id }}</p>
-                                        </div>
-                                    </div>
 
-                                    <div class="sm:col-span-1">
-                                        <label for="subject_id"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Subject
-                                        </label>
-                                        <div class="mt-2">
-                                            <select v-model="form.subject_id" name="subject" id="subject"
-                                                autocomplete="subject"
-                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                                <option value="">...</option>
-                                                <option v-for="subject in subjects" :value="subject.id"
-                                                    :key="subject">{{ subject . name }}</option>
-                                            </select>
-                                            <p class="mt-2 text-sm text-red-500" v-if="errors.subject_id">
-                                                {{ errors . subject_id }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="sm:col-span-1">
-                                        <label for="type"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Exam Type
-                                        </label>
-                                        <div class="mt-2">
-                                            <select v-model="form.type" name="subject" id="type"
-                                                autocomplete="subject"
-                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                                <option value="">...</option>
-                                                <option value="1">Midterm Exam</option>
-                                                <option value="2">Final Exam</option>
-                                            </select>
-                                            <p class="mt-2 text-sm text-red-500" v-if="errors.type">
-                                                {{ errors . type }}</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="sm:col-span-1">
-                                        <label for="grade_id"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Teacher
-                                        </label>
-                                        <div class="mt-2">
-                                            <select v-model="form.teacher_id" name="teacher" id="teacher"
-                                                autocomplete="teacher"
-                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                                <option value="">...</option>
-                                                <option v-for="teacher in teachers" :value="teacher.id"
-                                                    :key="teacher">{{ teacher . name }}</option>
-                                            </select>
-                                            <p class="mt-2 text-sm text-red-500" v-if="errors.teacher_id">
-                                                {{ errors . teacher_id }}</p>
-                                        </div>
-                                    </div>
 
                                     <!-- Year -->
                                     <div class="sm:col-span-1">
@@ -117,6 +51,58 @@
                                                 {{ errors . year }}</p>
                                         </div>
                                     </div>
+
+                                    <div class="sm:col-span-1">
+                                        <label for="grade_id"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Month
+                                        </label>
+                                        <div class="mt-2">
+                                            <select v-model="form.month_id" name="month" id="month"
+                                                autocomplete="month"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">...</option>
+                                                <option v-for="month in months" :value="month.id"
+                                                    :key="month">{{ month . name }}</option>
+                                            </select>
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.month_id">
+                                                {{ errors . month_id }}</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Term -->
+                                    <div class="sm:col-span-1">
+                                        <label for="term_id"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Term
+                                        </label>
+                                        <div class="mt-2">
+                                            <select v-model="form.term" name="term" id="term"
+                                                autocomplete="term"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option v-for="(term, id) in terms" :value="id"
+                                                    :key="term">{{ term }}</option>
+                                            </select>
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.id">
+                                                {{ errors . term }}</p>
+                                        </div>
+                                    </div>
+                                    <!-- Term -->
+                                    <div class="sm:col-span-1">
+                                        <label for="term_id"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Location
+                                        </label>
+                                        <div class="mt-2">
+                                            <select v-model="form.location" name="location" id="location"
+                                                autocomplete="location"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option v-for="(location, id) in locations" :value="id"
+                                                    :key="location">{{ location }}</option>
+                                            </select>
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.id">
+                                                {{ errors . location }}</p>
+                                        </div>
+                                    </div>
+
+
 
                                     <div class="sm:col-span-6">
                                         <label for="photo" class="block text-sm font-medium text-gray-700">
@@ -190,15 +176,14 @@
         router
     } from '@inertiajs/vue3';
 
-    const props = defineProps(['grades', 'errors', 'years', 'teachers', 'subjects']);
+    const props = defineProps(['terms', 'errors', 'years', 'months', 'subjects', 'locations']);
 
     const form = reactive({
         file: null,
-        grade_id: '',
-        teacher_id: '',
+        month_id: '',
         year: '',
-        subject_id: '',
-        type: '',
+        term: 1,
+        location: ''
     });
 
     function selectFile($event) {
@@ -206,7 +191,7 @@
     }
 
     function submit() {
-        router.post(route(`student-attendance.store-multiple-student-attendance`), form, {
+        router.post(route(`student-attendance-log.store-multiple-student-attendance`), form, {
             forceFormData: true,
             onFinish: (res) => {
 

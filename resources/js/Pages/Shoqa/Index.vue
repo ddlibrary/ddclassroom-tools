@@ -23,7 +23,7 @@
                         class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <div class="py-1">
                             <MenuItem v-slot="{ active }">
-                            <p @click="exportShoqa('score')"
+                            <p @click="navigate('score')"
                                 :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                                     'block px-4 py-2 text-sm cursor-pointer'
                                 ]">
@@ -31,7 +31,7 @@
                             </MenuItem>
 
                             <MenuItem v-slot="{ active }">
-                            <p @click="exportShoqa('attendance')"
+                            <p @click="navigate('attendance')"
                                 :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                                     'block px-4 py-2 text-sm cursor-pointer'
                                 ]">
@@ -123,32 +123,39 @@
     } from 'vue';
     import axios from 'axios';
 
-    defineProps(['subjects', 'grades', 'years', 'examTypes']);
+    const props = defineProps(['subjects', 'grades', 'years', 'examTypes']);
 
-    function exportShoqa(type) {
-        let gradeElement = document.getElementById("grade");
-        let gradeOption = gradeElement.options[gradeElement.selectedIndex];
-        let gradeName = gradeOption.textContent;
+    function navigate(type) {
+        const params = {
+            year: form.year,
+            grade_id: form.grade_id,
+            subject_id: form.subject_id,
+            type: form.type,
+            export_type: type,
+        };
 
-        let subjectElement = document.getElementById("subject");
-        let subjectOption = subjectElement.options[subjectElement.selectedIndex];
-        let subjectName = subjectOption.textContent;
-
-        axios({
-                url: `/get-shoqa-as-excel?year=${form.year}&grade_id=${form.grade_id}&subject_id=${form.subject_id}&type=${form.type}&export_type=${type}`,
-                method: 'get',
-                responseType: 'blob', // Important
-            })
-            .then(response => {
-                const url = window.URL.createObjectURL(new Blob([response.data]));
-                const link = document.createElement('a');
-                link.href = url;
-                let fileName = type == 'score' ? 'شقه نمرات ': 'ضوابط حاضری ';
-                link.setAttribute('download', `${fileName} ${subjectName} - صنف ${gradeName} - سال-${form.year}.xlsx`);
-                document.body.appendChild(link);
-                link.click();
-            })
-            .catch(error => {});
+        fetch(`/get-shoqa-as-excel?${new URLSearchParams(params)}`, {
+            method: 'GET',
+            headers: {
+            'Content-Type': 'application/vnd.ms-excel',
+            'Content-Disposition': 'attachment; filename="shoqa_report.xlsx"',
+            },
+        })
+        .then((response) => response.blob())
+        .then((blob) => {
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            const fileName = getFileName(type)
+            link.setAttribute('download', `${fileName}.xlsx`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+            console.error('Error exporting Shoqa report:', error);
+        });
     }
 
     const form = reactive({
@@ -157,4 +164,11 @@
         grade_id: '',
         type: '',
     });
+
+    function getFileName(type) {
+        const subjectName = props.subjects.find(subject => subject.id == form.subject_id)?.en_name
+        const gradeLabel = props.grades.find(grade => grade.id == form.grade_id)?.full_name
+
+        return `${subjectName}-${gradeLabel}`
+    }
 </script>
