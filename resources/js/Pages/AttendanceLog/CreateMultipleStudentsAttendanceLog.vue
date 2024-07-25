@@ -85,6 +85,22 @@
                                                 {{ errors . term }}</p>
                                         </div>
                                     </div>
+                                    <!-- Term -->
+                                    <div class="sm:col-span-1">
+                                        <label for="term_id"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Location
+                                        </label>
+                                        <div class="mt-2">
+                                            <select v-model="form.location" name="location" id="location"
+                                                autocomplete="location"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option v-for="(location, id) in locations" :value="id"
+                                                    :key="location">{{ location }}</option>
+                                            </select>
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.id">
+                                                {{ errors . location }}</p>
+                                        </div>
+                                    </div>
 
 
 
@@ -160,13 +176,14 @@
         router
     } from '@inertiajs/vue3';
 
-    const props = defineProps(['terms', 'errors', 'years', 'months', 'subjects']);
+    const props = defineProps(['terms', 'errors', 'years', 'months', 'subjects', 'locations']);
 
     const form = reactive({
         file: null,
         month_id: '',
         year: '',
         term: 1,
+        location: ''
     });
 
     function selectFile($event) {
