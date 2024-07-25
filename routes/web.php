@@ -95,6 +95,7 @@ Route::controller(StudentResultCardController::class)->group(function () {
 Route::controller(ScoreController::class)->group(function () {
     Route::get('student-score', 'index')->name('student-score.index');
     Route::get('student-score/create', 'create')->name('student-score.create');
+    Route::get('student-score/create-scores', 'createScores')->name('student-score.create-scores');
     Route::get('student-score/{score}/edit', 'edit');
     Route::post('student-score', 'store')->name('student-score.store');
     Route::put('student-score/{score}', 'update')->name('student-score.update');
