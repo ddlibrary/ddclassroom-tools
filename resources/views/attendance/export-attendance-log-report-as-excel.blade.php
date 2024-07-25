@@ -32,7 +32,7 @@
                 <td style="text-align: left;border:1px solid #000 !important">{{ $student->father_name }}</td>
                 <td style="text-align: left;border:1px solid #000 !important">{{ $student->email }}</td>
                 <td  style="text-align: center;border:1px solid #000 !important">{{ $student->id_number }}</td>
-                <td  style="text-align: center;border:1px solid #000 !important">{{ $student->subGrade->name }}</td>
+                <td  style="text-align: center;border:1px solid #000 !important">{{ $student->subGrade->full_name }}</td>
 
                 <td  style="text-align: center;border:1px solid #000 !important">{{ $year }}</td>
                 <td  style="text-align: center;border:1px solid #000 !important">{{ $month?->name }}</td>
