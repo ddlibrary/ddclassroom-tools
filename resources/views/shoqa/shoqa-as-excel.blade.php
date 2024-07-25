@@ -105,7 +105,9 @@
                         {{ $enrollment->student->id_number }}
                     </td>
                     <td style="text-align: center;border:1px solid #000 !important">
-                        {{ $loop->iteration }}
+                        <a href="https://courses.darakhtdanesh.org/user/profile.php?id={{ $enrollment->student->id_number }}">
+                            https://courses.darakhtdanesh.org/user/profile.php?id={{ $enrollment->student->id_number }}
+                        </a>
                     </td>
                 </tr>
             @endforeach
