@@ -24,7 +24,7 @@
             <tr>
                 <td style="width: 50% !important; vertical-align:middle !important; height:100px !important"
                     colspan="5">
-                    <img src="{{ public_path('images/logo.webp') }}" height="70px;">
+                    <img src="{{ public_path('images/logo.png') }}" height="70px;">
                 </td>
                 <td style="width: 50% !important; vertical-align:middle !important; height:100px !important"
                     colspan="5">
