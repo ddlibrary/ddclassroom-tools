@@ -20,7 +20,7 @@ class ExportAttendanceLogReport implements FromView, ShouldAutoSize
         $request = (object)$this->data;
 
         $query = Student::query()->select(['id', 'name','father_name','fa_name','fa_father_name', 'email', 'phone','id_number','sub_grade_id'])
-        ->with(['subGrade:id,name']);
+        ->with(['subGrade:id,name,full_name']);
         $query
             ->withCount([
                 'attendanceLogs' => function ($query) use ($request) {
