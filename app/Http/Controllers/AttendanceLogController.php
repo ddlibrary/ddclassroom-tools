@@ -115,6 +115,13 @@ class AttendanceLogController extends Controller
             1 => 'First Term',
             2 => 'Second Term',
         ];
+
+        $locations = [
+            'ddc' => 'DDClassroom',
+            'dlc' => 'DLC Pakistan',
+            'arsa' => 'ARSA Turkey',
+        ];
+
         $years = Year::all(['id', 'name']);
         $months = Month::all(['id', 'name']);
 
@@ -122,6 +129,7 @@ class AttendanceLogController extends Controller
             'months' => $months,
             'terms' => $terms,
             'years' => $years,
+            'locations' => $locations
         ]);
     }
 
