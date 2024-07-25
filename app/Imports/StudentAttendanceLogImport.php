@@ -29,9 +29,21 @@ class StudentAttendanceLogImport implements ToModel, WithHeadingRow
                 return [];
             }
 
+            if(request()->location == 'ddc'){
+                $from = 0;
+                $to = 3;
+            }elseif(request()->location == 'dlc'){
+                $from = 4;
+                $to = 7;
+            }elseif(request()->location == 'arsa'){
+                $from = 5;
+                $to = 8;
+            }
+
+
             $subject = isset($row['course_name']) ? $row['course_name'] : null;
-            $subjectId = Cache::remember("subject_name_" . substr($subject, 4, 7), 3600, function () use ($subject) {
-                return Subject::where('en_name', 'like', substr($subject, 4, 7) . '%')->value('id');
+            $subjectId = Cache::remember("subject_name_" . substr($subject, $from, $to), 3600, function () use ($subject, $from, $to) {
+                return Subject::where('en_name', 'like', substr($subject, $from, $to) . '%')->value('id');
             });
 
 
