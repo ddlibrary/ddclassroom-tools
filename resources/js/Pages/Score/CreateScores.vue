@@ -210,6 +210,18 @@
                                                                     scope="col"
                                                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                                                 >
+                                                                Result
+                                                                </th>
+                                                                <th
+                                                                    scope="col"
+                                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                                >
+                                                                Total Score
+                                                                </th>
+                                                                <th
+                                                                    scope="col"
+                                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                                >
                                                                 Total
                                                                 </th>
                                                                 <th
@@ -283,6 +295,13 @@
                                                                 class="bg-yellow-50/20"
                                                                 :class="[selectedScores.includes(studentScore?.id) && '!bg-green-100']"
                                                             >
+                                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-900"
+                                                                :class="[(studentScore.totalAmount != studentScore.total) && 'bg-red-600']">
+                                                                    {{  studentScore.totalAmount - studentScore.total }}
+                                                                </td>
+                                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
+                                                                    {{ studentScore.totalAmount }}
+                                                                </td>
                                                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
                                                                     <input
                                                                         id="total"
@@ -510,9 +529,7 @@ const form = reactive({
 
 const scoreLimits = ref([]);
 
-function selectFile($event) {
-    form.file = $event.target.files[0];
-}
+
 
 function submit() {
     console.log(form)
@@ -586,17 +603,18 @@ function mapstudentScores(data) {
         studentScores.value = rows.map((row, index) => {
             const cols = row.split('\t');
             return {
-                total: cols[0],
-                evaluation: cols[1],
-                homework: cols[2],
-                activity: cols[3],
-                attendance: cols[4],
-                oral:  cols[5],
-                written: cols[6],
+                total: Number(cols[0] || 0),
+                evaluation: Number(cols[1] || 0),
+                homework: Number(cols[2] || 0),
+                activity: Number(cols[3] || 0),
+                attendance: Number(cols[4] || 0),
+                oral: Number(cols[5] || 0),
+                written: Number(cols[6] || 0),
                 name: cols[7],
                 father_name: cols[8],
                 moodle_id: cols[9],
                 no: cols[10],
+                totalAmount: Number(cols[1] || 0) + Number(cols[2] || 0) + Number(cols[3] || 0) + Number(cols[4] || 0) + Number(cols[5] || 0) + Number(cols[6] || 0),
             };
         });
     }else{

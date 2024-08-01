@@ -71,9 +71,13 @@
                             Upload Attendance
                         </Link>
 
-                        <div @click="exportAttendanceLog()"
+                        <div @click="exportAttendanceLog('general')"
                                 class="pointer-events-auto ml-4 float-right mb-2 rounded-md bg-indigo-600 px-3 py-2 text-[0.8125rem] font-semibold leading-5 text-white hover:bg-indigo-500">
                             Export as Excel
+                        </div>
+                        <div @click="exportAttendanceLog('details')"
+                                class="pointer-events-auto ml-4 float-right mb-2 rounded-md bg-indigo-600 px-3 py-2 text-[0.8125rem] font-semibold leading-5 text-white hover:bg-indigo-500">
+                            Export in details as Excel
                         </div>
                     </div>
                 </div>
@@ -232,7 +236,7 @@
         country_id : '',
     });
 
-    function exportAttendanceLog() {
+    function exportAttendanceLog(type = null) {
         const params = {
             year: form.year,
             sub_grade_id: form.sub_grade_id,
@@ -240,6 +244,8 @@
             month_id: form.month_id,
             country_id: form.country_id,
             search: form.search,
+            type: type
+
         };
 
         fetch(`/get-attendance-log-report-as-excel?${new URLSearchParams(params)}`, {

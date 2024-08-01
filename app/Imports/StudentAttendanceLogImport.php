@@ -6,6 +6,7 @@ use App\Models\AttendanceLog;
 use App\Models\AttendanceMissingEmail;
 use App\Models\Student;
 use App\Models\Subject;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -49,6 +50,10 @@ class StudentAttendanceLogImport implements ToModel, WithHeadingRow
 
             if($subjectId){
 
+                $dateTime = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['date']);
+
+                $createdAt = $dateTime->format('Y-m-d H:i:s');
+
                 AttendanceLog::insert([
                     'year' => request()->year,
                     'student_id' => $student->id,
@@ -58,6 +63,7 @@ class StudentAttendanceLogImport implements ToModel, WithHeadingRow
                     'status' => $row['status'],
                     'first_term' => request()->term == 1 ? true : false,
                     'user_id' => auth()->id(),
+                    'date' => $createdAt,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
