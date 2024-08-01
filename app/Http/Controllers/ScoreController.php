@@ -38,7 +38,7 @@ class ScoreController extends Controller
             $name = $request->search;
             $query->where(function ($query) use ($name) {
                 $query->whereHas('student', function ($query) use ($name) {
-                    $query->whereAny(['name', 'username', 'father_name', 'email', 'id_number'], 'like', "%$name%");
+                    $query->whereAny(['name', 'username','fa_name','fa_father_name', 'father_name', 'email', 'id_number'], 'like', "%$name%");
                 });
             });
         }
@@ -115,7 +115,7 @@ class ScoreController extends Controller
 
     public function store(MultipleStudentRequest $request)
     {
-        $scores = json_decode($request->scoreData);
+        $scores = json_decode($request->studentScores);
 
         DB::beginTransaction();
 
@@ -134,7 +134,7 @@ class ScoreController extends Controller
 
                 if (Score::where($where)->doesntExist()) {
                     for ($i = 1; $i < 4; $i++) {
-                        $score = Score::updateOrCreate(
+                        Score::updateOrCreate(
                             [
                                 'year' => $request->year,
                                 'student_id' => $student->id,
@@ -187,7 +187,7 @@ class ScoreController extends Controller
                         'is_passed' => $score->total >= $minAmount ? true : false,
                     ]);
 
-                $score = Score::where($where)->where('type', $type)->first();
+                //Score::where($where)->where('type', $type)->first();
                 $secondScore = Score::where($where)
                     ->where('type', $type == 1 ? 2 : 1)
                     ->first();
@@ -196,14 +196,14 @@ class ScoreController extends Controller
                 Score::where($where)
                     ->where('type', 3)
                     ->update([
-                        'written' => (int) $secondScore->written + $score->written,
-                        'verbal' => (int) $secondScore->verbal + $score->verbal,
-                        'attendance' => (int) $secondScore->attendance + $score->attendance,
-                        'activity' => (int) $secondScore->activity + $score->activity,
-                        'homework' => (int) $secondScore->homework + $score->homework,
-                        'evaluation' => (int) $secondScore->evaluation + $score->evaluation,
-                        'total' => (int) $secondScore->total + $score->total,
-                        'is_passed' => (int) $secondScore->total + $score->total >= SubjectMinScoreEnum::Success->value ? true : false,
+                        'written' => (float) $secondScore->written + $score->written,
+                        'verbal' => (float) $secondScore->verbal + $score->oral,
+                        'attendance' => (float) $secondScore->attendance + $score->attendance,
+                        'activity' => (float) $secondScore->activity + $score->activity,
+                        'homework' => (float) $secondScore->homework + $score->homework,
+                        'evaluation' => (float) $secondScore->evaluation + $score->evaluation,
+                        'total' => (float) $secondScore->total + $score->total,
+                        'is_passed' => (float) $secondScore->total + $score->total >= SubjectMinScoreEnum::Success->value ? true : false,
                     ]);
 
                 $studentResult = StudentResult::where($studentResultWhere)->first();
