@@ -105,6 +105,10 @@
                         </th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Taken Date
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Exam
                         </th>
                         <th scope="col" class="relative px-6 py-3">
@@ -144,6 +148,9 @@
 
                         <td class="px-6 py-4 whitespace-nowrap">
                             {{ score.year }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            {{ score.date }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             {{ score.type == 1 ? 'Middle' : 'Final' }}
