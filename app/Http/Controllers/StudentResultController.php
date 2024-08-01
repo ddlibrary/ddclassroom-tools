@@ -27,7 +27,7 @@ class StudentResultController extends Controller
             $query->where(function ($query) use ($name) {
                 $query
                     ->whereHas('student', function ($query) use ($name) {
-                        $query->whereAny(['name', 'username', 'father_name', 'email', 'id_number'], 'like', "%$name%");
+                        $query->whereAny(['name', 'username', 'father_name','fa_name', 'fa_father_name', 'email', 'id_number'], 'like', "%$name%");
                     })
                     ->orWhere('result_name', 'like', $name.'%');
             });
