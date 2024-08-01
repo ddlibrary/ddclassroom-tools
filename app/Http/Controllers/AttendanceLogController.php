@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportAttendanceLogDetailsReport;
 use App\Exports\ExportAttendanceLogReport;
 use App\Http\Requests\Attendance\CreateMultipleAttendanceLogRequest;
 use App\Imports\StudentAttendanceLogImport;
@@ -241,6 +242,9 @@ class AttendanceLogController extends Controller
     }
 
     public function getAttendanceLogReportAsExcel(Request $request) {
+        if($request->type == 'details'){
+            return Excel::download(new ExportAttendanceLogDetailsReport($request->all()), "جزییات-حاضری.xlsx");
+        }
         return Excel::download(new ExportAttendanceLogReport($request->all()), "گزارش-حاضری-صنف.xlsx");
     }
 }
