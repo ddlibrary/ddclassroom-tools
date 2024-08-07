@@ -67,6 +67,15 @@
                     </div>
                     <div class="sm:col-span-2">
                         <div class="mt-1 rounded-md shadow-sm flex">
+                            <select name="name" v-model="form.type"
+                            class="focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
+                            <option value="">Select Exam</option>
+                            <option v-for="examType in examTypes" :value="examType.id" :key="examType">{{ examType.name }}</option>
+                        </select>
+                    </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <div class="mt-1 rounded-md shadow-sm flex">
                             <select name="name" id="subject" v-model="form.subject_id"
                                 class="focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
                                 <option value=""> Select Subject </option>
@@ -75,15 +84,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="sm:col-span-2">
-                        <div class="mt-1 rounded-md shadow-sm flex">
-                            <select name="name" v-model="form.type"
-                                class="focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
-                                <option value="">Select Exam</option>
-                                <option v-for="examType in examTypes" :value="examType.id" :key="examType">{{ examType.name }}</option>
-                            </select>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
