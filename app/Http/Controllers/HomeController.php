@@ -51,16 +51,4 @@ class HomeController extends Controller
 
         return Inertia::render('Dashboard', ['subGrades' => $subGrades, 'generalView' => $generalView]);
     }
-
-    public function clear()
-    {
-        $studentResults = StudentResult::all();
-
-        foreach ($studentResults as $studentResult) {
-            $result = $this->resultType($studentResult->result_name, 'final');
-            $studentResult->update([
-                'result_type_id' => $result,
-            ]);
-        }
-    }
 }
