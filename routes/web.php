@@ -110,6 +110,5 @@ Route::controller(ShoqaController::class)->group(function () {
 });
 Route::get('get-student-result-as-excel', [StudentResultController::class, 'getStudentResultAsExcel']);
 
-Route::get('clear', [HomeController::class, 'clear']);
 
 require __DIR__.'/auth.php';
