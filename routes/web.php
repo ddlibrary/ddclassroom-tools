@@ -35,15 +35,12 @@ Route::get('test', [AttendanceLogController::class, 'studentAttendance']);
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [HomeController::class, 'index']);
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
-
     Route::resource('users', UserController::class);
     Route::resource('students', StudentController::class);
-
     Route::get('students/create/multiple', [StudentController::class, 'createMultipleStudents']);
     Route::post('storeMultipleStudents', [StudentController::class, 'storeMultipleStudents'])->name('students.store-multiple-student');
     Route::post('student-uploading-sample-file', [StudentController::class, 'studentUpladingSampleFile'])->name('student-uploading-sample-file');
     Route::get('email-handbook/{uuid}', [StudentController::class, 'emailHandbook']);
-
     Route::get('handbooks', [HandBookController::class, 'index'])->name('handbooks.index');
     Route::post('handbooks.send-handbook', [HandBookController::class, 'sendHandbook'])->name('handbooks.send-handbook');
 
@@ -78,37 +75,31 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('toggle-result-is-active', [ResultController::class, 'toggleIsActive']);
     Route::resource('sub-grades', SubGradeController::class);
     Route::post('toggle-sub-grade-is-active', [SubGradeController::class, 'toggleIsActive']);
-
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Log file
     Route::get('logs', [LogViewerController::class, 'index']);
+
+    Route::controller(StudentResultCardController::class)->group(function () {
+        Route::get('student-hand-book/{uuid}', 'studentHandBook');
+        Route::get('student-result-card/{uuid}/{year}', 'studentResultCard');
+    });
+
+    Route::controller(ScoreController::class)->group(function () {
+        Route::get('student-score', 'index')->name('student-score.index');
+        Route::get('student-score/create', 'create')->name('student-score.create');
+        Route::get('student-score/create-scores', 'createScores')->name('student-score.create-scores');
+        Route::get('student-score/{score}/edit', 'edit');
+        Route::post('student-score', 'store')->name('student-score.store');
+        Route::put('student-score/{score}', 'update')->name('student-score.update');
+    });
+
+    Route::post('get-students', [EnrollmentController::class, 'getStudents'])->name('get-students');
+
+    Route::controller(ShoqaController::class)->group(function () {
+        Route::get('shoqa', 'index');
+        Route::get('get-shoqa-as-excel', 'getShoqaAsExcel');
+    });
+
+    Route::get('get-student-result-as-excel', [StudentResultController::class, 'getStudentResultAsExcel']);
 });
-
-Route::controller(StudentResultCardController::class)->group(function () {
-    Route::get('student-hand-book/{uuid}', 'studentHandBook');
-    Route::get('student-result-card/{uuid}/{year}', 'studentResultCard');
-});
-
-Route::controller(ScoreController::class)->group(function () {
-    Route::get('student-score', 'index')->name('student-score.index');
-    Route::get('student-score/create', 'create')->name('student-score.create');
-    Route::get('student-score/create-scores', 'createScores')->name('student-score.create-scores');
-    Route::get('student-score/{score}/edit', 'edit');
-    Route::post('student-score', 'store')->name('student-score.store');
-    Route::put('student-score/{score}', 'update')->name('student-score.update');
-
-});
-Route::post('get-students', [EnrollmentController::class, 'getStudents'])->name('get-students');
-
-Route::controller(ShoqaController::class)->group(function () {
-
-    Route::get('shoqa', 'index');
-    Route::get('get-shoqa-as-excel', 'getShoqaAsExcel');
-});
-Route::get('get-student-result-as-excel', [StudentResultController::class, 'getStudentResultAsExcel']);
-
-
-require __DIR__.'/auth.php';
