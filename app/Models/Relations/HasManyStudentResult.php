@@ -10,4 +10,9 @@ trait HasManyStudentResult
     {
         return $this->HasMany(StudentResult::class);
     }
+
+    public function midtermResults()
+    {
+        return $this->HasMany(StudentResult::class, 'middle_result_id');
+    }
 }

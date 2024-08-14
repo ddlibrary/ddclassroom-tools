@@ -39,13 +39,6 @@
                                 :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm cursor-pointer']">
                                 Export Student Result</p>
                             </MenuItem>
-
-                            <MenuItem v-slot="{ active }" v-if="form.grade_id && form.year">
-                            <Link download="download"
-                                :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">
-                            Export Student Result in Details</Link>
-                            </MenuItem>
-
                         </div>
                     </MenuItems>
                 </transition>
@@ -230,7 +223,7 @@
         axios({
                 url: '/get-student-result-as-excel?year='+form.year+'&grade_id='+form.grade_id,
                 method: 'get',
-                responseType: 'blob', // Important
+                responseType: 'blob',
             })
             .then(response => {
                 const url = window.URL.createObjectURL(new Blob([response.data]));
