@@ -125,6 +125,7 @@ const teams = [
     },
     { id: 3, name: "Subject", href: "/subjects", icon: DocumentDuplicateIcon, current: false },
     { id: 4, name: "Years", href: "/years", icon: DocumentDuplicateIcon, current: false },
+    { id: 5, name: "2FA", href: "/2fa/index", icon: DocumentDuplicateIcon, current: false },
 ];
 const userNavigation = [{ name: "Your profile", href: "#" }];
 
