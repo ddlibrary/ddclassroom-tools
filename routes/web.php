@@ -15,9 +15,12 @@ use App\Http\Controllers\StudentResultCardController;
 use App\Http\Controllers\StudentResultController;
 use App\Http\Controllers\SubGradeController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\TwoFactorAuthSetupController;
+use App\Http\Controllers\TwoFactorChallengeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\YearController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 
 /*
@@ -32,7 +35,8 @@ use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 */
 Route::get('test', [AttendanceLogController::class, 'studentAttendance']);
 
-Route::middleware(['auth', 'verified'])->group(function () {
+
+Route::middleware(['auth', 'verified','2fa'])->group(function () {
     Route::get('/', [HomeController::class, 'index']);
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
@@ -103,3 +107,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('get-student-result-as-excel', [StudentResultController::class, 'getStudentResultAsExcel']);
 });
+
+Route::middleware(['auth'])->controller(TwoFactorAuthSetupController::class)->group(function(){
+    Route::get('2fa/index','index');
+    Route::get('2fa/enable','store')->name('enable-2fa');
+    Route::post('2fa/disable','destroy')->name('disable-2fa');
+
+});
+Route::get('two-factor-challenge-backup-code', [TwoFactorChallengeController::class,'index']);
