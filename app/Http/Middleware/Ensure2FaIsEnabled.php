@@ -11,14 +11,9 @@ class Ensure2FaIsEnabled
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
+        if($user && !$user->two_factor_secret){
 
-        if (! optional($user)->two_factor_confirmed_at) {
-
-            if ($request->hasSession()) {
-                $request->session()->invalidate();
-            }
-
-            return redirect('/enable-two-factor-authentication');
+            return redirect('2fa/index');
         }
 
         return $next($request);
