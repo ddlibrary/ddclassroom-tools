@@ -11,7 +11,10 @@ use App\Models\Student;
 use App\Models\SubGrade;
 use App\Models\Year;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\DomCrawler\Crawler;
+
 
 class StudentController extends Controller
 {
@@ -69,7 +72,7 @@ class StudentController extends Controller
 
         // Upload student photo
         if ($request->hasFile('photo')) {
-            $student->photo = 'student-photos/'.$this->upload($request);
+            $student->photo = 'student-photos/' . $this->upload($request);
             $student->save();
         }
 
@@ -87,7 +90,7 @@ class StudentController extends Controller
     public function upload($request)
     {
         if ($request->hasFile('photo')) {
-            $filename = time().'-'.$request->photo->getClientOriginalName();
+            $filename = time() . '-' . $request->photo->getClientOriginalName();
             $request->photo->storeAs('student-photos', $filename, 'public');
 
             return $filename;
@@ -119,7 +122,7 @@ class StudentController extends Controller
 
         // Upload student photo
         if ($request->hasFile('photo')) {
-            $student->photo = 'student-photos/'.$this->upload($request);
+            $student->photo = 'student-photos/' . $this->upload($request);
             $student->save();
         }
 
@@ -163,5 +166,38 @@ class StudentController extends Controller
         $fileName = 'student-uploading-sample-file.xlsx';
 
         return response()->download($filePath, $fileName);
+    }
+
+    public function sendResultCard(Request $request)
+    {
+        // Retrieve the student's data from the request
+        $student = $request->input('student');
+
+        // Render the Blade view that displays the student's result card
+        $html = view('student.result-card', compact('student'))->render();
+
+        // Use the Symfony DomCrawler to capture a screenshot of the result card
+        $crawler = new Crawler($html);
+        $screenshot = $crawler->filter('body')->screenshot('result-card.png');
+
+        // Create an Excel file attachment
+        $excel = Excel::create('student-result', function ($excel) use ($student) {
+            $excel->sheet('Results', function ($sheet) use ($student) {
+                $sheet->fromArray([
+                    'Name' => $student['name'],
+                    'Grade' => $student['grade'],
+                    'Attendance' => $student['attendance'],
+                ]);
+            });
+        })->store('xlsx');
+
+        // Send the email with the screenshot and Excel attachment
+        Mail::send('emails.result-card', compact('student', 'screenshot', 'excel'), function ($message) use ($student) {
+            $message->to($student['email'])->subject('Student Result Card');
+            $message->attach(storage_path('app/result-card.png'));
+            $message->attach(storage_path('app/student-result.xlsx'));
+        });
+
+        return redirect()->back()->with('success', 'Result card sent successfully!');
     }
 }

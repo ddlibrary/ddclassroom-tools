@@ -546,6 +546,7 @@ function submit() {
 }
 
 function getStudents() {
+    console.log(form)
     if (form.year && form.subject_id && form.sub_grade_id && form.type_id) {
         scoreLimits.value = form.type_id == 1 ? props.midtermScores: props.finalScores;
 

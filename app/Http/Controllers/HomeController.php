@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Enrollment;
+use App\Models\Score;
+use App\Models\Student;
 use App\Models\StudentResult;
 use App\Models\SubGrade;
 use App\Traits\ResultTypeTrait;

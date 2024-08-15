@@ -30,7 +30,7 @@
                             <MenuItem v-slot="{ active }">
                             <Link href="/student-score/create-scores"
                                 :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">
-                            Create Scores</Link>
+                            Create Score via Excel</Link>
                             </MenuItem>
                             <MenuItem v-slot="{ active }">
                             <Link href="/student-score/create"
