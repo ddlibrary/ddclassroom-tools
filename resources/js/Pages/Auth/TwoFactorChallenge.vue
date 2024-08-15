@@ -35,23 +35,24 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="code" value="Code" />
 
                 <TextInput
-                    id="email"
+                    id="code"
                     class="mt-1 block w-full"
                     v-model="form.code"
+                    placeholder="Please enter your 6-digit code."
                     required
                     autofocus
-                    autocomplete="username"
+                    autocomplete="code"
                 />
 
                 <InputError class="mt-2" :message="form.errors.code" />
             </div>
 
 
-            <div class="flex items-center justify-end mt-4">
-
+            <div class="flex items-center justify-between mt-4">
+                <Link href="two-factor-challenge-backup-code" class="left">Use backup code</Link>
 
                 <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Send
