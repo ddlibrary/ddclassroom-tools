@@ -56,4 +56,8 @@ class User extends Authenticatable
 
         return null;
     }
+
+    public function twoFactorAuthEnabled(){
+        return $this->tow_factor_receovery_codes != null;
+    }
 }
