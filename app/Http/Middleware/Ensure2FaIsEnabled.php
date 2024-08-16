@@ -10,10 +10,13 @@ class Ensure2FaIsEnabled
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $user = $request->user();
-        if($user && !$user->two_factor_secret){
+        if(env('TWO_FACTOR_ATTENTICATION', true)){
 
-            return redirect('2fa/index');
+            $user = $request->user();
+            if($user && !$user->two_factor_secret){
+
+                return redirect('2fa/index');
+            }
         }
 
         return $next($request);
