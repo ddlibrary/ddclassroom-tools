@@ -70,6 +70,12 @@ const navigation = [
                 icon: DocumentDuplicateIcon,
                 current: false,
             },
+            {
+                name: "Delete Student Score",
+                href: "/student-score/delete-scores",
+                icon: DocumentDuplicateIcon,
+                current: false,
+            },
         ],
     },
 
