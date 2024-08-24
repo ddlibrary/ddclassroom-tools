@@ -93,8 +93,10 @@ Route::middleware(['auth', 'verified','2fa'])->group(function () {
         Route::get('student-score', 'index')->name('student-score.index');
         Route::get('student-score/create', 'create')->name('student-score.create');
         Route::get('student-score/create-scores', 'createScores')->name('student-score.create-scores');
+        Route::get('student-score/delete-scores', 'deleteScores')->name('student-score.delete-scores');
         Route::get('student-score/{score}/edit', 'edit');
         Route::post('student-score', 'store')->name('student-score.store');
+        Route::post('delete-scores', 'deleteStudentScores')->name('delete-scores');
         Route::put('student-score/{score}', 'update')->name('student-score.update');
     });
 

@@ -160,25 +160,6 @@ class ScoreController extends Controller
 
             $grade = $score->subGrade->grade;
 
-
-            // Update Final Score
-            // $finalScore = Score::where([
-            //     'subject_id' => $score->subject_id,
-            //     'type' => 3,
-            // ])
-            //     ->where($scoreWhere)
-            //     ->first();
-
-            // $finalScore->update([
-            //     'total' => $finalScore->total - $score->total + $request->total,
-            //     'written' => $finalScore->written - $score->written + $request->written,
-            //     'activity' => $finalScore->activity - $score->activity + $request->activity,
-            //     'verbal' => $finalScore->verbal - $score->verbal + $request->verbal,
-            //     'attendance' => $finalScore->attendance - $score->attendance + $request->attendance,
-            //     'homework' => $finalScore->homework - $score->homework + $request->homework,
-            //     'evaluation' => $finalScore->evaluation - $score->evaluation + $request->evaluation,
-            //     'is_passed' => $finalScore->total - $score->total + $request->total >= $maxAmount ? true : false,
-            // ]);
             $type = $score->type;
             $minAmount = $type == 1 ? SubjectMinScoreEnum::Middle->value : SubjectMinScoreEnum::Final->value;
 
@@ -244,5 +225,43 @@ class ScoreController extends Controller
     public function storeMultipleStudentsScore(CreateMultipleStudentsScoreRequest $request)
     {
         Excel::import(new StudentScoreImport(), $request->file);
+    }
+
+    public function deleteScores()
+    {
+        $grades = SubGrade::whereIsActive(true)->get();
+        $subjects = Subject::all(['id', 'name']);
+        $years = Year::all(['id', 'name']);
+        $types = [['id' => 1, 'name' => 'Midterm Exam'], ['id' => 2, 'name' => 'Final Exam']];
+
+        return inertia('Score/DeleteScores', [
+            'subjects' => $subjects,
+            'types' => $types,
+            'grades' => $grades,
+            'years' => $years,
+        ]);
+    }
+
+    public function deleteStudentScores(Request $request){
+        $where = [
+            'year' => $request->year,
+            'sub_grade_id' => $request->sub_grade_id,
+            'subject_id' => $request->subject_id,
+        ];
+
+
+        Score::where($where)
+            ->where('type', '<>', $request->type == 1 ? 2 : 1)
+            ->update([
+                'written' => null,
+                'verbal' => null,
+                'attendance' => null,
+                'activity' => null,
+                'homework' => null,
+                'evaluation' => null,
+                'total' => null,
+                'is_passed' => false,
+                'user_id' => auth()->id(),
+            ]);
     }
 }
