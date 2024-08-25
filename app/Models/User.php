@@ -57,6 +57,15 @@ class User extends Authenticatable
         return null;
     }
 
+    public function getSignatureAttribute($value)
+    {
+        if ($value) {
+            return asset("images/$value");
+        }
+
+        return null;
+    }
+
     public function twoFactorAuthEnabled(){
         return $this->tow_factor_receovery_codes != null;
     }
