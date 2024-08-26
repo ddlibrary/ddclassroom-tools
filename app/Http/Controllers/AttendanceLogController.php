@@ -247,4 +247,8 @@ class AttendanceLogController extends Controller
         }
         return Excel::download(new ExportAttendanceLogReport($request->all()), "گزارش-حاضری-صنف.xlsx");
     }
+
+    public function clearAllAttendanceLog(){
+        AttendanceLog::where('id', '>=', 1)->delete();
+    }
 }

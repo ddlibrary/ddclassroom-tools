@@ -17,7 +17,7 @@
                     <form @submit.prevent="submit">
                         <div class="space-y-12">
 
-                            <div class="border-b border-gray-900/10 pb-12">
+                            <div class="border-b border-gray-900/10 p-12">
                                 <h2 class="text-base font-semibold leading-7 text-gray-900">Edit user</h2>
                                 <p class="mt-1 text-sm leading-6 text-gray-600">You can edit user info
                                     receive mail.
@@ -149,14 +149,31 @@
                                         </div>
                                     </div>
 
+                                    <div class="sm:col-span-3">
+                                        <label for="signature" class="block text-sm font-medium text-gray-700">
+                                            Signature
+                                        </label>
+                                        <div class="mt-2">
+
+                                            <input type="file" id="file-upload" @change="selectSignature"
+                                                name="file-upload"
+                                                class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                        </div>
+                                        <div class="flex-shrink-0 h-16 w-16 my-4" v-if="form.user_signature">
+                                            <img class="h-16 w-16 rounded-full" :src="form.user_signature"
+                                                alt="" />
+                                        </div>
+                                    </div>
+
+
                                     <!-- New Password  -->
                                     <div class="sm:col-span-3">
                                         <label for="password"
                                             class="block text-sm font-medium leading-6 text-gray-900">New Password
-                                            </label>
+                                        </label>
                                         <div class="mt-2">
-                                            <input id="password" v-model="form.password" name="password" type="password"
-                                                autocomplete="password"
+                                            <input id="password" v-model="form.password" name="password"
+                                                type="password" autocomplete="password"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                             <p class="mt-2 text-sm text-red-500" v-if="errors.password">
                                                 {{ errors . password }}
@@ -170,7 +187,8 @@
                         <!-- Submit button -->
                         <div class="mt-6 flex items-center justify-end gap-x-6">
                             <Link href="/users">
-                            <button type="button" class="text-sm font-semibold leading-6 text-gray-900">Cancel</button>
+                            <button type="button"
+                                class="text-sm font-semibold leading-6 text-gray-900">Cancel</button>
                             </Link>
 
                             <button type="submit"
@@ -216,6 +234,8 @@
         is_active: props.user.is_active,
         photo: null,
         password: null,
+        user_signature: props.user.signature,
+        signature: null,
         user_photo: props.user.photo,
         _method: 'put'
     })
@@ -228,5 +248,9 @@
 
     function selectPhoto($event) {
         form.photo = $event.target.files[0];
+    }
+
+    function selectSignature($event) {
+        form.signature = $event.target.files[0];
     }
 </script>
