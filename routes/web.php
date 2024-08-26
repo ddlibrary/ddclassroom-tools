@@ -33,10 +33,12 @@ use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('test', [AttendanceLogController::class, 'studentAttendance']);
 
 
 Route::middleware(['auth', 'verified','2fa'])->group(function () {
+
+    Route::get('add-student-attendance', [AttendanceLogController::class, 'studentAttendance']);
+    Route::get('clear-all-attendance-log', [AttendanceLogController::class, 'clearAllAttendanceLog']);
     Route::get('/', [HomeController::class, 'index']);
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
