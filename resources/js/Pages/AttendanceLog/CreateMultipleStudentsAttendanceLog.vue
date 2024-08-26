@@ -8,7 +8,7 @@
 
                     <h2 class="text-base font-semibold leading-7 text-gray-900">Create student attendace
 
-                        <a href="/assets/samples/student-attendance-format.xlsx">
+                        <a href="/assets/samples/upload-attendance-records-from-moodle">
                             <button
                                 class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 float-right focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
 
