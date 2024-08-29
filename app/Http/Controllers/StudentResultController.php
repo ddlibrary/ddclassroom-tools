@@ -7,6 +7,7 @@ use App\Exports\ExportStudentResult;
 use App\Http\Requests\Score\CreateMultipleStudentsScoreRequest;
 use App\Http\Requests\Score\CreateScoreRequest;
 use App\Imports\StudentScoreImport;
+use App\Models\Country;
 use App\Models\Student;
 use App\Models\StudentResult;
 use App\Models\SubGrade;
@@ -20,16 +21,23 @@ class StudentResultController extends Controller
 {
     public function index(Request $request)
     {
-        $query = StudentResult::query()->with(['student:id,name,father_name,fa_name,fa_father_name,uuid', 'middleResult:id,name', 'subGrade:id,full_name', 'teacher:id,name']);
+        $query = StudentResult::query()->with(['student:id,name,father_name,country_id,fa_name,fa_father_name,uuid', 'middleResult:id,name', 'subGrade:id,full_name', 'teacher:id,name']);
 
-        if ($request->search) {
+        if ($request->search || $request->country_id) {
+            $countryId = $request->country_id;
             $name = $request->search;
-            $query->where(function ($query) use ($name) {
-                $query
-                    ->whereHas('student', function ($query) use ($name) {
-                        $query->whereAny(['name', 'username', 'father_name','fa_name', 'fa_father_name', 'email', 'id_number'], 'like', "%$name%");
-                    })
-                    ->orWhere('result_name', 'like', $name.'%');
+            $query->where(function ($query) use ($name, $countryId) {
+                $query->whereHas('student', function ($query) use ($name, $countryId) {
+                    if ($name) {
+                        $query->whereAny(['name', 'username', 'father_name', 'fa_name', 'fa_father_name', 'email', 'id_number'], 'like', "%$name%");
+                    }
+                    if ($countryId) {
+                        $query->where('country_id', $countryId);
+                    }
+                });
+                if ($name) {
+                    $query->orWhere('result_name', 'like', $name . '%');
+                }
             });
         }
         if ($request->grade_id) {
@@ -44,8 +52,9 @@ class StudentResultController extends Controller
 
         $grades = SubGrade::whereIsActive(true)->get();
         $years = Year::all(['id', 'name']);
+        $countries = Country::all(['id', 'name']);
 
-        return inertia('ResultCard/Index', ['scores' => $scores, 'grades' => $grades, 'years' => $years]);
+        return inertia('ResultCard/Index', ['scores' => $scores, 'grades' => $grades, 'countries' => $countries, 'years' => $years]);
     }
 
     public function create()

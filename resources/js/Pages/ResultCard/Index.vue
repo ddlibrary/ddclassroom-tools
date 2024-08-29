@@ -56,6 +56,16 @@
                     </div>
                     <div class="sm:col-span-2">
                         <div class="mt-1 rounded-md shadow-sm flex">
+                            <select name="name" v-model="form.country_id"
+                                class="focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
+                                <option value="">...</option>
+                                <option v-for="country in countries" :value="country.id" :key="country">
+                                    {{ country . name }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <div class="mt-1 rounded-md shadow-sm flex">
                             <select name="name" v-model="form.year"
                                 class="focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
                                 <option value="">...</option>
@@ -178,7 +188,6 @@
 </template>
 <script setup>
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-    import ErrorsAndMessages from "./../Partials/ErrorsAndMessages.vue";
     import NoRecordFound from "./../Partials/NoRecordFound.vue";
     import Pagination from "@/Components/Pagination.vue";
     import {
@@ -194,10 +203,7 @@
         router
     } from '@inertiajs/vue3';
     import {
-        computed,
-        defineComponent,
         reactive,
-        ref
     } from 'vue'
     import {
         Head,
@@ -209,19 +215,11 @@
     } from 'vue';
     import axios from 'axios';
 
-    defineProps(['scores', 'errors', 'grades', 'years']);
-
-    function submit(id) {
-        if (confirm('Are you sure to delete this student?')) {
-            router.delete(route(`students.destroy`, {
-                'id': id
-            }));
-        }
-    }
+    defineProps(['scores', 'errors', 'grades', 'years', 'countries']);
 
     function exportResultCard() {
         axios({
-                url: '/get-student-result-as-excel?year='+form.year+'&grade_id='+form.grade_id,
+                url: '/get-student-result-as-excel?year='+form.year+'&grade_id='+form.grade_id+'&country_id='+form.country_id,
                 method: 'get',
                 responseType: 'blob',
             })
@@ -236,13 +234,13 @@
             .catch(error => {
                 // Handle the error, e.g., show an error message
             });
-   // },
     }
 
     const form = reactive({
         search: null,
         year: '',
-        grade_id: ''
+        grade_id: '',
+        country_id: ''
     });
 
     watch(form, debounce(() => {
