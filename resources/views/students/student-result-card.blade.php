@@ -74,7 +74,7 @@
         </a>
 
         <div>
-            
+
             <div style="direction:rtl;position: relative;" id="container">
                 <div style="background-image:url('{{ $image }}') !important;position: absolute;
                 top: 20%;
@@ -134,7 +134,7 @@
                                         $middleScore = $subject->subject?->middle?->total;
                                         $finalScore = $subject->subject?->final?->total;
                                         $totalScore = $subject->subject?->finalResult?->total;
-                                        
+
                                         $middle += $middleScore;
                                         $final += $finalScore;
                                         $total += $totalScore;
@@ -277,7 +277,7 @@
                                     <tr>
                                         <th class="text-center" style="height: 60px !important">
                                             @if ($responsible)
-                                                <img src="{{ asset('images/' . $responsible->teacher->signature) }}"
+                                                <img src="{{ $responsible->teacher->signature }}"
                                                     style="height: 70px;">
                                             @endif
                                         </th>
