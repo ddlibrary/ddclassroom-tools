@@ -499,14 +499,9 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Swal from "sweetalert2";
-import { Inertia } from "@inertiajs/inertia";
-import { Switch } from "@headlessui/vue";
-import { computed, defineComponent, reactive, ref } from "vue";
+import { reactive, ref } from "vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { router } from "@inertiajs/vue3";
-import debounce from "lodash.debounce";
-import { watch } from "vue";
-import axios from "axios";
 
 const props = defineProps([
     "grades",
@@ -603,20 +598,22 @@ function mapstudentScores(data) {
 
         studentScores.value = rows.map((row, index) => {
             const cols = row.split('\t');
-            return {
-                total: Number(cols[0] || 0),
-                evaluation: Number(cols[1] || 0),
-                homework: Number(cols[2] || 0),
-                activity: Number(cols[3] || 0),
-                attendance: Number(cols[4] || 0),
-                oral: Number(cols[5] || 0),
-                written: Number(cols[6] || 0),
-                name: cols[7],
-                father_name: cols[8],
-                moodle_id: cols[9],
-                no: cols[10],
-                totalAmount: Number(cols[1] || 0) + Number(cols[2] || 0) + Number(cols[3] || 0) + Number(cols[4] || 0) + Number(cols[5] || 0) + Number(cols[6] || 0),
-            };
+            if(cols[9] > 0){
+                return {
+                    total: Number(cols[0] || 0),
+                    evaluation: Number(cols[1] || 0),
+                    homework: Number(cols[2] || 0),
+                    activity: Number(cols[3] || 0),
+                    attendance: Number(cols[4] || 0),
+                    oral: Number(cols[5] || 0),
+                    written: Number(cols[6] || 0),
+                    name: cols[7],
+                    father_name: cols[8],
+                    moodle_id: cols[9],
+                    no: cols[10],
+                    totalAmount: Number(cols[1] || 0) + Number(cols[2] || 0) + Number(cols[3] || 0) + Number(cols[4] || 0) + Number(cols[5] || 0) + Number(cols[6] || 0),
+                };
+            }
         });
     }else{
         alert('Please select all above fields')
