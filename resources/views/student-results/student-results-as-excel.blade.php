@@ -32,6 +32,7 @@
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold;">نام</th>
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold;">نام پدر</th>
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold;">Moodle ID</th>
+                <th style="text-align: center;border:1px solid #000 !important;text-weight:bold;">Country</th>
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold;">Grade</th>
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold;">Year</th>
                 <th style="text-align: left;border:1px solid #000 !important;text-weight:bold;">Midterm Score</th>
@@ -56,6 +57,7 @@
                     <td style="text-align: center;border:1px solid #000 !important">{{ $result->student->fa_name }}
                     <td style="text-align: center;border:1px solid #000 !important">{{ $result->student->fa_father_name }}
                     <td style="text-align: center;border:1px solid #000 !important">{{ $result->student->id_number }}</td>
+                    <td style="text-align: center;border:1px solid #000 !important">{{ $result->student->country?->name }}</td>
                     <td style="text-align: center;border:1px solid #000 !important">{{ $result->subGrade->grade_id }} {{ $result
                     ->subGrade->level }}</td>
                     <td style="text-align: center;border:1px solid #000 !important">{{ $result->year }}</td>
@@ -82,27 +84,6 @@
                 </tr>
             @endforeach
         </table>
-        {{-- <table>
-            <tr>
-                <th>DDC Midterm Exam Result Summary-2024</th>
-                <th></th>
-            </tr>
-            @foreach ($resultCategories as $resultCategory)
-
-            <tr>
-                <td>
-                    Students who scored between {{$resultCategory->from}}% & {{$resultCategory->to}}% ({{$resultCategory->name}})
-                </td>
-                <td>{{ $resultCategory->midterm_student_results_count}}</td>
-
-            </tr>
-            @endforeach
-
-            <tr>
-                <th>Total</th>
-                <th>{{ $resultCategories->sum('midterm_student_results_count') }}</th>
-            </tr>
-        </table> --}}
     </div>
 </body>
 

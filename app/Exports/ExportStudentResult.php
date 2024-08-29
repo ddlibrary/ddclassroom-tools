@@ -10,13 +10,17 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class ExportStudentResult implements FromView, ShouldAutoSize
 {
-    public function __construct(private array $data) {}
+    public function __construct(private array $data)
+    {
+    }
 
     public function view(): View
     {
         $year = $this->data['year'];
+        $countryId = $this->data['country_id'];
         $gradeId = $this->data['grade_id'];
-        $results = StudentResult::with(['student:id,name,father_name,uuid,id_number,fa_name,fa_father_name,email,password', 'middleResult:id,name', 'finalResult:id,name', 'result:id,name', 'teacher:id,name'])
+        $query = StudentResult::query()->with(['student:id,name,country_id,father_name,uuid,id_number,fa_name,fa_father_name,email,password','student.country:id,name', 'middleResult:id,name', 'finalResult:id,name', 'result:id,name', 'teacher:id,name']);
+        $query
             ->where('year', $year)
             ->where(function ($query) use ($gradeId) {
                 if ($gradeId) {
@@ -31,21 +35,18 @@ class ExportStudentResult implements FromView, ShouldAutoSize
                         },
                     ]);
                 },
-            ])
-            ->get();
-
-        $resultCategories = Result::withCount(['midtermStudentResults' => function($query) use ($year, $gradeId){
-            $query->where('year', $year);
-            if ($gradeId) {
-                $query->where('sub_grade_id', $gradeId);
-            }
-        }],'middle_result_id')->get();
-
-        info($resultCategories);
+            ]);
+        if ($countryId) {
+            $query->where(function ($query) use ($countryId) {
+                $query->whereHas('student', function ($query) use ($countryId) {
+                    $query->where('country_id', $countryId);
+                });
+            });
+        }
+        $results = $query->get();
 
         return view('student-results.student-results-as-excel', [
             'results' => $results,
-            'resultCategories' => $resultCategories
         ]);
     }
 }
