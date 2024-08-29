@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AttendanceLogController;
+use App\Http\Controllers\ClassResponsibleController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\HandBookController;
@@ -80,6 +81,7 @@ Route::middleware(['auth', 'verified','2fa'])->group(function () {
     Route::resource('results', ResultController::class);
     Route::post('toggle-result-is-active', [ResultController::class, 'toggleIsActive']);
     Route::resource('sub-grades', SubGradeController::class);
+    Route::resource('class-responsible', ClassResponsibleController::class);
     Route::post('toggle-sub-grade-is-active', [SubGradeController::class, 'toggleIsActive']);
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
