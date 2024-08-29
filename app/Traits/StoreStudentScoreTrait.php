@@ -16,76 +16,79 @@ trait StoreStudentScoreTrait
             ->where('sub_grade_id', $request->sub_grade_id)
             ->first();
 
-        $where = [
-            'year' => $request->year,
-            'student_id' => $student->id,
-            'subject_id' => $request->subject_id,
-            'sub_grade_id' => $request->sub_grade_id,
-        ];
+        if($student){
 
-        $this->createStudentResult($request, $student->id, $where);
+            $where = [
+                'year' => $request->year,
+                'student_id' => $student->id,
+                'subject_id' => $request->subject_id,
+                'sub_grade_id' => $request->sub_grade_id,
+            ];
 
-        $studentResultWhere = [
-            'year' => request()->year,
-            'student_id' => $student->id,
-            'sub_grade_id' => $student->sub_grade_id,
-        ];
-        if (StudentResult::where($studentResultWhere)->doesntExist()) {
-            StudentResult::create($studentResultWhere);
+            $this->createStudentResult($request, $student->id, $where);
+
+            $studentResultWhere = [
+                'year' => request()->year,
+                'student_id' => $student->id,
+                'sub_grade_id' => $student->sub_grade_id,
+            ];
+            if (StudentResult::where($studentResultWhere)->doesntExist()) {
+                StudentResult::create($studentResultWhere);
+            }
+
+            $type = $request->type_id;
+
+            Score::where($where)
+                ->where('type', '<>', $type == 1 ? 2 : 1)
+                ->update([
+                    'written' => null,
+                    'verbal' => null,
+                    'attendance' => null,
+                    'activity' => null,
+                    'homework' => null,
+                    'evaluation' => null,
+                    'total' => null,
+                    'is_passed' => false,
+                    'teacher_id' => $request->teacher_id,
+                    'user_id' => auth()->id(),
+                ]);
+
+            $minAmount = $type == 1 ? SubjectMinScoreEnum::Middle->value : SubjectMinScoreEnum::Final->value;
+
+            Score::where($where)
+                ->where('type', $type)
+                ->update([
+                    'written' => $score->written,
+                    'verbal' => $score->oral,
+                    'attendance' => $score->attendance ? $score->attendance : null,
+                    'activity' => $score->activity,
+                    'homework' => $score->homework,
+                    'evaluation' => $score->evaluation,
+                    'total' => $score->total,
+                    'is_passed' => $score->total >= $minAmount ? true : false,
+                ]);
+
+            //Score::where($where)->where('type', $type)->first();
+            $secondScore = Score::where($where)
+                ->where('type', $type == 1 ? 2 : 1)
+                ->first();
+
+            // Update final score
+            Score::where($where)
+                ->where('type', 3)
+                ->update([
+                    'written' => (float) $secondScore->written + $score->written,
+                    'verbal' => (float) $secondScore->verbal + $score->oral,
+                    'attendance' => (float) $secondScore->attendance + $score->attendance,
+                    'activity' => (float) $secondScore->activity + $score->activity,
+                    'homework' => (float) $secondScore->homework + $score->homework,
+                    'evaluation' => (float) $secondScore->evaluation + $score->evaluation,
+                    'total' => (float) $secondScore->total + $score->total,
+                    'is_passed' => (float) $secondScore->total + $score->total >= SubjectMinScoreEnum::Success->value ? true : false,
+                ]);
+
+            $this->updateStudentResult($grade, $studentResultWhere, $type);
         }
-
-        $type = $request->type_id;
-
-        Score::where($where)
-            ->where('type', '<>', $type == 1 ? 2 : 1)
-            ->update([
-                'written' => null,
-                'verbal' => null,
-                'attendance' => null,
-                'activity' => null,
-                'homework' => null,
-                'evaluation' => null,
-                'total' => null,
-                'is_passed' => false,
-                'teacher_id' => $request->teacher_id,
-                'user_id' => auth()->id(),
-            ]);
-
-        $minAmount = $type == 1 ? SubjectMinScoreEnum::Middle->value : SubjectMinScoreEnum::Final->value;
-
-        Score::where($where)
-            ->where('type', $type)
-            ->update([
-                'written' => $score->written,
-                'verbal' => $score->oral,
-                'attendance' => $score->attendance ? $score->attendance : null,
-                'activity' => $score->activity,
-                'homework' => $score->homework,
-                'evaluation' => $score->evaluation,
-                'total' => $score->total,
-                'is_passed' => $score->total >= $minAmount ? true : false,
-            ]);
-
-        //Score::where($where)->where('type', $type)->first();
-        $secondScore = Score::where($where)
-            ->where('type', $type == 1 ? 2 : 1)
-            ->first();
-
-        // Update final score
-        Score::where($where)
-            ->where('type', 3)
-            ->update([
-                'written' => (float) $secondScore->written + $score->written,
-                'verbal' => (float) $secondScore->verbal + $score->oral,
-                'attendance' => (float) $secondScore->attendance + $score->attendance,
-                'activity' => (float) $secondScore->activity + $score->activity,
-                'homework' => (float) $secondScore->homework + $score->homework,
-                'evaluation' => (float) $secondScore->evaluation + $score->evaluation,
-                'total' => (float) $secondScore->total + $score->total,
-                'is_passed' => (float) $secondScore->total + $score->total >= SubjectMinScoreEnum::Success->value ? true : false,
-            ]);
-
-        $this->updateStudentResult($grade, $studentResultWhere, $type);
     }
 
     private function createStudentResult($request, $studentId, $where){
