@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Exports;
+ini_set('max_execution_time', 120);
 
 use App\Models\AttendanceLog;
 use App\Models\Month;

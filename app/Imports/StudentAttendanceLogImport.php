@@ -15,14 +15,15 @@ class StudentAttendanceLogImport implements ToModel, WithHeadingRow
 {
     public function model(array $row)
     {
-        if (isset($row['email'])) {
-            $email = $row['email'];
-            if ($email == 'NULL' || $email == null) {
+        if (isset($row['username'])) {
+            $username = $row['username'];
+            $email = $row['username'];
+            if ($username == 'NULL' || $username == null) {
                 return [];
             }
             // Use cache to pre-load students and subjects
-            $student = Cache::remember("student_email_{$email}", 3600, function () use ($email) {
-                return Student::whereEmail($email)->first();
+            $student = Cache::remember("student_username_{$username}", 3600, function () use ($username) {
+                return Student::whereUsername($username)->first();
             });
 
             if (!$student) {

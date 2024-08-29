@@ -9,8 +9,8 @@ class SubjectScore
         'homework' => 5,
         'evaluation' => 5,
         'attendance' => 5,
-        'written' => 10,
-        'oral' => 10,
+        'written' => 20,
+        'oral' => 20,
         'total' => 40,
     ];
 
@@ -19,8 +19,8 @@ class SubjectScore
         'homework' => 6,
         'evaluation' => 10,
         'attendance' => 6,
-        'written' => 15,
-        'oral' => 13,
+        'written' => 20,
+        'oral' => 20,
         'total' => 60,
     ];
 
