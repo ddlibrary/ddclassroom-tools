@@ -238,7 +238,7 @@ class AttendanceLogController extends Controller
 
         // }
 
-        return $students;
+        return back();
     }
 
     public function getAttendanceLogReportAsExcel(Request $request) {
