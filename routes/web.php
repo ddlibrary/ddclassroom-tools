@@ -102,6 +102,9 @@ Route::middleware(['auth', 'verified','2fa'])->group(function () {
         Route::post('student-score', 'store')->name('student-score.store');
         Route::post('delete-scores', 'deleteStudentScores')->name('delete-scores');
         Route::put('student-score/{score}', 'update')->name('student-score.update');
+        Route::get('add-midterm-score-based-on-final', 'createMidtermScoreBasedOnFinal');
+        Route::post('add-midterm-score-based-on-final', 'storeMidtermScoreBasedOnFinal')->name('add-midterm-score-based-on-final');
+
     });
 
     Route::post('get-students', [EnrollmentController::class, 'getStudents'])->name('get-students');

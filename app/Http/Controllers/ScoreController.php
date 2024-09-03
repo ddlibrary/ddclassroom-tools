@@ -9,6 +9,7 @@ use App\Http\Requests\Score\MultipleStudentRequest;
 use App\Http\Requests\ScoreRequest;
 use App\Imports\StudentScoreImport;
 use App\Models\Score;
+use App\Models\Student;
 use App\Models\SubGrade;
 use App\Models\Subject;
 use App\Models\User;
@@ -141,7 +142,6 @@ class ScoreController extends Controller
 
     public function update(ScoreRequest $request, Score $score)
     {
-        // dd($request->all(), $score);
         DB::beginTransaction();
 
         try {
@@ -174,24 +174,24 @@ class ScoreController extends Controller
                 'is_passed' => $request->total >= $minAmount ? true : false,
             ]);
 
-        //Score::where($scoreWhere)->where('type', $type)->first();
-        $secondScore = Score::where($scoreWhere)
-            ->where('type', $type == 1 ? 2 : 1)
-            ->first();
+            //Score::where($scoreWhere)->where('type', $type)->first();
+            $secondScore = Score::where($scoreWhere)
+                ->where('type', $type == 1 ? 2 : 1)
+                ->first();
 
-        // Update final score
-        Score::where($scoreWhere)
-            ->where('type', 3)
-            ->update([
-                'written' => (float) $secondScore->written + $score->written,
-                'verbal' => (float) $secondScore->verbal + $score->oral,
-                'attendance' => (float) $secondScore->attendance + $score->attendance,
-                'activity' => (float) $secondScore->activity + $score->activity,
-                'homework' => (float) $secondScore->homework + $score->homework,
-                'evaluation' => (float) $secondScore->evaluation + $score->evaluation,
-                'total' => (float) $secondScore->total + $score->total,
-                'is_passed' => (float) $secondScore->total + $score->total >= SubjectMinScoreEnum::Success->value ? true : false,
-            ]);
+            // Update final score
+            Score::where($scoreWhere)
+                ->where('type', 3)
+                ->update([
+                    'written' => (float) $secondScore->written + $score->written,
+                    'verbal' => (float) $secondScore->verbal + $score->oral,
+                    'attendance' => (float) $secondScore->attendance + $score->attendance,
+                    'activity' => (float) $secondScore->activity + $score->activity,
+                    'homework' => (float) $secondScore->homework + $score->homework,
+                    'evaluation' => (float) $secondScore->evaluation + $score->evaluation,
+                    'total' => (float) $secondScore->total + $score->total,
+                    'is_passed' => (float) $secondScore->total + $score->total >= SubjectMinScoreEnum::Success->value ? true : false,
+                ]);
 
             $this->updateStudentResult($grade, $studentResultWhere, $type);
 
@@ -204,8 +204,6 @@ class ScoreController extends Controller
 
         return redirect('student-score');
     }
-
-
 
     public function createMultipleStudentScores()
     {
@@ -242,13 +240,13 @@ class ScoreController extends Controller
         ]);
     }
 
-    public function deleteStudentScores(Request $request){
+    public function deleteStudentScores(Request $request)
+    {
         $where = [
             'year' => $request->year,
             'sub_grade_id' => $request->sub_grade_id,
             'subject_id' => $request->subject_id,
         ];
-
 
         Score::where($where)
             ->where('type', '<>', $request->type == 1 ? 2 : 1)
@@ -263,5 +261,102 @@ class ScoreController extends Controller
                 'is_passed' => false,
                 'user_id' => auth()->id(),
             ]);
+    }
+
+    public function createMidtermScoreBasedOnFinal()
+    {
+        $grades = SubGrade::whereIsActive(true)->get();
+        $subjects = Subject::all(['id', 'name']);
+        $years = Year::all(['id', 'name']);
+
+        return inertia('Score/CreateMidtermScoreBasedOnFinal', [
+            'subjects' => $subjects,
+            'grades' => $grades,
+            'years' => $years,
+        ]);
+    }
+
+    public function storeMidtermScoreBasedOnFinal(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $student = Student::where('id_number', $request->moodle_id)->first();
+
+            if ($student && $request->sub_grade_id == $student->sub_grade_id) {
+                $subjects = Subject::where(function ($query) use ($request) {
+                    if ($request->subject_id) {
+                        $query->where('id', $request->subject_id);
+                    }
+                })->get();
+
+                foreach ($subjects as $subject) {
+                    $where = [
+                        'student_id' => $student->id,
+                        'subject_id' => $subject->id,
+                        'year' => $request->year,
+                        'sub_grade_id' => $request->sub_grade_id,
+                    ];
+                    $finalScore = Score::where($where)->where('type', 2)->first();
+
+                    if ($finalScore->total > 0) {
+                        $minAmount = SubjectMinScoreEnum::Middle->value;
+                        $total = $this->changeScoreFromFinalToMidterm($finalScore->total);
+                        Score::where($where) // Update midterm score
+                            ->where('type', 1)
+                            ->update([
+                                'total' => $total,
+                                'written' => $this->changeScoreFromFinalToMidterm($finalScore->written),
+                                'activity' => $this->changeScoreFromFinalToMidterm($finalScore->activity),
+                                'verbal' => $this->changeScoreFromFinalToMidterm($finalScore->verbal),
+                                'attendance' => $this->changeScoreFromFinalToMidterm($finalScore->attendance),
+                                'homework' => $this->changeScoreFromFinalToMidterm($finalScore->homework),
+                                'evaluation' => $this->changeScoreFromFinalToMidterm($finalScore->evaluation),
+                                'is_passed' => $total >= $minAmount ? true : false,
+                            ]);
+
+                        $midtermScore = Score::where($where)->where('type', 1)->first();
+
+                        Score::where($where)
+                            ->where('type', 3)
+                            ->update([
+                                'written' => (float) $midtermScore->written + $finalScore->written,
+                                'verbal' => (float) $midtermScore->oral + $finalScore->oral,
+                                'attendance' => (float) $midtermScore->attendance + $finalScore->attendance,
+                                'activity' => (float) $midtermScore->activity + $finalScore->activity,
+                                'homework' => (float) $midtermScore->homework + $finalScore->homework,
+                                'evaluation' => (float) $midtermScore->evaluation + $finalScore->evaluation,
+                                'total' => (float) $midtermScore->total + $finalScore->total,
+                                'is_passed' => (float) $midtermScore->total + $finalScore->total >= SubjectMinScoreEnum::Success->value ? true : false,
+                            ]);
+                    }
+                }
+                $studentResultWhere = [
+                    'student_id' => $student->id,
+                    'year' => $request->year,
+                    'sub_grade_id' => $request->sub_grade_id,
+                ];
+                $grade = SubGrade::find($request->sub_grade_id)->grade;
+                $this->updateStudentResult($grade, $studentResultWhere, 1);
+                $this->updateStudentResult($grade, $studentResultWhere, 2);
+                DB::commit();
+            }else{
+                DB::rollBack();
+            }
+
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            throw $exception;
+        }
+
+        return redirect('add-midterm-score-based-on-final');
+    }
+
+    private function changeScoreFromFinalToMidterm($score)
+    {
+        $finalScore = 60;
+        $midtermScore = 40;
+
+        return $score != 0 ? round(($score * $midtermScore) / $finalScore, 2) : 0;
     }
 }
