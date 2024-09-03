@@ -1,6 +1,6 @@
 <template>
 
-    <Head title="Create Student" />
+    <Head title="Delete student score" />
     <AuthenticatedLayout>
         <div class="py-4 bg-sky-30 rounded-lg border">
             <div class="mx-auto sm:px-6 lg:px-8">
@@ -154,7 +154,7 @@
                 form, {
                     forceFormData: true,
                     onFinish: (res) => {
-                        Swal.fire(`Created`, `Student's scores have been successfully cleared.`);
+                        Swal.fire(`Deleted`, `Student's scores have been successfully cleared.`);
                     },
                 });
         }

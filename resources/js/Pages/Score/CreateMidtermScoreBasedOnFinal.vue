@@ -1,6 +1,6 @@
 <template>
 
-    <Head title="Create Student" />
+    <Head title="Create midterm score based on final score" />
     <AuthenticatedLayout>
         <div class="py-4 bg-sky-30 rounded-lg border">
             <div class="mx-auto sm:px-6 lg:px-8">

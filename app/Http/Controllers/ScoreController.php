@@ -248,8 +248,9 @@ class ScoreController extends Controller
             'subject_id' => $request->subject_id,
         ];
 
+
         Score::where($where)
-            ->where('type', '<>', $request->type == 1 ? 2 : 1)
+            ->where('type', $request->type_id)
             ->update([
                 'written' => null,
                 'verbal' => null,
@@ -261,6 +262,32 @@ class ScoreController extends Controller
                 'is_passed' => false,
                 'user_id' => auth()->id(),
             ]);
+
+        $score = Score::where($where)
+        ->where('type', $request->type_id == 1 ? 2 : 1)->first();
+
+
+
+        Score::where($where)
+            ->where('type', 3)
+            ->update([
+                'written' => (float) $score->written,
+                'verbal' => (float) $score->oral,
+                'attendance' => (float) $score->attendance,
+                'activity' => (float) $score->activity,
+                'homework' => (float) $score->homework,
+                'evaluation' => (float) $score->evaluation,
+                'total' => (float) $score->total,
+                'is_passed' => (float) $score->total >= SubjectMinScoreEnum::Success->value ? true : false,
+            ]);
+
+            $studentResultWhere = [
+                'year' => $request->year,
+                'sub_grade_id' => $request->sub_grade_id,
+                'student_id' => $score->student_id,
+            ];
+            $this->updateStudentResult($score->subGrade->grade, $studentResultWhere, 1);
+            $this->updateStudentResult($score->subGrade->grade, $studentResultWhere, 2);
     }
 
     public function createMidtermScoreBasedOnFinal()
@@ -298,7 +325,7 @@ class ScoreController extends Controller
                     ];
                     $finalScore = Score::where($where)->where('type', 2)->first();
 
-                    if ($finalScore->total > 0) {
+                    if ($finalScore && $finalScore->total > 0) {
                         $minAmount = SubjectMinScoreEnum::Middle->value;
                         $total = $this->changeScoreFromFinalToMidterm($finalScore->total);
                         Score::where($where) // Update midterm score
@@ -339,10 +366,9 @@ class ScoreController extends Controller
                 $this->updateStudentResult($grade, $studentResultWhere, 1);
                 $this->updateStudentResult($grade, $studentResultWhere, 2);
                 DB::commit();
-            }else{
+            } else {
                 DB::rollBack();
             }
-
         } catch (Exception $exception) {
             DB::rollback();
 
