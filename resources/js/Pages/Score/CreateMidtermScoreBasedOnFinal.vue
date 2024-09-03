@@ -1,6 +1,6 @@
 <template>
 
-    <Head title="Delete student score" />
+    <Head title="Create midterm score based on final score" />
     <AuthenticatedLayout>
         <div class="py-4 bg-sky-30 rounded-lg border">
             <div class="mx-auto sm:px-6 lg:px-8">
@@ -10,13 +10,29 @@
                         <div class="space-y-12">
                             <div class="border-b border-gray-900/10 pb-12">
                                 <h2 class="text-base font-semibold leading-7 text-gray-900">
-                                    Clear Score
+                                    Create Score
                                 </h2>
                                 <p class="mt-1 text-sm leading-6 text-gray-600">
-                                    You can clear student's scores.
+                                    You can add student's midterm score based on her final
                                 </p>
 
                                 <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                                    <!-- Moodle ID -->
+                                    <div class="sm:col-span-1">
+                                        <label for="moodle_id"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Moodle ID
+                                        </label>
+                                        <div class="mt-2">
+                                            <input v-model="form.moodle_id" name="moodle" id="moodle"
+                                                autocomplete="moodle"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.moodle_id">
+                                                {{ errors . moodle_id }}
+                                            </p>
+                                        </div>
+                                    </div>
+
                                     <!-- Grade -->
                                     <div class="sm:col-span-1">
                                         <label for="sub_grade_id"
@@ -80,40 +96,23 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <div class="sm:col-span-1">
-                                        <label for="subject_id"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Exam Type
-                                        </label>
-                                        <div class="mt-2">
-                                            <select name="name" v-model="form.type_id"
-                                                class="focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
-                                                <option value="">
-                                                    Select Exam
-                                                </option>
-                                                <option v-for="type in types" :value="type.id"
-                                                    :key="type">
-                                                    {{ type . name }}
-                                                </option>
-                                            </select>
-                                            <p class="mt-2 text-sm text-red-500" v-if="errors.type">
-                                                {{ errors . type }}
-                                            </p>
-                                        </div>
-                                    </div>
+
+
+
+
                                     <div class="sm:col-span-1 content-end">
                                         <label for="teacher" class="block text-sm font-medium leading-6 text-gray-900">
                                         </label>
                                         <div class="mt-2">
-                                            <button type="submit" :disabled="form.type_id && form.year && form.subject_id && form.sub_grade_id ? false : true"
+                                            <button type="submit" :disabled="form.year && form.moodle_id && form.sub_grade_id ? false : true"
                                                 class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                                Clear
+                                                Change Score
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </form>
                 </div>
             </div>
@@ -136,7 +135,6 @@
     const props = defineProps([
         "grades",
         "errors",
-        "types",
         "years",
         "subjects",
     ]);
@@ -145,16 +143,16 @@
         sub_grade_id: "",
         year: "",
         subject_id: "",
-        type_id: "",
+        moodle_id: "",
     });
 
     function submit() {
-        if (confirm("Are you sure to delete this subject's scores?")) {
-            router.post(route(`delete-scores`),
+        if (confirm("Are you sure to add this subject's scores?")) {
+            router.post(route(`add-midterm-score-based-on-final`),
                 form, {
                     forceFormData: true,
                     onFinish: (res) => {
-                        Swal.fire(`Deleted`, `Student's scores have been successfully cleared.`);
+                        Swal.fire(`Created`, `Student's scores have been successfully changed.`);
                     },
                 });
         }
