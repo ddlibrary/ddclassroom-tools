@@ -152,7 +152,7 @@
                 form, {
                     forceFormData: true,
                     onFinish: (res) => {
-                        Swal.fire(`Created`, `Student's scores have been successfully cleared.`);
+                        Swal.fire(`Created`, `Student's scores have been successfully changed.`);
                     },
                 });
         }
