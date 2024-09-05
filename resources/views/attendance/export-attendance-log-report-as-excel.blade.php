@@ -11,11 +11,14 @@
 <body>
     <table>
         <tr>
+            <th style="text-align: right;border:1px solid #000 !important">نام</th>
+            <th style="text-align: right;border:1px solid #000 !important">نام پدر </th>
             <th style="text-align: left;border:1px solid #000 !important">Name</th>
             <th style="text-align: left;border:1px solid #000 !important">Father Name</th>
             <th style="text-align: left;border:1px solid #000 !important">Email</th>
             <th style="text-align: center;border:1px solid #000 !important">Moodle ID</th>
             <th style="text-align: center;border:1px solid #000 !important">Grade</th>
+            <th style="text-align: center;border:1px solid #000 !important">Phone</th>
             <th style="text-align: center;border:1px solid #000 !important">Year</th>
             <th style="text-align: center;border:1px solid #000 !important">Month</th>
             <th style="text-align: center;border:1px solid #000 !important">Total Hours</th>
@@ -28,11 +31,14 @@
         </tr>
         @foreach ($students as $student)
             <tr>
+                <td style="text-align: right;border:1px solid #000 !important">{{ $student->fa_name }}</td>
+                <td style="text-align: right;border:1px solid #000 !important">{{ $student->fa_father_name }}</td>
                 <td style="text-align: left;border:1px solid #000 !important">{{ $student->name }}</td>
                 <td style="text-align: left;border:1px solid #000 !important">{{ $student->father_name }}</td>
                 <td style="text-align: left;border:1px solid #000 !important">{{ $student->email }}</td>
                 <td  style="text-align: center;border:1px solid #000 !important">{{ $student->id_number }}</td>
                 <td  style="text-align: center;border:1px solid #000 !important">{{ $student->subGrade->full_name }}</td>
+                <td  style="text-align: center;border:1px solid #000 !important">{{ $student->phone }}</td>
 
                 <td  style="text-align: center;border:1px solid #000 !important">{{ $year }}</td>
                 <td  style="text-align: center;border:1px solid #000 !important">{{ $month?->name }}</td>
