@@ -180,6 +180,19 @@
                                             </p>
                                         </div>
                                     </div>
+                                    <!-- Father Phone -->
+                                    <div class="sm:col-span-3">
+                                        <label for="father_phone" class="block text-sm font-medium leading-6 text-gray-900">
+                                            Father Phone</label>
+                                        <div class="mt-2">
+                                            <input id="father_phone" v-model="form.father_phone" name="father_phone" type="text"
+                                                autocomplete="father_phone"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.father_phone">
+                                                {{ errors . father_phone }}
+                                            </p>
+                                        </div>
+                                    </div>
 
                                     <!-- Country -->
                                     <div class="sm:col-span-3">
@@ -196,6 +209,19 @@
                                             </select>
                                             <p class="mt-2 text-sm text-red-500" v-if="errors.country_id">
                                                 {{ errors . country_id }}</p>
+                                        </div>
+                                    </div>
+                                    <!-- Province -->
+                                    <div class="sm:col-span-3">
+                                        <label for="province" class="block text-sm font-medium leading-6 text-gray-900">
+                                            Province</label>
+                                        <div class="mt-2">
+                                            <input id="province" v-model="form.province" name="province" type="text"
+                                                autocomplete="province"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.province">
+                                                {{ errors . province }}
+                                            </p>
                                         </div>
                                     </div>
 
@@ -230,6 +256,7 @@
                                                 {{ errors . grade_id }}</p>
                                         </div>
                                     </div>
+
                                     <!-- Password -->
                                     <div class="sm:col-span-3">
                                         <label for="password"
@@ -241,6 +268,20 @@
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                             <p class="mt-2 text-sm text-red-500" v-if="errors.password">
                                                 {{ errors . password }}</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Father Email -->
+                                    <div class="sm:col-span-3">
+                                        <label for="father_email"
+                                            class="block text-sm font-medium leading-6 text-gray-900">
+                                            Father Email</label>
+                                        <div class="mt-2">
+                                            <input type="text" v-model="form.father_email" name="father_email"
+                                                id="father_email" autocomplete="father_email"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.father_email">
+                                                {{ errors . father_email }}</p>
                                         </div>
                                     </div>
 
@@ -376,6 +417,10 @@
         father_name: props.student.father_name,
         fa_father_name: props.student.fa_father_name,
         phone: props.student.phone,
+        father_phone: props.student.father_phone,
+        father_email: props.student.father_email,
+        province: props.student.province,
+        reg_date: props.student.reg_date,
         photo: props.student.photo,
         username: props.student.username,
         email: props.student.email,
