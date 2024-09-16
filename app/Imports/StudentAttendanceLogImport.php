@@ -36,10 +36,10 @@ class StudentAttendanceLogImport implements ToModel, WithHeadingRow
                 $to = 3;
             }elseif(request()->location == 'dlc'){
                 $from = 4;
-                $to = 7;
+                $to = 4;
             }elseif(request()->location == 'arsa'){
                 $from = 5;
-                $to = 8;
+                $to = 4;
             }
 
 

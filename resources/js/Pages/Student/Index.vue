@@ -13,6 +13,10 @@
                 class="pointer-events-auto float-right mb-2 rounded-md bg-indigo-600 px-3 py-3 text-[0.8125rem] font-semibold leading-5 text-white hover:bg-indigo-500">
             Upload Student List
             </Link>
+            <Link href="/edit-student-info"
+                class="pointer-events-auto float-right mb-2 rounded-md bg-indigo-600 px-3 py-3 text-[0.8125rem] font-semibold leading-5 text-white hover:bg-indigo-500">
+                Edit student info
+            </Link>
             <div class="space-y-9 divide-y divide-gray-200 mb-2">
                 <div
                     class="mt-6  grid xs:grid-cols-2 gap-y-8 sm:grid-cols-6 md:grid-cols-6 sm:gap-x-6 lg:grid-cols-10 xl:gap-x-8 mr-2">

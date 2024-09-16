@@ -15,4 +15,9 @@ trait HasOneStudentAttendance
     {
         return $this->HasOne(Attendance::class)->where('type', 2);
     }
+
+    public function attendance()
+    {
+        return $this->HasOne(Attendance::class);
+    }
 }

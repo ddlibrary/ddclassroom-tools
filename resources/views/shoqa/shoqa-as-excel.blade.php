@@ -73,9 +73,16 @@
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">شماره</th>
             </tr>
             @foreach ($enrollments as $enrollment)
+                <?php
+                $studentScore = $enrollment->student?->score?->attendance;
+                $score = 0;;
+                if(!$studentScore || $studentScore<=0){
+                    $score = $enrollment->student?->attendance?->total_class_hours != 0 ? round(($enrollment->student?->attendance?->total_class_hours - $enrollment->student?->attendance?->absent) * 5 / ($enrollment->student?->attendance?->total_class_hours),2) : 0;
+                }
+                  ?>
                 <tr>
                     <td style="text-align: center;border:1px solid #000 !important">
-                        {{ $enrollment->student?->score?->total }}
+                        {{ $enrollment->student?->score?->total + $score }}
                     </td>
                     <td style="text-align: center;border:1px solid #000 !important">
                         {{ $enrollment->student?->score?->evaluation }}
@@ -87,7 +94,8 @@
                         {{ $enrollment->student?->score?->activity }}
                     </td>
                     <td style="text-align: center;border:1px solid #000 !important">
-                        {{ $enrollment->student?->score?->attendance }}
+                        {{ $studentScore + $score }}
+
                     </td>
                     <td style="text-align: center;border:1px solid #000 !important">
                         {{ $enrollment->student?->score?->verbal }}

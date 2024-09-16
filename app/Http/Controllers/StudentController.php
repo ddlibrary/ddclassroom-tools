@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Student\CreateMultipleStudentsRequest;
 use App\Http\Requests\Student\CreateStudentRequest;
+use App\Http\Requests\Student\UpdateStudentInfoRequest;
 use App\Imports\StudentImport;
+use App\Imports\UpdateStudentInfoImport;
 use App\Jobs\SendEmailJob;
 use App\Models\Country;
 use App\Models\Student;
@@ -140,9 +142,21 @@ class StudentController extends Controller
         return inertia('Student/CreateMultipleStudents', ['grades' => $grades, 'years' => $years]);
     }
 
+    public function editStudentInfo()
+    {
+        return inertia('Student/EditStudentInfo');
+    }
+
+
+
     public function storeMultipleStudents(CreateMultipleStudentsRequest $request)
     {
         Excel::import(new StudentImport(), $request->file);
+    }
+
+    public function updateStudentInfo(UpdateStudentInfoRequest $request)
+    {
+        Excel::import(new UpdateStudentInfoImport(), $request->file);
     }
 
     public function emailHandbook($uuid)
