@@ -45,6 +45,10 @@ Route::middleware(['auth', 'verified','2fa'])->group(function () {
     Route::resource('users', UserController::class);
     Route::resource('students', StudentController::class);
     Route::get('students/create/multiple', [StudentController::class, 'createMultipleStudents']);
+    Route::get('edit-student-info', [StudentController::class, 'editStudentInfo']);
+
+    Route::post('update-student-info', [StudentController::class, 'updateStudentInfo'])->name('students.update-student-info');
+
     Route::post('storeMultipleStudents', [StudentController::class, 'storeMultipleStudents'])->name('students.store-multiple-student');
     Route::post('student-uploading-sample-file', [StudentController::class, 'studentUpladingSampleFile'])->name('student-uploading-sample-file');
     Route::get('email-handbook/{uuid}', [StudentController::class, 'emailHandbook']);
