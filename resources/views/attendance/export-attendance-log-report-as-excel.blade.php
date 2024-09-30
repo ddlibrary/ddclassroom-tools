@@ -41,7 +41,6 @@
                 <td  style="text-align: center;border:1px solid #000 !important">{{ $student->subGrade->full_name }}</td>
                 <td  style="text-align: center;border:1px solid #000 !important">{{ $student->phone }}</td>
                 <td  style="text-align: center;border:1px solid #000 !important">{{ $student->province }}</td>
-
                 <td  style="text-align: center;border:1px solid #000 !important">{{ $year }}</td>
                 <td  style="text-align: center;border:1px solid #000 !important">{{ $month?->name }}</td>
                 <td  style="text-align: center;border:1px solid #000 !important;color:{{ $student->attendance_logs_count <= 1 ? 'red' :'black'}};">{{ $student->attendance_logs_count }}</td>
