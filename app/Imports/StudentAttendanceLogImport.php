@@ -42,12 +42,10 @@ class StudentAttendanceLogImport implements ToModel, WithHeadingRow
                 $to = 4;
             }
 
-
             $subject = isset($row['course_name']) ? $row['course_name'] : null;
             $subjectId = Cache::remember("subject_name_" . substr($subject, $from, $to), 3600, function () use ($subject, $from, $to) {
                 return Subject::where('en_name', 'like', substr($subject, $from, $to) . '%')->value('id');
             });
-
 
             if($subjectId){
 
@@ -71,7 +69,6 @@ class StudentAttendanceLogImport implements ToModel, WithHeadingRow
             }else{
                 info("Subject id is not found for $email, $subject");
             }
-
         }
     }
 }
