@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Exports;
+ini_set('max_execution_time', 120);
 
 use App\Models\Month;
 use App\Models\Student;
@@ -19,7 +20,7 @@ class ExportAttendanceLogReport implements FromView, ShouldAutoSize
 
         $request = (object)$this->data;
 
-        $query = Student::query()->select(['id', 'name','father_name','fa_name','fa_father_name', 'email', 'phone','id_number','sub_grade_id'])
+        $query = Student::query()->select(['id', 'name','father_name','fa_name','fa_father_name','province', 'email', 'phone','id_number','sub_grade_id'])
         ->with(['subGrade:id,name,full_name']);
         $query
             ->withCount([

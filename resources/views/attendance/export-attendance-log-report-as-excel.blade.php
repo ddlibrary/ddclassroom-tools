@@ -19,6 +19,7 @@
             <th style="text-align: center;border:1px solid #000 !important">Moodle ID</th>
             <th style="text-align: center;border:1px solid #000 !important">Grade</th>
             <th style="text-align: center;border:1px solid #000 !important">Phone</th>
+            <th style="text-align: center;border:1px solid #000 !important">Current Location</th>
             <th style="text-align: center;border:1px solid #000 !important">Year</th>
             <th style="text-align: center;border:1px solid #000 !important">Month</th>
             <th style="text-align: center;border:1px solid #000 !important">Total Hours</th>
@@ -39,6 +40,7 @@
                 <td  style="text-align: center;border:1px solid #000 !important">{{ $student->id_number }}</td>
                 <td  style="text-align: center;border:1px solid #000 !important">{{ $student->subGrade->full_name }}</td>
                 <td  style="text-align: center;border:1px solid #000 !important">{{ $student->phone }}</td>
+                <td  style="text-align: center;border:1px solid #000 !important">{{ $student->province }}</td>
 
                 <td  style="text-align: center;border:1px solid #000 !important">{{ $year }}</td>
                 <td  style="text-align: center;border:1px solid #000 !important">{{ $month?->name }}</td>
