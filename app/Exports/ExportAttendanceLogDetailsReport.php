@@ -28,7 +28,6 @@ class ExportAttendanceLogDetailsReport implements FromView, ShouldAutoSize
                 'subGrade:id,full_name',
                 'subject:id,name',
                 'month:id,name',
-
             ])
            ->select('id', 'date', 'student_id', 'status', 'date', 'sub_grade_id', 'subject_id', 'month_id', 'user_id'); // Select only necessary columns
 
