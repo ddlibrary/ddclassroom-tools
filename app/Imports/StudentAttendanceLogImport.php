@@ -7,6 +7,7 @@ use App\Models\AttendanceMissingEmail;
 use App\Models\Student;
 use App\Models\Subject;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -49,7 +50,16 @@ class StudentAttendanceLogImport implements ToModel, WithHeadingRow
 
             if($subjectId){
 
-                $dateTime = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['date']);
+                $dateTime = Carbon::createFromFormat('l, d F Y, h:i A', $row['date']);
+
+                // Check if the conversion was successful
+                if ($dateTime) {
+                    // Format the date as 'Y-m-d H:i:s'
+                    $createdAt = $dateTime->format('Y-m-d H:i:s');
+                } else {
+                    // Handle invalid date format
+                    $createdAt = null; // or some default value
+                }
 
                 $createdAt = $dateTime->format('Y-m-d H:i:s');
 
