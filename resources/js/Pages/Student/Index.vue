@@ -10,7 +10,7 @@
             Create
             </Link>
             <Link href="/students/create/multiple"
-                class="pointer-events-auto float-right mb-2 rounded-md bg-indigo-600 px-3 py-3 text-[0.8125rem] font-semibold leading-5 text-white hover:bg-indigo-500">
+                class="pointer-events-auto float-right mx-2 mb-2 rounded-md bg-indigo-600 px-3 py-3 text-[0.8125rem] font-semibold leading-5 text-white hover:bg-indigo-500">
             Upload Student List
             </Link>
             <Link href="/edit-student-info"
@@ -146,6 +146,11 @@
 
                             <Link :href="'/students/' + student.id + '/edit'" class="text-indigo-600 ml-2 hover:text-indigo-900">
                             Edit</Link>
+
+                            <span class="text-red-700 cursor-pointer ml-2"
+                                @click="deleteItem(student.id)">
+                                Delete
+                            </span>
                         </td>
                     </tr>
                 </tbody>
@@ -212,4 +217,18 @@
             preserveState: true,
         });
     }, 300));
+
+    function deleteItem(id) {
+        if (confirm('Are you sure to delete this student?')) {
+            router.delete(route(`students.destroy`, {
+                'id': id
+            }), {
+                forceFormData: true,
+                onFinish: () => {
+                    Swal.fire(`Deleted`,
+                        `Student has been successfully deleted.`)
+                },
+            });
+        }
+    }
 </script>
