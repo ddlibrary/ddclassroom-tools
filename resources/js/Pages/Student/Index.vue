@@ -155,8 +155,6 @@
                     </tr>
                 </tbody>
             </table>
-
-
         </div>
         <no-record-found v-if="students.data.length == 0"></no-record-found>
         <!-- Pagination -->
