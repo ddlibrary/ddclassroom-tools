@@ -50,17 +50,17 @@
             opacity: 0.1;
         }
 
-        @media print{
-            #logo{
-                background-image:url('{{ $image }}') !important;
+        @media print {
+            #logo {
+                background-image: url('{{ $image }}') !important;
                 position: absolute;
-            top: 20%;
-            bottom: 20%;
-            right: 20%;
-            left: 20%;
-            background-repeat: no-repeat;
-            background-position: center;
-            opacity: 0.1;
+                top: 20%;
+                bottom: 20%;
+                right: 20%;
+                left: 20%;
+                background-repeat: no-repeat;
+                background-position: center;
+                opacity: 0.1;
             }
         }
     </style>
@@ -69,10 +69,9 @@
 <body style="padding:20px;">
     <div class="container">
         <button onclick="printDiv('container')" id="print" class="btn btn-success my-2">چاپ</button>
-            <a href="{{ url('student-result-card/'.$student->uuid.'/'.$year.'?en_result=true') }}" style="float:left">English Result Card</a>
-
+        <a href="{{ url('student-result-card/' . $student->uuid . '/' . $year . '?en_result=true') }}"
+            style="float:left">English Result Card</a>
         <div>
-
             <div style="direction:rtl;position: relative;" id="container">
                 <div style="background-image:url('{{ $image }}') !important;position: absolute;
                 top: 20%;
@@ -81,7 +80,8 @@
                 left: 20%;
                 background-repeat: no-repeat;
                 background-position: center;
-                opacity: 0.04;" id="logo"></div>
+                opacity: 0.04;"
+                    id="logo"></div>
                 <div style=";padding:25px;border:1px solid black;border-radius:12px;">
 
                     <div class="text-center">
@@ -99,11 +99,13 @@
                         </tr>
                         <tr>
                             <th class="text-right" style="width: 150px;">اسم شاگرد</th>
-                            <th class="text-start">{{ $student->fa_name ? $student->fa_name : $student->name }} {{ $student->fa_last_name ? $student->fa_last_name : $student->last_name }}</th>
+                            <th class="text-start">{{ $student->fa_name ? $student->fa_name : $student->name }}
+                                {{ $student->fa_last_name ? $student->fa_last_name : $student->last_name }}</th>
                         </tr>
                         <tr>
                             <th>اسم پدر</th>
-                            <th class="text-start">{{ $student->fa_father_name ? $student->fa_father_name : $student->father_name }}</th>
+                            <th class="text-start">
+                                {{ $student->fa_father_name ? $student->fa_father_name : $student->father_name }}</th>
                         </tr>
                         <tr>
                             <th>صنف</th>
@@ -166,14 +168,17 @@
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th style="background-color: #ffa80054 !important" class="text-start text-danger">
+                                        <th style="background-color: #ffa80054 !important"
+                                            class="text-start text-danger">
                                             مجموعه</th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">{{ $middle }}</th>
                                         <th style="background-color: #ffa80054 !important;"
-                                            class="result-bg text-danger text-center">{{ $final > 0 ? $final : '' }}</th>
+                                            class="result-bg text-danger text-center">{{ $final > 0 ? $final : '' }}
+                                        </th>
                                         <th style="background-color: #ffa80054 !important;"
-                                            class="result-bg text-danger text-center">{{ $total > $middle ? $total : '' }}</th>
+                                            class="result-bg text-danger text-center">
+                                            {{ $total > $middle ? $total : '' }}</th>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #ffa80054 !important;"
@@ -307,10 +312,10 @@
         <script src="{{ asset('assets/js/myjs.js') }}"></script>
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-              var div = document.getElementById("print");
-              div.click();
+                var div = document.getElementById("print");
+                div.click();
             });
-          </script>
+        </script>
 </body>
 
 </html>
