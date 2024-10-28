@@ -24,7 +24,6 @@ class ExportShoqa implements FromView, ShouldAutoSize
         $subject = Subject::where('id', $subjectId)->first();
         $subGrade = SubGrade::where('id', $subGradeId)->first();
 
-
         $subjectScore = new SubjectScore($type);
 
         $oral = $subjectScore->getOral();
@@ -34,7 +33,6 @@ class ExportShoqa implements FromView, ShouldAutoSize
         $homework = $subjectScore->getHomework();
         $activity = $subjectScore->getActivity();
         $total = $subjectScore->getTotal();
-
 
         $enrollments = Enrollment::with([
             'student' => function ($query) use ($year, $subjectId, $subGradeId, $type) {
