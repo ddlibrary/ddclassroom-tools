@@ -9,6 +9,7 @@ use App\Imports\StudentImport;
 use App\Imports\UpdateStudentInfoImport;
 use App\Jobs\SendEmailJob;
 use App\Models\Country;
+use App\Models\Enrollment;
 use App\Models\Student;
 use App\Models\SubGrade;
 use App\Models\Year;
@@ -72,6 +73,13 @@ class StudentController extends Controller
             'is_active' => $request->is_active == 1 ? true : false,
         ]);
 
+        Enrollment::create([
+            'student_id' => $student->id,
+            'sub_grade_id' => $student->sub_grade_id,
+            'user_id' => auth()->id(),
+            'year' => date('Y'),
+        ]);
+
         // Upload student photo
         if ($request->hasFile('photo')) {
             $student->photo = 'student-photos/' . $this->upload($request);
@@ -101,6 +109,28 @@ class StudentController extends Controller
 
     public function update(CreateStudentRequest $request, Student $student)
     {
+        if($student->sub_grade_id != $request->grade_id){
+            $currentClass = $student->subGrade->grade;
+            $newClass = SubGrade::find($request->grade_id)->grade;
+
+            if($currentClass->id == $newClass->id){
+                Enrollment::where(['student_id' => $student->id, 'sub_grade_id' => $student->sub_grade_id])->update([
+                    'sub_grade_id' => $request->grade_id,
+                    'user_id' => auth()->id(),
+                ]);
+            }else{
+                Enrollment::create([
+                    'student_id' => $student->id,
+                    'sub_grade_id' => $request->grade_id,
+                    'user_id' => auth()->id(),
+                    'year' => date('Y'),
+                ]);
+            }
+            $student->sub_grade_id = $request->grade_id;
+            $student->save();
+
+        }
+
         $student->update([
             'name' => $request->name,
             'last_name' => $request->last_name,
@@ -117,13 +147,14 @@ class StudentController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'country_id' => $request->country_id,
-            'sub_grade_id' => $request->grade_id,
+
             'password' => $request->password,
             'name_in_system' => $request->name_in_system,
             'school' => $request->school,
             'password' => $request->password,
             'is_active' => $request->is_active == 1 ? true : false,
         ]);
+
 
         // Upload student photo
         if ($request->hasFile('photo')) {
