@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 
 <head>
     <!-- Required meta tags -->
@@ -8,8 +8,8 @@
 
     <?php $image = asset('images/main-logo.jpeg'); ?>
     <!-- Bootstrap CSS -->
-    <link href="{{ asset('assets/bootstrap/css/bootstrap.rtl.min.css') }}" rel="stylesheet">
-    <title>اطلاعنامه {{ $student->fa_name }} {{ $student->fa_father_name }} - {{ $student->subGrade->name }}</title>
+    <link href="{{ asset('assets/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <title>اطلاعنامه {{ $student->name }} {{ $student->father_name }} - {{ $student->subGrade->name }}</title>
     <style>
         table {
             page-break-inside: avoid;
@@ -50,17 +50,17 @@
             opacity: 0.1;
         }
 
-        @media print {
-            #logo {
-                background-image: url('{{ $image }}') !important;
+        @media print{
+            #logo{
+                background-image:url('{{ $image }}') !important;
                 position: absolute;
-                top: 20%;
-                bottom: 20%;
-                right: 20%;
-                left: 20%;
-                background-repeat: no-repeat;
-                background-position: center;
-                opacity: 0.1;
+            top: 20%;
+            bottom: 20%;
+            right: 20%;
+            left: 20%;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.1;
             }
         }
     </style>
@@ -68,11 +68,13 @@
 
 <body style="padding:20px;">
     <div class="container">
-        <button onclick="printDiv('container')" id="print" class="btn btn-success my-2">چاپ</button>
-        <a href="{{ url('student-result-card/' . $student->uuid . '/' . $year . '?en_result=true') }}"
-            style="float:left">English Result Card</a>
+        <button onclick="printDiv('container')" id="print" class="btn btn-success my-2">Print</button>
+        <a href="{{ url('email-handbook/' . $student->uuid) }}" style="float:left">
+        </a>
+
         <div>
-            <div style="direction:rtl;position: relative;" id="container">
+
+            <div style="direction:ltr;position: relative;" id="container">
                 <div style="background-image:url('{{ $image }}') !important;position: absolute;
                 top: 20%;
                 bottom: 20%;
@@ -80,35 +82,32 @@
                 left: 20%;
                 background-repeat: no-repeat;
                 background-position: center;
-                opacity: 0.04;"
-                    id="logo"></div>
+                opacity: 0.04;" id="logo"></div>
                 <div style=";padding:25px;border:1px solid black;border-radius:12px;">
 
                     <div class="text-center">
                         <img src="{{ asset('images/logo.webp') }}" style="width: 200px;">
                     </div>
-                    <h3 class="text-center">اطلاعنامه</h3>
+                    <h3 class="text-center">Result Card</h3>
                     <table class="table table-bordered border-dark">
                         <tr>
-                            <th class="text-center" style="background: #ffa800 !important;" colspan="2">مشخصات شاگرد
+                            <th class="text-center" style="background: #ffa800 !important;" colspan="2"> Student Information
                             </th>
                         </tr>
                         <tr>
-                            <th>آی دی</th>
+                            <th>ID#</th>
                             <th class="text-start">{{ $student->id_number ? $student->id_number : $student->id }}</th>
                         </tr>
                         <tr>
-                            <th class="text-right" style="width: 150px;">اسم شاگرد</th>
-                            <th class="text-start">{{ $student->fa_name ? $student->fa_name : $student->name }}
-                                {{ $student->fa_last_name ? $student->fa_last_name : $student->last_name }}</th>
+                            <th class="text-right" style="width: 150px;">Student Name</th>
+                            <th class="text-start">{{ $student->name ? $student->name : $student->name }} {{ $student->last_name ? $student->last_name : $student->last_name }}</th>
                         </tr>
                         <tr>
-                            <th>اسم پدر</th>
-                            <th class="text-start">
-                                {{ $student->fa_father_name ? $student->fa_father_name : $student->father_name }}</th>
+                            <th>Father Name</th>
+                            <th class="text-start">{{ $student->father_name ? $student->father_name : $student->father_name }}</th>
                         </tr>
                         <tr>
-                            <th>صنف</th>
+                            <th>Course</th>
                             <th class="text-start">{{ $student->subGrade->name }}</th>
                         </tr>
                     </table>
@@ -119,10 +118,10 @@
                             <div>
                                 <table class="table table-bordered border-dark">
                                     <tr>
-                                        <th class="text-start w-25">مضمون</th>
-                                        <th class="text-center w-25">چهارنم ماهه</th>
-                                        <th class="text-center w-25">سالانه</th>
-                                        <th class="text-center w-25">مجموع</th>
+                                        <th class="text-start w-25">Subject</th>
+                                        <th class="text-center w-25">Midterm</th>
+                                        <th class="text-center w-25">Final</th>
+                                        <th class="text-center w-25">Total</th>
                                     </tr>
                                     <?php
                                     $middle = 0;
@@ -141,7 +140,7 @@
                                         ?>
 
                                         <tr>
-                                            <td class="text-start">{{ $subject->subject->name }}</td>
+                                            <td class="text-start">{{ $subject->subject->en_name }}</td>
                                             <td class="text-center" style="{{ $middleScore < 16 ? 'color:red' : '' }}">
                                                 {{ floatval($middleScore) }}</td>
                                             <td class="text-center" style="{{ $finalScore < 24 ? 'color:red' : '' }}">
@@ -153,36 +152,33 @@
                                     @endforeach
                                     <tr>
                                         <th style="background-color: #ffa80054 !important;"
-                                            class="result-bg text-danger text-start">نتیجه</th>
+                                            class="result-bg text-danger text-start">Result</th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $student->studentResult->middle_result_name }}
+                                            {{ getResultName($student->studentResult->middle_result_name) }}
                                         </th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $final > 0 ? $student->studentResult->final_result_name : '' }}
+                                            {{ $final > 0 ? getResultName($student->studentResult->final_result_name) : '' }}
                                         </th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $final > 0 ? $student->studentResult->result_name : '' }}
+                                            {{ $final > 0 ? getResultName($student->studentResult->result_name) : '' }}
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th style="background-color: #ffa80054 !important"
-                                            class="text-start text-danger">
-                                            مجموعه</th>
+                                        <th style="background-color: #ffa80054 !important" class="text-start text-danger">
+                                            Total</th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">{{ $middle }}</th>
                                         <th style="background-color: #ffa80054 !important;"
-                                            class="result-bg text-danger text-center">{{ $final > 0 ? $final : '' }}
-                                        </th>
+                                            class="result-bg text-danger text-center">{{ $final > 0 ? $final : '' }}</th>
                                         <th style="background-color: #ffa80054 !important;"
-                                            class="result-bg text-danger text-center">
-                                            {{ $total > $middle ? $total : '' }}</th>
+                                            class="result-bg text-danger text-center">{{ $total > $middle ? $total : '' }}</th>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #ffa80054 !important;"
-                                            class="result-bg text-danger text-start">فیصدی</th>
+                                            class="result-bg text-danger text-start">Percentage</th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
                                             {{ round($student->studentResult->middle_percentage, 2) }}%
@@ -198,7 +194,7 @@
                                     </tr>
                                     <tr>
                                         <th style="background-color: #ffa80054 !important;"
-                                            class="result-bg text-danger text-start">درجه</th>
+                                            class="result-bg text-danger text-start">Grade</th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
                                             {{ $student->studentResult->middleResult->name }}
@@ -217,15 +213,16 @@
                             <div>
                                 <table class="table table-bordered border-dark">
                                     <tr>
-                                        <th class="text-center w-75" style="background: #ffa800 !important;">درجه بندی
-                                            شاگردان بر اساس فیصدی</th>
-                                        <th class="text-center w-25" style="background: #ffa800 !important;">نتیجه</th>
+                                        <th class="text-center w-75" style="background: #ffa800 !important;"> Categorized Students based on
+                                            Percentage
+                                               </th>
+                                        <th class="text-center w-25" style="background: #ffa800 !important;">Result</th>
                                     </tr>
                                     @foreach ($results as $result)
                                         <tr>
-                                            <td class="text-center"> از {{ $result->from }} الی {{ $result->to }}
+                                            <td class="text-center"> From {{ $result->from }} to {{ $result->to }}
                                                 @if ($result->result == 'تکرار صنف')
-                                                    (تکرار صنف)
+                                                    (repeat course)
                                                 @endif
                                             </td>
                                             <td class="text-center">{{ $result->name }}</td>
@@ -235,39 +232,39 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="col-5" style="padding-right:80px !important;">
+                        <div class="col-5" style="padding-left:80px !important;">
                             <div>
                                 <table class="table table-bordered border-dark">
                                     <tr>
                                         <th class="text-center" colspan="2" style="background: #ffa800 !important;">
-                                            حاضری</th>
+                                            Attendance</th>
                                     </tr>
                                     <tr>
-                                        <th class="text-right" style="width:60%">مجموع ساعات درسی</th>
+                                        <th class="text-right" style="width:60%">Total Study Hours</th>
                                         <th class="text-start">
                                             {{ $student->middleAttendance?->total_class_hours + $student->finalAttendance?->total_class_hours }}
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th>حاضر</th>
+                                        <th>Present</th>
                                         <th class="text-start">
                                             {{ $student->middleAttendance?->present + $student->finalAttendance?->present }}
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th>غیر حاضر</th>
+                                        <th>Absent</th>
                                         <th class="text-start">
                                             {{ $student->middleAttendance?->absent + $student->finalAttendance?->absent }}
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th>رخصتی</th>
+                                        <th>Vocation</th>
                                         <th class="text-start">
                                             {{ $student->middleAttendance?->permission + $student->finalAttendance?->permission }}
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th>مریضی</th>
+                                        <th>Sickness</th>
                                         <th class="text-start">
                                             {{ $student->middleAttendance?->patien + $student->finalAttendance?->patien }}
                                         </th>
@@ -275,7 +272,7 @@
                                 </table>
                             </div>
                             <div class="text-center" style="margin-top:120px;">
-                                امضاء استاد نگران
+                                Signature of Course Representative
                                 <table class="table table-bordered border-dark">
                                     <tr>
                                         <th class="text-center" style="height: 60px !important">
@@ -289,7 +286,7 @@
                             </div>
 
                             <div class="text-center" style="margin-top:80px;">
-                                امضاء مدیر مکتب
+                                Signature of School Principal
                                 <table class="table table-bordered border-dark">
                                     <tr>
                                         <th class="text-center" style="height: 60px !important">
@@ -310,12 +307,6 @@
         <script src="{{ asset('assets/js/jquery-min.js') }}"></script>
         <script src="{{ asset('assets/js/print-this.js') }}"></script>
         <script src="{{ asset('assets/js/myjs.js') }}"></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                var div = document.getElementById("print");
-                div.click();
-            });
-        </script>
 </body>
 
 </html>

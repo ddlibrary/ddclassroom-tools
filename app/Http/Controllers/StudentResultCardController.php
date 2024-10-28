@@ -6,6 +6,7 @@ use App\Models\ClassResponsible;
 use App\Models\GradeSubject;
 use App\Models\Result;
 use App\Models\Student;
+use Illuminate\Http\Request;
 
 class StudentResultCardController extends Controller
 {
@@ -16,7 +17,7 @@ class StudentResultCardController extends Controller
         return view('students.show', compact('student'));
     }
 
-    public function studentResultCard($uuid, $year)
+    public function studentResultCard(Request $request, $uuid, $year)
     {
         $student = Student::where('uuid', $uuid)
             ->with('studentResult', function ($query) use ($year) {
@@ -60,9 +61,10 @@ class StudentResultCardController extends Controller
             ->where('grade_id', $student->subGrade->grade_id)->get();
         $results = Result::all();
 
-        //  return $subjects;
-
-        return view('students.student-result-card', compact('student', 'subjects', 'results', 'responsible'));
+        if($request->en_result){
+            return view('students.student-en-result-card', compact('student', 'subjects', 'results', 'responsible'));
+        }
+        return view('students.student-result-card', compact('student', 'subjects', 'results', 'responsible', 'year'));
     }
 
     public function resultCards() {}
