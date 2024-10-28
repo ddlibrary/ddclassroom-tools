@@ -128,7 +128,6 @@ class StudentController extends Controller
             }
             $student->sub_grade_id = $request->grade_id;
             $student->save();
-
         }
 
         $student->update([
