@@ -103,6 +103,12 @@ const navigation = [
                 icon: DocumentDuplicateIcon,
                 current: false,
             },
+            {
+                name: "Create student shoqa's score",
+                href: "/create-student-shoqa-score",
+                icon: DocumentDuplicateIcon,
+                current: false,
+            },
         ],
     },
     {

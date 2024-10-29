@@ -139,8 +139,8 @@ class AttendanceLogController extends Controller
         Excel::import(new StudentAttendanceLogImport(), $request->file);
     }
 
-    public function studentAttendance(Request $request){
-        $query = Student::query()->select('id', 'sub_grade_id');
+    public function generalAttendanceScore(Request $request){
+        $query = Student::query()->where('sub_grade_id', $request->sub_grade_id)->select('id', 'sub_grade_id');
         $query
             ->withCount([
                 'attendanceLogs' => function ($query) use ($request) {
@@ -170,9 +170,14 @@ class AttendanceLogController extends Controller
 
 
             $students = $query->get();
-
-            Attendance::where('id', '>=', 1)->delete();
-            AttendanceDetail::where('id', '>=', 1)->delete();
+            $studnetId = $students->pluck('id');
+            $where = [
+                'sub_grade_id' => $request->sub_grade_id,
+                'type' => $request->type,
+                'year' => $request->year,
+            ];
+            Attendance::whereIn('student_id', $studnetId)->where($where)->delete();
+            AttendanceDetail::whereIn('student_id', $studnetId)->where($where)->delete();
             foreach ($students as $student) {
                 $subjects = Subject::withCount([
                     'attendanceLogs' => function ($query) use ($student) {
@@ -200,8 +205,8 @@ class AttendanceLogController extends Controller
                     },
                 ])->get();
                 Attendance::insert([
-                    'type' => 1,
-                    'year' => 2024,
+                    'type' => $request->type,
+                    'year' => $request->year,
                     'student_id' => $student->id,
                     'sub_grade_id' => $student->sub_grade_id,
                     'teacher_id' => auth()->id(),
@@ -217,8 +222,8 @@ class AttendanceLogController extends Controller
 
                 foreach ($subjects as $subject) {
                     AttendanceDetail::insert([
-                        'type' => 1,
-                        'year' => 2024,
+                        'type' => $request->type,
+                        'year' => $request->year,
                         'student_id' => $student->id,
                         'subject_id' => $subject->id,
                         'sub_grade_id' => $student->sub_grade_id,
