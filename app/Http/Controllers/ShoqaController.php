@@ -44,4 +44,16 @@ class ShoqaController extends Controller
             return Excel::download(new ExportAttendanceShoqa($request->all()), "ضوابط-حاضری-$subjectName-صنف-$className.xlsx");
         }
     }
+
+    public function createStudentShoqaScore()
+    {
+        $subGrades = SubGrade::whereIsActive(true)->get();
+        $years = Year::all(['id', 'name']);
+        $types = [
+            ['id' => 1, 'name' => 'Midterm Exam'],
+            ['id' => 2, 'name' => 'Final Exam'],
+        ];
+
+        return inertia('Shoqa/CreateStudentShoqaScore', ['examTypes' => $types, 'subGrades' => $subGrades, 'years' => $years]);
+    }
 }

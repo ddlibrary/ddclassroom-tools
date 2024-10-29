@@ -103,6 +103,12 @@ const navigation = [
                 icon: DocumentDuplicateIcon,
                 current: false,
             },
+            {
+                name: "Attendance Shoqa",
+                href: "/create-student-shoqa-score",
+                icon: DocumentDuplicateIcon,
+                current: false,
+            },
         ],
     },
     {

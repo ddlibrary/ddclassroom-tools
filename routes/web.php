@@ -38,7 +38,8 @@ use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 
 Route::middleware(['auth', 'verified','2fa'])->group(function () {
 
-    Route::get('add-student-attendance', [AttendanceLogController::class, 'studentAttendance']);
+    Route::post('general-attendance-score', [AttendanceLogController::class, 'generalAttendanceScore'])->name('general-attendance-score');
+    Route::get('create-student-shoqa-score', [ShoqaController::class, 'createStudentShoqaScore']);
     Route::get('clear-all-attendance-log', [AttendanceLogController::class, 'clearAllAttendanceLog']);
     Route::get('/', [HomeController::class, 'index']);
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
