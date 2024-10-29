@@ -6,17 +6,19 @@ use App\Models\AttendanceLog;
 use App\Models\AttendanceMissingEmail;
 use App\Models\Student;
 use App\Models\Subject;
-use Carbon\Carbon;
-use DateTime;
 use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
+use Carbon\Carbon;
 
 class StudentAttendanceLogImport implements ToModel, WithHeadingRow
 {
     public function model(array $row)
     {
-        if (isset($row['username'])) {
+
+        info($row);
+        if (isset($row['email']) && isset($row['username']) && isset($row['status']) && isset($row['date']) && isset($row['course_name'])) {
             $username = $row['username'];
             $email = $row['username'];
             if ($username == 'NULL' || $username == null) {
@@ -49,19 +51,19 @@ class StudentAttendanceLogImport implements ToModel, WithHeadingRow
             });
 
             if($subjectId){
-
-                $dateTime = Carbon::createFromFormat('l, d F Y, h:i A', $row['date']);
-
-                // Check if the conversion was successful
-                if ($dateTime) {
-                    // Format the date as 'Y-m-d H:i:s'
-                    $createdAt = $dateTime->format('Y-m-d H:i:s');
-                } else {
-                    // Handle invalid date format
-                    $createdAt = null; // or some default value
+                $createdAt = now();
+                if(isset($row['date'])){
+                    $dateValue = $row['date'];
+                    if (is_numeric($dateValue)) {
+                        $dateTime = Carbon::instance(Date::excelToDateTimeObject($dateValue));
+                        $createdAt = $dateTime->format('Y-m-d H:i:s');
+                    } else {
+                        try {
+                            $dateTime = Carbon::parse($dateValue);
+                            $createdAt = $dateTime->format('Y-m-d H:i:s');
+                        } catch (\Exception $e) {}
+                    }
                 }
-
-                $createdAt = $dateTime->format('Y-m-d H:i:s');
 
                 AttendanceLog::insert([
                     'year' => request()->year,
