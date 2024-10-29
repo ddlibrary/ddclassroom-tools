@@ -1,12 +1,12 @@
 <template>
 
-    <Head title="Student List" />
+    <Head title="Create student's shoqa" />
 
     <AuthenticatedLayout>
         <!-- Student List -->
         <div class="mb-2">
 
-
+            <p>You can create student's attendace shoqa by attendance log</p>
             <div class="space-y-9 divide-y divide-gray-200">
                 <form @submit.prevent="submit">
                     <div
@@ -41,7 +41,8 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="sm:col-span-2">
+
+                        <div class="sm:col-span-2" v-if="form.type && form.year && form.sub_grade_id">
                             <div class="mt-1 rounded-md shadow-sm flex">
                                 <button type="submit"
                                     class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Generate</button>

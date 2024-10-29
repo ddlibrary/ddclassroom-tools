@@ -104,7 +104,7 @@ const navigation = [
                 current: false,
             },
             {
-                name: "Create student shoqa's score",
+                name: "Attendance Shoqa",
                 href: "/create-student-shoqa-score",
                 icon: DocumentDuplicateIcon,
                 current: false,
