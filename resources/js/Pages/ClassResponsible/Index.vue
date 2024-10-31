@@ -32,7 +32,7 @@
                                             class="focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
                                             <option value="">...Select Class...</option>
                                             <option v-for="subGrade in subGrades" :value="subGrade.id" :key="subGrade">
-                                                {{ subGrade . name }}</option>
+                                                {{ subGrade . full_name }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -154,7 +154,7 @@
                                                                 class="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
                                                                 <option value="">...</option>
                                                                 <option v-for="grade in subGrades" :value="grade.id"
-                                                                    :key="grade">{{ grade . name }}</option>
+                                                                    :key="grade">{{ grade . full_name }}</option>
                                                             </select>
                                                         </div>
                                                         <p class="mt-2 text-sm text-red-500" v-if="errors.sub_grade_id">
