@@ -141,7 +141,9 @@
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <a :href="'/student-hand-book/' + student.uuid" target="_blank" class="text-indigo-600 mr-2 hover:text-indigo-900">
                             Handbook</a>
-                            <a v-if="student.id_number" :href="'https://courses.darakhtdanesh.org/user/profile.php?id=' + student.id_number +'#usercourses'" target="_blank" class="text-indigo-600 mr-2 hover:text-indigo-900">
+                            <a v-if="student.id_number"
+                            :href="'https://classroom.darakhtdanesh.org/user/editadvanced.php?id=' + student.id_number"
+                            target="_blank" class="text-indigo-600 mr-2 hover:text-indigo-900">
                                 Moodle Account</a>
 
                             <Link :href="'/students/' + student.id + '/edit'" class="text-indigo-600 ml-2 hover:text-indigo-900">
