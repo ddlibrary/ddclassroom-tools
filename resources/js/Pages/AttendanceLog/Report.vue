@@ -259,6 +259,8 @@
             subject_id: form.subject_id,
             month_id: form.month_id,
             country_id: form.country_id,
+            from: form.from,
+            to: form.to,
             search: form.search,
             type: type
 
