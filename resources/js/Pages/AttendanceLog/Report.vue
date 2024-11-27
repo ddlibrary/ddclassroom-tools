@@ -19,6 +19,20 @@
                     </div>
                     <div class="sm:col-span-2">
                         <div class="mt-1 rounded-md shadow-sm flex">
+                            <input type='date' name="from" v-model="form.from" id="from" autocomplete="from"
+                            placeholder="From"
+                                class="focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <div class="mt-1 rounded-md shadow-sm flex">
+                            <input type='date' name="to" v-model="form.to" id="to" autocomplete="to"
+                            placeholder="To"
+                                class="focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <div class="mt-1 rounded-md shadow-sm flex">
                             <select name="subject_id" v-model="form.subject_id"
                                 class="focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
                                 <option value="">...Subject...</option>
@@ -230,6 +244,8 @@
     const form = reactive({
         search : null,
         year : '',
+        from : '',
+        to : '',
         sub_grade_id : '',
         month_id : '',
         subject_id : '',
