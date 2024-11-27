@@ -22,6 +22,11 @@ trait AttendanceLogConditionTrait
             $query->where('first_term', $request->term == 1 ? true : false);
         }
 
+        if (isset($request->from) && isset($request->to) && $request->from && $request->to) {
+            $query->where('date', '>=', $request->from. ' 00:00:00');
+            $query->where('date', '<=', $request->to. ' 23:59:59');
+        }
+
         return $query;
     }
 }

@@ -17,7 +17,6 @@ class StudentAttendanceLogImport implements ToModel, WithHeadingRow
     public function model(array $row)
     {
 
-        info($row);
         if (isset($row['email']) && isset($row['username']) && isset($row['status']) && isset($row['date']) && isset($row['course_name'])) {
             $username = $row['username'];
             $email = $row['username'];
