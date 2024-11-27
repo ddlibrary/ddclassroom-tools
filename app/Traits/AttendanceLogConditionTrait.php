@@ -23,8 +23,8 @@ trait AttendanceLogConditionTrait
         }
 
         if (isset($request->from) && isset($request->to) && $request->from && $request->to) {
-            $query->where('date', '>=', $request->from. ' 00:00:00');
-            $query->where('date', '<=', $request->to. ' 23:59:59');
+
+            $query->where('date', '>=', $request->from. ' 00:00:00')->where('date', '<=', $request->to. ' 23:59:59');
         }
 
         return $query;
