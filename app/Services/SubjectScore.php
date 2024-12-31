@@ -25,6 +25,7 @@ class SubjectScore
     ];
 
     private $type;
+
     private $scoreConfig;
 
     public function __construct(int $type)

@@ -11,6 +11,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\ScoreController;
 use App\Http\Controllers\ShoqaController;
+use App\Http\Controllers\StudentClassPromotionController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentResultCardController;
 use App\Http\Controllers\StudentResultController;
@@ -21,7 +22,6 @@ use App\Http\Controllers\TwoFactorChallengeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\YearController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 
 /*
@@ -35,8 +35,7 @@ use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 |
 */
 
-
-Route::middleware(['auth', 'verified','2fa'])->group(function () {
+Route::middleware(['auth', 'verified', '2fa'])->group(function () {
 
     Route::post('general-attendance-score', [AttendanceLogController::class, 'generalAttendanceScore'])->name('general-attendance-score');
     Route::get('create-student-shoqa-score', [ShoqaController::class, 'createStudentShoqaScore']);
@@ -120,12 +119,17 @@ Route::middleware(['auth', 'verified','2fa'])->group(function () {
     });
 
     Route::get('get-student-result-as-excel', [StudentResultController::class, 'getStudentResultAsExcel']);
+
+    Route::controller(StudentClassPromotionController::class)->group(function () {
+        Route::get('student-class-promotion', 'index');
+        Route::post('student-class-promotion', 'store')->name('student-class-promotion');
+    });
 });
 
-Route::middleware(['auth'])->controller(TwoFactorAuthSetupController::class)->group(function(){
-    Route::get('2fa/index','index');
-    Route::get('2fa/enable','store')->name('enable-2fa');
-    Route::post('2fa/disable','destroy')->name('disable-2fa');
+Route::middleware(['auth'])->controller(TwoFactorAuthSetupController::class)->group(function () {
+    Route::get('2fa/index', 'index');
+    Route::get('2fa/enable', 'store')->name('enable-2fa');
+    Route::post('2fa/disable', 'destroy')->name('disable-2fa');
 
 });
-Route::get('two-factor-challenge-backup-code', [TwoFactorChallengeController::class,'index']);
+Route::get('two-factor-challenge-backup-code', [TwoFactorChallengeController::class, 'index']);

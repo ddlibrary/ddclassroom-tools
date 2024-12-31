@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subject extends Model
 {
-    use HasFactory, HasOneScore, HasManyAttendanceLog;
+    use HasFactory, HasManyAttendanceLog, HasOneScore;
 
     protected $guarded = [];
 

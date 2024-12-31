@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Exports;
+
 ini_set('max_execution_time', 256);
 ini_set('memory_limit', '256M');
 
@@ -13,9 +14,8 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 class ExportAttendanceLogDetailsReport implements FromView, ShouldAutoSize
 {
     use AttendanceLogConditionTrait;
-    public function __construct(private array $data)
-    {
-    }
+
+    public function __construct(private array $data) {}
 
     public function view(): View
     {
@@ -29,7 +29,7 @@ class ExportAttendanceLogDetailsReport implements FromView, ShouldAutoSize
                 'subject:id,name',
                 'month:id,name',
             ])
-           ->select('id', 'date', 'student_id', 'status', 'date', 'sub_grade_id', 'subject_id', 'month_id', 'user_id'); // Select only necessary columns
+            ->select('id', 'date', 'student_id', 'status', 'date', 'sub_grade_id', 'subject_id', 'month_id', 'user_id'); // Select only necessary columns
 
         $query
             ->when($request->sub_grade_id, function ($q) use ($request) {
@@ -50,8 +50,6 @@ class ExportAttendanceLogDetailsReport implements FromView, ShouldAutoSize
 
         // Order and get the results
         $logs = $query->take(20000)->orderBy('date')->get();
-
-
 
         return view('attendance.export-attendance-log-details-report-as-excel', [
             'logs' => $logs,

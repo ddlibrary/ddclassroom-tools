@@ -124,6 +124,6 @@ class AttendanceController extends Controller
 
     public function storeMultipleStudentsAttendance(CreateMultipleAttendanceRequest $request)
     {
-        Excel::import(new StudentAttendanceImport(), $request->file);
+        Excel::import(new StudentAttendanceImport, $request->file);
     }
 }

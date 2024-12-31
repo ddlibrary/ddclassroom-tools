@@ -14,7 +14,7 @@ class ClassResponsibleController extends Controller
     // Result list
     public function index(Request $request)
     {
-        $query = ClassResponsible::query()->with(['subGrade:id,full_name','teacher:id,name']);
+        $query = ClassResponsible::query()->with(['subGrade:id,full_name', 'teacher:id,name']);
 
         if ($request->sub_grade_id) {
             $query->where('sub_grade_id', $request->sub_grade_id);
@@ -47,7 +47,6 @@ class ClassResponsibleController extends Controller
     // Store or update result
     public function store(ClassResponsibleRequest $request)
     {
-
 
         $data = [
             'teacher_id' => $request->teacher_id,

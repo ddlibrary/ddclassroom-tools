@@ -7,12 +7,11 @@ use App\Models\Relations\BelongsToStudent;
 use App\Models\Relations\BelongsToSubGrade;
 use App\Models\Relations\BelongsToSubject;
 use App\Models\Relations\BelongsToUser;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AttendanceLog extends Model
 {
-    use BelongsToStudent, BelongsToSubGrade, BelongsToSubject, BelongsToUser, BelongsToMonth;
+    use BelongsToMonth, BelongsToStudent, BelongsToSubGrade, BelongsToSubject, BelongsToUser;
 
     protected $guarded = [];
 }

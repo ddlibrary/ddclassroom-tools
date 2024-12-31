@@ -19,13 +19,13 @@ class Student extends Model
 {
     use BelongsToCountry,
         BelongsToSubGrade,
+        HasManyAttendanceLog,
         HasManyEnrollment,
         HasManyScore,
         HasOneAttendanceDetail,
         HasOneResponsible,
         HasOneScore,
         HasOneStudentAttendance,
-        HasManyAttendanceLog,
         HasOneStudentResult;
 
     public static function boot()

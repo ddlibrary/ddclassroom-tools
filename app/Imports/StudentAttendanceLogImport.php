@@ -1,23 +1,24 @@
 <?php
+
 namespace App\Imports;
+
 ini_set('max_execution_time', 120);
 
 use App\Models\AttendanceLog;
 use App\Models\AttendanceMissingEmail;
 use App\Models\Student;
 use App\Models\Subject;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
-use Carbon\Carbon;
 
 class StudentAttendanceLogImport implements ToModel, WithHeadingRow
 {
     public function model(array $row)
     {
 
-        info($row);
         if (isset($row['email']) && isset($row['username']) && isset($row['status']) && isset($row['date']) && isset($row['course_name'])) {
             $username = $row['username'];
             $email = $row['username'];
@@ -29,30 +30,31 @@ class StudentAttendanceLogImport implements ToModel, WithHeadingRow
                 return Student::whereUsername($username)->first();
             });
 
-            if (!$student) {
+            if (! $student) {
                 AttendanceMissingEmail::updateOrCreate(['email' => $email], ['created_at' => now()]);
+
                 return [];
             }
 
-            if(request()->location == 'ddc'){
+            if (request()->location == 'ddc') {
                 $from = 0;
                 $to = 3;
-            }elseif(request()->location == 'dlc'){
+            } elseif (request()->location == 'dlc') {
                 $from = 4;
                 $to = 4;
-            }elseif(request()->location == 'arsa'){
+            } elseif (request()->location == 'arsa') {
                 $from = 5;
                 $to = 4;
             }
 
             $subject = isset($row['course_name']) ? $row['course_name'] : null;
-            $subjectId = Cache::remember("subject_name_" . substr($subject, $from, $to), 3600, function () use ($subject, $from, $to) {
-                return Subject::where('en_name', 'like', substr($subject, $from, $to) . '%')->value('id');
+            $subjectId = Cache::remember('subject_name_'.substr($subject, $from, $to), 3600, function () use ($subject, $from, $to) {
+                return Subject::where('en_name', 'like', substr($subject, $from, $to).'%')->value('id');
             });
 
-            if($subjectId){
+            if ($subjectId) {
                 $createdAt = now();
-                if(isset($row['date'])){
+                if (isset($row['date'])) {
                     $dateValue = $row['date'];
                     if (is_numeric($dateValue)) {
                         $dateTime = Carbon::instance(Date::excelToDateTimeObject($dateValue));
@@ -61,7 +63,8 @@ class StudentAttendanceLogImport implements ToModel, WithHeadingRow
                         try {
                             $dateTime = Carbon::parse($dateValue);
                             $createdAt = $dateTime->format('Y-m-d H:i:s');
-                        } catch (\Exception $e) {}
+                        } catch (\Exception $e) {
+                        }
                     }
                 }
 
@@ -78,7 +81,7 @@ class StudentAttendanceLogImport implements ToModel, WithHeadingRow
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
-            }else{
+            } else {
                 info("Subject id is not found for $email, $subject");
             }
         }

@@ -527,7 +527,6 @@ const scoreLimits = ref([]);
 
 
 function submit() {
-    console.log(form)
     router.post(route(`student-score.store`), {
                     studentScores: JSON.stringify(studentScores.value),
                     ...form,

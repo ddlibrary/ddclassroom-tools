@@ -36,7 +36,7 @@ class StudentResultController extends Controller
                     }
                 });
                 if ($name) {
-                    $query->orWhere('result_name', 'like', $name . '%');
+                    $query->orWhere('result_name', 'like', $name.'%');
                 }
             });
         }
@@ -132,7 +132,7 @@ class StudentResultController extends Controller
 
     public function storeMultipleStudentsScore(CreateMultipleStudentsScoreRequest $request)
     {
-        Excel::import(new StudentScoreImport(), $request->file);
+        Excel::import(new StudentScoreImport, $request->file);
     }
 
     public function getStudentResultAsExcel(Request $request)

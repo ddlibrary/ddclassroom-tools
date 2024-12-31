@@ -2,7 +2,6 @@
 
 namespace App\Exports;
 
-use App\Models\Result;
 use App\Models\StudentResult;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
@@ -10,16 +9,14 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class ExportStudentResult implements FromView, ShouldAutoSize
 {
-    public function __construct(private array $data)
-    {
-    }
+    public function __construct(private array $data) {}
 
     public function view(): View
     {
         $year = $this->data['year'];
         $countryId = $this->data['country_id'];
         $gradeId = $this->data['grade_id'];
-        $query = StudentResult::query()->with(['student:id,name,country_id,father_name,uuid,id_number,fa_name,fa_father_name,email,password','student.country:id,name', 'middleResult:id,name', 'finalResult:id,name', 'result:id,name', 'teacher:id,name']);
+        $query = StudentResult::query()->with(['student:id,name,country_id,father_name,uuid,id_number,fa_name,fa_father_name,email,password', 'student.country:id,name', 'middleResult:id,name', 'finalResult:id,name', 'result:id,name', 'teacher:id,name']);
         $query
             ->where('year', $year)
             ->where(function ($query) use ($gradeId) {
