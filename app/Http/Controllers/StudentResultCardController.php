@@ -61,9 +61,10 @@ class StudentResultCardController extends Controller
             ->where('grade_id', $student->subGrade->grade_id)->get();
         $results = Result::all();
 
-        if($request->en_result){
+        if ($request->en_result) {
             return view('students.student-en-result-card', compact('student', 'subjects', 'results', 'responsible'));
         }
+
         return view('students.student-result-card', compact('student', 'subjects', 'results', 'responsible', 'year'));
     }
 

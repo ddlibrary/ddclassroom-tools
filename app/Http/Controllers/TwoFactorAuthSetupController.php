@@ -12,26 +12,27 @@ use Laravel\Fortify\Actions\EnableTwoFactorAuthentication;
 
 class TwoFactorAuthSetupController extends Controller
 {
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $twoFactorEnabled = Auth::user()->twoFactorAuthEnabled();
 
         $qrCode = null;
         $recoveryCodes = null;
 
-        if(Auth::user()->two_factor_secret){
+        if (Auth::user()->two_factor_secret) {
             $qrCode = Auth::user()->twoFactorQrCodeSvg();
             $recoveryCodes = Auth::user()->recoveryCodes();
         }
 
-
         return Inertia::render('Auth/TwoFactorEnableDisable', [
             'twoFactorEnabled' => $twoFactorEnabled,
             'qrCode' => $qrCode,
-            'recoveryCodes' => $recoveryCodes
+            'recoveryCodes' => $recoveryCodes,
         ]);
     }
 
-    public function store(EnableTwoFactorAuthentication $enable) {
+    public function store(EnableTwoFactorAuthentication $enable)
+    {
         $user = Auth::user();
         $enable($user);
 
@@ -39,10 +40,12 @@ class TwoFactorAuthSetupController extends Controller
         $user->save();
 
         Mail::to($user->email)->send(new BackupCodesEmail($user->recoveryCodes()));
+
         return redirect()->back()->with('newlyEnabled', true);
     }
 
-    public function destroy(DisableTwoFactorAuthentication $disabled){
+    public function destroy(DisableTwoFactorAuthentication $disabled)
+    {
         $user = Auth::user();
 
         $disabled($user);
@@ -52,6 +55,4 @@ class TwoFactorAuthSetupController extends Controller
 
         return redirect()->back();
     }
-
-
 }

@@ -55,7 +55,7 @@ class ExportAttendanceShoqa implements FromView, ShouldAutoSize
             'subject' => $subject,
             'year' => $year,
             'grade' => $subGrade,
-            'type' => $type
+            'type' => $type,
         ]);
     }
 }

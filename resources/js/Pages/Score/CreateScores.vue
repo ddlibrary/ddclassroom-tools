@@ -527,7 +527,6 @@ const scoreLimits = ref([]);
 
 
 function submit() {
-    console.log(form)
     router.post(route(`student-score.store`), {
                     studentScores: JSON.stringify(studentScores.value),
                     ...form,
@@ -541,14 +540,11 @@ function submit() {
 }
 
 function getStudents() {
-    console.log(form)
     if (form.year && form.subject_id && form.sub_grade_id && form.type_id) {
         scoreLimits.value = form.type_id == 1 ? props.midtermScores: props.finalScores;
-
     }else{
         studentScores.value = [];
     }
-
 }
 
 const selectedScores = ref([]);

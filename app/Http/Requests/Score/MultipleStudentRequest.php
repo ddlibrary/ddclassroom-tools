@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Score;
 
-use App\Enums\SubjectMinScoreEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MultipleStudentRequest extends FormRequest

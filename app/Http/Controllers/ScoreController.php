@@ -115,7 +115,7 @@ class ScoreController extends Controller
         DB::beginTransaction();
 
         try {
-            if (is_array($scores) && !empty($scores)) {
+            if (is_array($scores) && ! empty($scores)) {
                 $grade = SubGrade::find($request->sub_grade_id)->grade;
                 foreach ($scores as $score) {
                     $this->storeScore($request, $score, $grade);
@@ -222,7 +222,7 @@ class ScoreController extends Controller
 
     public function storeMultipleStudentsScore(CreateMultipleStudentsScoreRequest $request)
     {
-        Excel::import(new StudentScoreImport(), $request->file);
+        Excel::import(new StudentScoreImport, $request->file);
     }
 
     public function deleteScores()
@@ -248,7 +248,6 @@ class ScoreController extends Controller
             'subject_id' => $request->subject_id,
         ];
 
-
         Score::where($where)
             ->where('type', $request->type_id)
             ->update([
@@ -264,9 +263,7 @@ class ScoreController extends Controller
             ]);
 
         $score = Score::where($where)
-        ->where('type', $request->type_id == 1 ? 2 : 1)->first();
-
-
+            ->where('type', $request->type_id == 1 ? 2 : 1)->first();
 
         Score::where($where)
             ->where('type', 3)
@@ -281,13 +278,13 @@ class ScoreController extends Controller
                 'is_passed' => (float) $score->total >= SubjectMinScoreEnum::Success->value ? true : false,
             ]);
 
-            $studentResultWhere = [
-                'year' => $request->year,
-                'sub_grade_id' => $request->sub_grade_id,
-                'student_id' => $score->student_id,
-            ];
-            $this->updateStudentResult($score->subGrade->grade, $studentResultWhere, 1);
-            $this->updateStudentResult($score->subGrade->grade, $studentResultWhere, 2);
+        $studentResultWhere = [
+            'year' => $request->year,
+            'sub_grade_id' => $request->sub_grade_id,
+            'student_id' => $score->student_id,
+        ];
+        $this->updateStudentResult($score->subGrade->grade, $studentResultWhere, 1);
+        $this->updateStudentResult($score->subGrade->grade, $studentResultWhere, 2);
     }
 
     public function createMidtermScoreBasedOnFinal()

@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\DomCrawler\Crawler;
 
-
 class StudentController extends Controller
 {
     public function index(Request $request)
@@ -82,7 +81,7 @@ class StudentController extends Controller
 
         // Upload student photo
         if ($request->hasFile('photo')) {
-            $student->photo = 'student-photos/' . $this->upload($request);
+            $student->photo = 'student-photos/'.$this->upload($request);
             $student->save();
         }
 
@@ -100,7 +99,7 @@ class StudentController extends Controller
     public function upload($request)
     {
         if ($request->hasFile('photo')) {
-            $filename = time() . '-' . $request->photo->getClientOriginalName();
+            $filename = time().'-'.$request->photo->getClientOriginalName();
             $request->photo->storeAs('student-photos', $filename, 'public');
 
             return $filename;
@@ -109,16 +108,16 @@ class StudentController extends Controller
 
     public function update(CreateStudentRequest $request, Student $student)
     {
-        if($student->sub_grade_id != $request->grade_id){
+        if ($student->sub_grade_id != $request->grade_id) {
             $currentClass = $student->subGrade->grade;
             $newClass = SubGrade::find($request->grade_id)->grade;
 
-            if($currentClass->id == $newClass->id){
+            if ($currentClass->id == $newClass->id) {
                 Enrollment::where(['student_id' => $student->id, 'sub_grade_id' => $student->sub_grade_id])->update([
                     'sub_grade_id' => $request->grade_id,
                     'user_id' => auth()->id(),
                 ]);
-            }else{
+            } else {
                 Enrollment::create([
                     'student_id' => $student->id,
                     'sub_grade_id' => $request->grade_id,
@@ -154,10 +153,9 @@ class StudentController extends Controller
             'is_active' => $request->is_active == 1 ? true : false,
         ]);
 
-
         // Upload student photo
         if ($request->hasFile('photo')) {
-            $student->photo = 'student-photos/' . $this->upload($request);
+            $student->photo = 'student-photos/'.$this->upload($request);
             $student->save();
         }
 
@@ -177,16 +175,14 @@ class StudentController extends Controller
         return inertia('Student/EditStudentInfo');
     }
 
-
-
     public function storeMultipleStudents(CreateMultipleStudentsRequest $request)
     {
-        Excel::import(new StudentImport(), $request->file);
+        Excel::import(new StudentImport, $request->file);
     }
 
     public function updateStudentInfo(UpdateStudentInfoRequest $request)
     {
-        Excel::import(new UpdateStudentInfoImport(), $request->file);
+        Excel::import(new UpdateStudentInfoImport, $request->file);
     }
 
     public function emailHandbook($uuid)

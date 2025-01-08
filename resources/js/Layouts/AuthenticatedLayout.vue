@@ -71,6 +71,12 @@ const navigation = [
                 current: false,
             },
             {
+                name: "Class Promotion",
+                href: "/student-class-promotion",
+                icon: DocumentDuplicateIcon,
+                current: false,
+            },
+            {
                 name: "Delete Student Score",
                 href: "/student-score/delete-scores",
                 icon: DocumentDuplicateIcon,

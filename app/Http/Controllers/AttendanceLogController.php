@@ -96,7 +96,7 @@ class AttendanceLogController extends Controller
                 $query->whereAny(['name', 'last_name', 'username', 'father_name', 'fa_name', 'fa_last_name', 'fa_father_name', 'email', 'phone', 'id_number'], 'like', "%$name%");
             });
         }
-        if($request->sub_grade_id){
+        if ($request->sub_grade_id) {
             $query->where('sub_grade_id', $request->sub_grade_id);
         }
         $students = $query->paginate(50)->appends(request()->query());
@@ -130,16 +130,17 @@ class AttendanceLogController extends Controller
             'months' => $months,
             'terms' => $terms,
             'years' => $years,
-            'locations' => $locations
+            'locations' => $locations,
         ]);
     }
 
     public function storeMultipleStudentsAttendanceLog(CreateMultipleAttendanceLogRequest $request)
     {
-        Excel::import(new StudentAttendanceLogImport(), $request->file);
+        Excel::import(new StudentAttendanceLogImport, $request->file);
     }
 
-    public function generalAttendanceScore(Request $request){
+    public function generalAttendanceScore(Request $request)
+    {
         $query = Student::query()->where('sub_grade_id', $request->sub_grade_id)->select('id', 'sub_grade_id');
         $query
             ->withCount([
@@ -168,22 +169,21 @@ class AttendanceLogController extends Controller
                 },
             ]);
 
-
-            $students = $query->get();
-            $studnetId = $students->pluck('id');
-            $where = [
-                'sub_grade_id' => $request->sub_grade_id,
-                'type' => $request->type,
-                'year' => $request->year,
-            ];
-            Attendance::whereIn('student_id', $studnetId)->where($where)->delete();
-            AttendanceDetail::whereIn('student_id', $studnetId)->where($where)->delete();
-            foreach ($students as $student) {
-                $subjects = Subject::withCount([
-                    'attendanceLogs' => function ($query) use ($student) {
-                        return $query->where('student_id', $student->id);
-                    },
-                ])
+        $students = $query->get();
+        $studnetId = $students->pluck('id');
+        $where = [
+            'sub_grade_id' => $request->sub_grade_id,
+            'type' => $request->type,
+            'year' => $request->year,
+        ];
+        Attendance::whereIn('student_id', $studnetId)->where($where)->delete();
+        AttendanceDetail::whereIn('student_id', $studnetId)->where($where)->delete();
+        foreach ($students as $student) {
+            $subjects = Subject::withCount([
+                'attendanceLogs' => function ($query) use ($student) {
+                    return $query->where('student_id', $student->id);
+                },
+            ])
                 ->withCount([
                     'present' => function ($query) use ($student) {
                         return $query->where('student_id', $student->id);
@@ -193,67 +193,70 @@ class AttendanceLogController extends Controller
                     'absent' => function ($query) use ($student) {
                         return $query->where('student_id', $student->id);
                     },
-                ])
+                    ])
                 ->withCount([
                     'late' => function ($query) use ($student) {
                         return $query->where('student_id', $student->id);
                     },
-                ])
+                    ])
                 ->withCount([
                     'excused' => function ($query) use ($student) {
                         return $query->where('student_id', $student->id);
                     },
-                ])->get();
-                Attendance::insert([
+                    ])->get();
+            Attendance::insert([
+                'type' => $request->type,
+                'year' => $request->year,
+                'student_id' => $student->id,
+                'sub_grade_id' => $student->sub_grade_id,
+                'teacher_id' => auth()->id(),
+                'user_id' => auth()->id(),
+                'total_class_hours' => $student->attendance_logs_count,
+                'present' => $student->present_count + $student->late_count,
+                'absent' => $student->absent_count,
+                'permission' => $student->excused_count,
+                'patient' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            foreach ($subjects as $subject) {
+                AttendanceDetail::insert([
                     'type' => $request->type,
                     'year' => $request->year,
                     'student_id' => $student->id,
+                    'subject_id' => $subject->id,
                     'sub_grade_id' => $student->sub_grade_id,
                     'teacher_id' => auth()->id(),
                     'user_id' => auth()->id(),
-                    'total_class_hours' => $student->attendance_logs_count,
-                    'present' => $student->present_count + $student->late_count,
-                    'absent' => $student->absent_count,
-                    'permission' => $student->excused_count,
+                    'total_class_hours' => $subject->attendance_logs_count,
+                    'present' => $subject->present_count + $subject->late_count,
+                    'absent' => $subject->absent_count,
+                    'permission' => $subject->excused_count,
                     'patient' => 0,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
-
-                foreach ($subjects as $subject) {
-                    AttendanceDetail::insert([
-                        'type' => $request->type,
-                        'year' => $request->year,
-                        'student_id' => $student->id,
-                        'subject_id' => $subject->id,
-                        'sub_grade_id' => $student->sub_grade_id,
-                        'teacher_id' => auth()->id(),
-                        'user_id' => auth()->id(),
-                        'total_class_hours' => $subject->attendance_logs_count,
-                        'present' => $subject->present_count + $subject->late_count,
-                        'absent' => $subject->absent_count,
-                        'permission' => $subject->excused_count,
-                        'patient' => 0,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
-                }
-
             }
+
+        }
 
         // }
 
         return back();
     }
 
-    public function getAttendanceLogReportAsExcel(Request $request) {
-        if($request->type == 'details'){
-            return Excel::download(new ExportAttendanceLogDetailsReport($request->all()), "جزییات-حاضری.xlsx");
+    public function getAttendanceLogReportAsExcel(Request $request)
+    {
+        if ($request->type == 'details') {
+            return Excel::download(new ExportAttendanceLogDetailsReport($request->all()), 'جزییات-حاضری.xlsx');
         }
-        return Excel::download(new ExportAttendanceLogReport($request->all()), "گزارش-حاضری-صنف.xlsx");
+
+        return Excel::download(new ExportAttendanceLogReport($request->all()), 'گزارش-حاضری-صنف.xlsx');
     }
 
-    public function clearAllAttendanceLog(){
+    public function clearAllAttendanceLog()
+    {
         AttendanceLog::where('id', '>=', 1)->delete();
     }
 }

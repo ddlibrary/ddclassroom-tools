@@ -35,7 +35,7 @@ class ShoqaController extends Controller
 
             if ($request->export_type == 'score') {
 
-                $response = Excel::download(new ExportShoqa($request->all()), "shoqa.xlsx", \Maatwebsite\Excel\Excel::XLSX);
+                $response = Excel::download(new ExportShoqa($request->all()), 'shoqa.xlsx', \Maatwebsite\Excel\Excel::XLSX);
                 ob_end_clean();
 
                 return $response;

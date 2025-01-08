@@ -1,10 +1,10 @@
 <?php
 
-
-function getResultName($name){
-    if($name == 'کامیاب'){
+function getResultName($name)
+{
+    if ($name == 'کامیاب') {
         return 'Passed';
-    }elseif($name == 'ناکام'){
+    } elseif ($name == 'ناکام') {
         return 'Failed';
     }
 

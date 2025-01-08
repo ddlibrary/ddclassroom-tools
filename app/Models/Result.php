@@ -9,11 +9,13 @@ class Result extends Model
 {
     use HasFactory;
 
-    public function midtermStudentResults(){
+    public function midtermStudentResults()
+    {
         return $this->hasMany(StudentResult::class, 'middle_result_id');
     }
 
-    public function finalStudentResults(){
+    public function finalStudentResults()
+    {
         return $this->hasMany(StudentResult::class, 'result_id');
     }
 }

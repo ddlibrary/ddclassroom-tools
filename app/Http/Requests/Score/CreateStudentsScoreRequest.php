@@ -22,7 +22,8 @@ class CreateStudentsScoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        $max = request()->type_id == 1 ? SubjectMinScoreEnum::Middle->value: SubjectMinScoreEnum::Final->value;
+        $max = request()->type_id == 1 ? SubjectMinScoreEnum::Middle->value : SubjectMinScoreEnum::Final->value;
+
         return [
             'grade_id' => ['required', 'exists:sub_grades,id'],
             'teacher_id' => ['required', 'exists:users,id'],
@@ -39,7 +40,6 @@ class CreateStudentsScoreRequest extends FormRequest
             'evaluation.*' => "required|numeric|min:0|max:$max",
             'total.*' => "required|numeric|min:0|max:$max",
             'type_id' => 'required|string',
-
 
         ];
     }

@@ -16,7 +16,7 @@ trait StoreStudentScoreTrait
             ->where('sub_grade_id', $request->sub_grade_id)
             ->first();
 
-        if($student){
+        if ($student) {
 
             $where = [
                 'year' => $request->year,
@@ -91,7 +91,8 @@ trait StoreStudentScoreTrait
         }
     }
 
-    private function createStudentResult($request, $studentId, $where){
+    private function createStudentResult($request, $studentId, $where)
+    {
         if (Score::where($where)->doesntExist()) {
             for ($i = 1; $i < 4; $i++) {
                 Score::updateOrCreate(
@@ -108,7 +109,8 @@ trait StoreStudentScoreTrait
         }
     }
 
-    private function updateStudentResult($grade, $studentResultWhere, $type){
+    private function updateStudentResult($grade, $studentResultWhere, $type)
+    {
         $studentResult = StudentResult::where($studentResultWhere)->first();
 
         $firstTerm = Score::where($studentResultWhere)->where('type', 1)->sum('total');

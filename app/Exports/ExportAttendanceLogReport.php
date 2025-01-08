@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Exports;
+
 ini_set('max_execution_time', 120);
 
 use App\Models\Month;
@@ -13,15 +14,16 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 class ExportAttendanceLogReport implements FromView, ShouldAutoSize
 {
     use AttendanceLogConditionTrait;
+
     public function __construct(private array $data) {}
 
     public function view(): View
     {
 
-        $request = (object)$this->data;
+        $request = (object) $this->data;
 
-        $query = Student::query()->select(['id', 'name','father_name','fa_name','fa_father_name','province', 'email', 'phone','id_number','sub_grade_id'])
-        ->with(['subGrade:id,name,full_name']);
+        $query = Student::query()->select(['id', 'name', 'father_name', 'fa_name', 'fa_father_name', 'province', 'email', 'phone', 'id_number', 'sub_grade_id'])
+            ->with(['subGrade:id,name,full_name']);
         $query
             ->withCount([
                 'attendanceLogs' => function ($query) use ($request) {
@@ -55,11 +57,11 @@ class ExportAttendanceLogReport implements FromView, ShouldAutoSize
         //         $query->whereAny(['name', 'last_name', 'username', 'father_name', 'fa_name', 'fa_last_name', 'fa_father_name', 'email', 'phone', 'id_number'], 'like', "%$name%");
         //     });
         // }
-        if($request->sub_grade_id){
+        if ($request->sub_grade_id) {
             $query->where('sub_grade_id', $request->sub_grade_id);
         }
 
-        if($request->country_id){
+        if ($request->country_id) {
             $query->where('country_id', $request->country_id);
         }
 
@@ -68,7 +70,7 @@ class ExportAttendanceLogReport implements FromView, ShouldAutoSize
         return view('attendance.export-attendance-log-report-as-excel', [
             'students' => $students,
             'year' => $request->year,
-            'month' => Month::find($request->month_id)
+            'month' => Month::find($request->month_id),
         ]);
     }
 }
