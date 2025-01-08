@@ -21,7 +21,7 @@ class ScoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        $maxScore = $this->type == 1 ? 46 : 54;
+        $maxScore = $this->type == 1 ? 40 : 60;
 
         return [
             'total' => ['required', 'numeric', 'min:0', "max:$maxScore"],
