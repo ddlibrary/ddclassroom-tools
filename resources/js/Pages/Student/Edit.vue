@@ -431,7 +431,7 @@
         id_number: props.student.id_number,
         school: props.student.school,
         password: props.student.password,
-        is_active: true,
+        is_active: props.student.is_active,
         _method: 'put'
     })
 

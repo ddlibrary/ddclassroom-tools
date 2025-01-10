@@ -243,4 +243,10 @@ class StudentController extends Controller
 
         return redirect()->back()->with('success', 'Result card sent successfully!');
     }
+
+    public function destroy(Student $student){
+        $student->update(['is_active' => !$student->is_active]);
+
+        return back();
+    }
 }

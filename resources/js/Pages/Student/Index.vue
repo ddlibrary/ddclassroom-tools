@@ -149,9 +149,10 @@
                             <Link :href="'/students/' + student.id + '/edit'" class="text-indigo-600 ml-2 hover:text-indigo-900">
                             Edit</Link>
 
-                            <span class="text-red-700 cursor-pointer ml-2"
-                                @click="deleteItem(student.id)">
-                                Delete
+                            <span class="cursor-pointer ml-2"
+                                :class="{ 'text-red-700': student.is_active, 'text-green-700': !student.is_active }"
+                                @click="deleteItem(student.id, student.is_active)">
+                            Make {{ student.is_active ? 'Disable' : 'Enable' }}
                             </span>
                         </td>
                     </tr>
@@ -218,15 +219,16 @@
         });
     }, 300));
 
-    function deleteItem(id) {
-        if (confirm('Are you sure to delete this student?')) {
+    function deleteItem(id, is_active) {
+        let isActive = is_active ? 'disable' : 'enable';
+        if (confirm(`Are you sure to ${isActive} this student?`)) {
             router.delete(route(`students.destroy`, {
                 'id': id
             }), {
                 forceFormData: true,
                 onFinish: () => {
                     Swal.fire(`Deleted`,
-                        `Student has been successfully deleted.`)
+                        `Student has been successfully ${is_active ? 'disabled' : 'enabled'}.`)
                 },
             });
         }

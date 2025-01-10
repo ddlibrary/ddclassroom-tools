@@ -52,7 +52,7 @@ class ExportShoqa implements FromView, ShouldAutoSize
                             'type' => $type,
                         ]);
                     },
-                ]);
+                ])->where('is_active', true);
             },
         ])->where(['sub_grade_id' => $subGradeId, 'year' => $year])->get();
 
