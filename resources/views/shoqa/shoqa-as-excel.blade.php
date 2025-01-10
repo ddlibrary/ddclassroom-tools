@@ -26,19 +26,19 @@
                 <td colspan="9" rowspan="5">
                     <img src="{{ public_path('images/logo.png') }}" height="70px;">
                 </td>
-                <td  style="text-align: right"> ( {{ $type == 1 ? 'چهارنیم ماه' : 'سالانه' }} )</td>
+                <td style="text-align: right"> ( {{ $type == 1 ? 'چهارنیم ماه' : 'سالانه' }} )</td>
                 <td>امتحان</td>
             </tr>
             <tr>
-                <td ></td>
+                <td></td>
                 <td>نام معلم</td>
             </tr>
             <tr>
-                <td  style="text-align: right">( {{ $grade->name }} )</td>
+                <td style="text-align: right">( {{ $grade->name }} )</td>
                 <td>صنف</td>
             </tr>
             <tr>
-                <td style="text-align: right" >({{ $subject->name }} )</td>
+                <td style="text-align: right">({{ $subject->name }} )</td>
                 <td>مضمون</td>
             </tr>
             <tr>
@@ -73,49 +73,51 @@
                 <th style="text-align: center;border:1px solid #000 !important;text-weight:bold !important;">شماره</th>
             </tr>
             @foreach ($enrollments as $enrollment)
-                <?php
-                $studentScore = $enrollment->student?->score?->attendance;
-                $score = 0;;
-                if(!$studentScore || $studentScore<=0){
-                    $score = $enrollment->student?->attendance?->total_class_hours != 0 ? round(($enrollment->student?->attendance?->total_class_hours - $enrollment->student?->attendance?->absent) * 5 / ($enrollment->student?->attendance?->total_class_hours),2) : 0;
-                }
-                  ?>
-                <tr>
-                    <td style="text-align: center;border:1px solid #000 !important">
-                        {{ $enrollment->student?->score?->total + $score }}
-                    </td>
-                    <td style="text-align: center;border:1px solid #000 !important">
-                        {{ $enrollment->student?->score?->evaluation }}
-                    </td>
-                    <td style="text-align: center;border:1px solid #000 !important">
-                        {{ $enrollment->student?->score?->homework }}
-                    </td>
-                    <td style="text-align: center;border:1px solid #000 !important">
-                        {{ $enrollment->student?->score?->activity }}
-                    </td>
-                    <td style="text-align: center;border:1px solid #000 !important">
-                        {{ $studentScore + $score }}
+                @if ($enrollment->student)
+                    <?php
+                    $studentScore = $enrollment->student?->score?->attendance;
+                    $score = 0;
+                    if (!$studentScore || $studentScore <= 0) {
+                        $score = $enrollment->student?->attendance?->total_class_hours != 0 ? round((($enrollment->student?->attendance?->total_class_hours - $enrollment->student?->attendance?->absent) * 5) / $enrollment->student?->attendance?->total_class_hours, 2) : 0;
+                    }
+                    ?>
+                    <tr>
+                        <td style="text-align: center;border:1px solid #000 !important">
+                            {{ $enrollment->student?->score?->total + $score }}
+                        </td>
+                        <td style="text-align: center;border:1px solid #000 !important">
+                            {{ $enrollment->student?->score?->evaluation }}
+                        </td>
+                        <td style="text-align: center;border:1px solid #000 !important">
+                            {{ $enrollment->student?->score?->homework }}
+                        </td>
+                        <td style="text-align: center;border:1px solid #000 !important">
+                            {{ $enrollment->student?->score?->activity }}
+                        </td>
+                        <td style="text-align: center;border:1px solid #000 !important">
+                            {{ $studentScore + $score }}
 
-                    </td>
-                    <td style="text-align: center;border:1px solid #000 !important">
-                        {{ $enrollment->student?->score?->verbal }}
-                    </td>
-                    <td style="text-align: center;border:1px solid #000 !important">
-                        {{ $enrollment->student?->score?->written }}
-                    </td>
-                    <td style="text-align: center;border:1px solid #000 !important">
-                        {{ $enrollment->student->fa_father_name }}
-                    </td>
-                    <td style="text-align: center;border:1px solid #000 !important">
-                        {{ $enrollment->student->fa_name }}
-                    </td>
-                    <td style="text-align: center;border:1px solid #000 !important">
-                        {{ $enrollment->student->id_number }}
-                    </td>
-                    <td style="text-align: center;border:1px solid #000 !important">
-                        {{ $loop->iteration }}
-                    </td>
-                </tr>
+                        </td>
+                        <td style="text-align: center;border:1px solid #000 !important">
+                            {{ $enrollment->student?->score?->verbal }}
+                        </td>
+                        <td style="text-align: center;border:1px solid #000 !important">
+                            {{ $enrollment->student?->score?->written }}
+                        </td>
+                        <td style="text-align: center;border:1px solid #000 !important">
+                            {{ $enrollment->student->fa_father_name }}
+                        </td>
+                        <td style="text-align: center;border:1px solid #000 !important">
+                            {{ $enrollment->student->fa_name }}
+                        </td>
+                        <td style="text-align: center;border:1px solid #000 !important">
+                            {{ $enrollment->student->id_number }}
+                        </td>
+                        <td style="text-align: center;border:1px solid #000 !important">
+                            {{ $loop->iteration }}
+                        </td>
+                    </tr>
+                @endif
             @endforeach
         </table>
     </div>
