@@ -28,7 +28,6 @@ class CreateStudentRequest extends FormRequest
             'grade_id' => 'required',
             'username' => 'required',
             'email' => 'required',
-            'password' => 'required',
         ];
     }
 }
