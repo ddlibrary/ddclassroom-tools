@@ -8,7 +8,7 @@
 
     <!-- Bootstrap CSS -->
     <link href="{{ asset('assets/bootstrap/css/bootstrap.rtl.min.css') }}" rel="stylesheet">
-    <title>{{ $student->fa_name.' - '.$student->fa_father_name }} - صنف {{ $student->subGrade->grade->number}}</title>
+    <title>{{ $student->fa_name . ' - ' . $student->fa_father_name }} - صنف {{ $student->subGrade->grade->number }}</title>
     <style>
         table {
             page-break-inside: avoid;
@@ -17,40 +17,39 @@
         td {
             page-break-inside: avoid;
         }
+
+        @media print {
+            .body {
+                direction: rtl;
+            }
+        }
     </style>
 </head>
 
-<body style="padding:20px;">
+<body style="padding:20px;" dir="rtl">
     <div class="container">
         <button onclick="printDiv('container')" class="btn btn-success my-2">چاپ</button>
-        <a href="{{ url('email-handbook/'.$student->uuid) }}" style="float:left">
+        <a href="{{ url('email-handbook/' . $student->uuid) }}" style="float:left">
             <button class="btn btn-success my-2">ایمیل به شاگرد</button>
         </a>
 
-        <div id="container">
-            <h1 class="text-center">Student’s Handbook</h1>
-            <h1 class="text-center">کتاب رهنمای شاگردان</h1>
-            <h5 class="text-center">کتاب رهنما برای دانش‌آموزان مرکز آموزشی دیجیتال (DLC) - پاکستان
-            </h5>
-            <p>
-                <b>
-                    مرکز آموزشی دیجیتال (DLC) - پاکستان باهدف ارائه خدمات آموزشی برای پناهندگان افغان ایجاد گردیده است.
-                    اکثریت
-                    قاطع این پناهندگان افغان بدون مدارک قانونی هستند که به همین دلیل قادر نیستند تا اطفال شان‌را به
-                    مکاتب
-                    پاکستان ثبت نام کنند. بناءً، ایجاد این مرکز آموزشی دیجیتال (DLC) به آن‌ها این امکان را می‌دهد تا
-                    بتوانند
-                    به‌صورت آنلاین دروس شان‌را از طریق صنوف درسی درخت دانش ادامه بدهند.
-                </b>
-            </p>
-            <p>
-                <b>
-                    این جزوه معلوماتی که به‌گونه سوال و جواب تهیه شده، برای شاگردان رهنمایی می‌کند تا چطور به سیستم درسی
-                    دست‌رسی
-                    پیدا کنند و چطور بتوانند تکالیف درسی را انجام بدهند و ارسال کنند.
 
-                </b>
+
+        <div id="container" dir="rtl">
+            <p>
+                سلام {{ $student->fa_name }} {{ $student->fa_father_name }} عزیز,
             </p>
+
+            <p>
+                برای دسترسی به برنامه درسی مودل شما از ایمیل آدرس و پسورد ذیل که برای شما مهیا شده است استفاده نمایید.
+            </p>
+            <p> برنامه مودل را شما میتوانید از لینک ذیل دانلود کنید.
+                <br>
+                <a
+                    href="https://play.google.com/store/apps/details?id=com.moodle.moodlemobile&pcampaignid=web_share">https://play.google.com/store/apps/details?id=com.moodle.moodlemobile&pcampaignid=web_share</a>
+            </p>
+            <h1 class="text-center">ایمیل و رمزعبور {{ $student->fa_name }} {{ $student->fa_father_name }} در مودل</h1>
+
 
             <table class="table table-bordered border-dark">
                 <tr>
@@ -63,243 +62,90 @@
                 </tr>
                 <tr>
                     <th>صنف</th>
-                    <th class="text-end">{{ $student->subGrade->grade->number }}</th>
+                    <th class="text-end">{{ $student->subGrade->name }}</th>
                 </tr>
                 <tr>
                     <th>اسم در سیستم</th>
                     <th class="text-end">{{ $student->name_in_system }}</th>
                 </tr>
                 <tr>
+                    <th>نام کاربری</th>
+                    <th class="text-end">{{ $student->username }}</th>
+                </tr>
+                <tr>
                     <th>ایمیل سیستم</th>
-                    <th class="text-end">{{ $student->email }}</th>
+                    <th class="text-end"><code>{{ $student->email }}</code></th>
                 </tr>
                 <tr>
                     <th>پسورد سیستم</th>
-                    <th class="text-end">{{ $student->password }}</th>
+                    <th class="text-end" style="direction: ltr !important;"><code>{{ $student->password }}</code></th>
                 </tr>
+                <tr>
+                    <th>آدرس سایت درخت دانش</th>
+                    <th class="text-end">https://courses.darakhtdanesh.org/login/index.php</th>
+                </tr>
+                <tr>
+                    <th>نام سایت درخت دانش در مودل</th>
+                    <th class="text-end">ddc</th>
+                </tr>
+                <tr>
+                    <th>گروپ تلگرام - حل مشکلات تخنیکی</th>
+                    <th class="text-end"><a href="https://t.me/+ebX2eq5ZIDViOWE1">https://t.me/+ebX2eq5ZIDViOWE1</a>
+                    </th>
+                </tr>
+                <tr>
+                    <th>گروپ تلگرام - ویدیوهای آموزشی </th>
+                    <th class="text-end"><a href="https://t.me/+ooZAZgJMm0kwYTNl">https://t.me/+ooZAZgJMm0kwYTNl</a>
+                    </th>
+                </tr>
+
+
+
             </table>
+            نوت: برای دانلود کردن برنامه تلگرام از این استفاده کنید.
+            <br>
+            <a
+                href="https://play.google.com/store/apps/details?id=org.telegram.messenger&pcampaignid=web_share">https://play.google.com/store/apps/details?id=org.telegram.messenger&pcampaignid=web_share</a>
 
             <br>
-            <table class="table table-bordered border-dark">
-                <tr>
-                    <th class="w-50 text-center">سوالات دانش‌‌آموزان</th>
-                    <th class="text-center">جوابات</th>
-                </tr>
-                <tr>
-                    <td>آیا درس‌های ما به‌صورت حضوری است یا به‌صورت آنلاین؟</td>
-                    <td>درس‌های شما به‌صورت آنلاین بوده؛ اما برای دست‌رسی به صنوف آنلاین تان نیاز است تا شما به مرکز
-                        آموزشی ما
-                        در آدرس ذیل مراجعه کنید تا با استفاده از وسایل و تجهیزات موجود در آنجا به دروس آنلاین تان
-                        دست‌رسی داشته
-                        باشید.
-                        <br>
-                        آدرس: دیپارتمنت کریمنولوژی، دانشگاه پشاور
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        ما از چی طریقی به درس‌های آنلاین حاضر شده می‌توانیم؟
-                    </td>
-                    <td>
-                        شما از طریق پلتفورم Moodle به درس‌های آنلاین خود وصل می‌شوید. ویدیوی درس تان قبلن در سیستم مودل
-                        گذاشته
-                        می‌شود، شما می توانید آن ویدیو را ببینید، سپس از طریق لینک Google Meet که در مودل گذاشته شده نظر
-                        به
-                        تقسیم‌اوقات تان در ساعت مشخص به صنف آنلاین خود وصل شوید.
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Moodle چی است؟
-                    </td>
-                    <td>
-                        Moodle یک پلتفورمی است که برای آموزش آنلاین استفاده می‌شود. ما نیز در این پلتفورم فضای را برای
-                        صنف شما
-                        در نظر گرفته ایم تا شما بتوانید به درس‌های خود به‌صورت سیستماتیک ادامه دهید. شما با استفاده از
-                        یوزر و
-                        پسوردی که در جدول فوق تهیه شده، می‌توانید به این صنف تان دست‌رسی داشته باشید.
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        آیا برای دروس تقسیم‌اوقات منظم وجود دارد؟
-                    </td>
-                    <td>
-                        بلی، تقسیم اوقات درسی منظم بوده و شما به رویت آن به درس‌های روزمره تان رسیدگی می‌کنید.
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        درس‌ جدید خود را چه وقت مشاهده کنیم و یا بخوانیم؟
-                    </td>
-                    <td>
-                        هر روز قبل از این‌که جلسه درسی آنلاین شروع شود، مطابق به تقسیم‌اوقات شما باید درس همان روز را به
-                        دقت
-                        بخوانید و آمادگی داشته باشید.
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        جوابات فعالیت‌ها، ارزیابی‌‌ها و کارخانه‌گی‌ها را چه وقت انجام دهیم؟
-                    </td>
-                    <td>
-                        در هر درس، سوالات ارزیابی، فعالیت‌ها و کار‌خانه‌گی‌ها را خواهید دید. بعد از این‌که درس امروز تان
-                        را به
-                        دقت خواندید، جوابات سوالات ارزیابی و کار‌خانگی‌ها را در کتاب‌چه‌های خود یادداشت کنید.
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        جوابات فعالیت‌ها، ارزیابی‌ها و کارخانه‌گی را چه قسم با استاد شریک بسازیم؟
-                    </td>
-                    <td>
-                        جواب فعالیت‌ها، ارزیابی‌ها و کارخانگی‌ها را از طریق سیستم مودل مطابق به آنچه قبلن آموزش داده
-                        شده، ارسال
-                        کنید.
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        آیا در انجام کارخانگی فقط از قلم و کتابچه استفاده کنیم یا گاهی نیاز می‌شود تا بعضی کارخانگی‌ها
-                        را با
-                        کمپیوتر/مبایل انجام بدهیم؟
-                    </td>
-                    <td>
-                        شما می توانید در انجام کارخانگی از کتابچه و قلم استفاده کنید و عکس کارخانگی خود را با استاد شریک
-                        سازید؛
-                        اما ممکن بعضی اساتید کارخانگی‌های را برای شاگردان در نظر بگیرند که باید با استفاده از
-                        کمپیوتر/تبلیت/مبایل انجام بدهند.
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        آیا در دروس آن‌لاین کتاب‌چه کار است؟
-                    </td>
-                    <td>
-                        بلی! باید برای هر مضمون کتاب‌چه‌ی جداگانه داشته باشید.
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        چه‌گونه بفهمیم که جوابات ما درست است یا خیر؟
-                    </td>
-                    <td>
-                        همه جوابات شما را استاد مربوطه مرور می‌کند و بعد نظرش را با شما شریک می‌سازد.
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        اگر در درس‌های خود مشکل داشته باشیم، چه کنیم؟
-                    </td>
-                    <td>
-                        می‌توانید از استادان تان، هم به‌طور شفاهی در صنوف آنلاین و هم تحریری از طریق پلتفورم مودل سوال
-                        کنید.
-                        البته در اوقات معینه نظر به تقسیم‌اوقاتی‌که برای تان داده شده است.
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        چه وقت در صنف آن‌لاین حاضر باشیم؟
-                    </td>
-                    <td>
-                        اوقات معین برای هر مضمون در تقسیم اوقاتی‌که با شما شریک ساخته شده درج می‌باشد، شما می‌توانید به
-                        رویت آن
-                        در صنف حاضر شوید، همیشه باید 5 دقیقه قبل از شروع درس، در صنف حاضر باشید.
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        اگر در صنف آن‌لاین حاضر نشوم غیرحاضر شمرده می‌شوم؟
-                    </td>
-                    <td>
-                        بلی! مثل صنف حضوری، حاضری نزد هر استاد موجود است و هر استاد در ساعت درسی خود از شما حاضری
-                        می‌گیرد، در
-                        صورتی‌که شما حاضر نباشید، شما را غیرحاضر می‌سازد و مطابق پالیسی ارزیابی، از نمره حاضری تان کاسته
-                        می شود.
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        آیا می‌توانیم از معلم‌ صاحب ما در موارد مشکلات درسی سوال کنیم؟
-                    </td>
-                    <td>
-                        بلی! می‌توانید هم در جلسه درسی آنلاین و هم از طریق پیام در پلتفورم مودل از استاد تان در مورد
-                        مشکلات درسی
-                        سوال بپرسید.
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        آیا دانش‌آموزان مکلف به سپری نمودن امتحان می‌باشند؟
-                    </td>
-                    <td>
-                        بلی! برعلاوه این‌که همانند مکتب حضوری امتحان چهارونیم‌ماهه و سالانه دارید، ارزیابی روزانه نیز
-                        بخشی از
-                        برنامه‌های ما است. کوشش کنید تا امتحانات و ارزیابی‌ها را موفقانه سپری نمایید.
-                    </td>
-                </tr>
-
-            </table>
-
-            <h3>1 - چگونه کورس‌ها را دانلود </h3>
-            <div>
-                <div>
-                    <p>
-                        a. برای دانلود کردن درس‌ها در صفحه کورس بالای شکل ابر کلیک کنید.
-                    </p>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            باتشکر
+            <br>
+            {{ auth()->user()->name }}
 
 
-                    <img src="{{ asset('handbook-images/1.png') }}" class="w-100">
-                </div>
-                <br>
-                <div>
-                    <p>
-                        b. در صفحه دانلود روبروی هر درس شکل ابر (آیکن دانلود) وجود دارد، بالای آن کلیک کنید و صبر کنید
-                        تا دانلود
-                        تکمیل شود. در صورت که دانلود تکمیل شود، شکل روبروی آن از ابر به سطل زباله تبدیل میشود. در صورت
-                        که شما
-                        درس ها را دانلود کنید، شما می‌توانید بدون مصرف اینترنت درس را بارها مکرراً تماشا کنید. حتی اگر
-                        بسته
-                        اینترنت
-                        شما تمام شود، درس‌های دانلود شده قابل مشاهده می‌باشد
-                    </p>
-
-                    <img src="{{ asset('handbook-images/2.png') }}" style="width:49%;">
-                    <img src="{{ asset('handbook-images/3.png') }}" style="width:49%;">
-                </div>
-
-                <br>
-                <h3>2 - چه‌گونه حساب درخت دانش خود را باز کنیم؟ </h3>
-                <div>
-                    <p>
-                        برنامه درسی‌ که شما در آن درس‌ها را دریافت می‌کنید و به کمک آن درس می‌خواند برای هر شاگرد یک
-                        حساب در آن
-                        موجود است که توسط آن می‌دانیم که شاگردان درس را مرور کرده اند یا خیر. در صورتی‌ که شما به هر
-                        دلیلی از
-                        حساب برنامه درسی تان بیرون شدید و به درس ها دسترسی نداشتید، رهنمایی‌های ذیل را انجام دهید و
-                        دوباره داخل
-                        حساب خود شوید. برنامه را باز کنید و I'M A LEARNER انتخاب کنید.
-                        در صفحه بعدی DDC نوشته کنید
-
-                    </p>
-                    <img src="{{ asset('handbook-images/4.png') }}" class="w-100">
+            {{-- <div dir="ltr">
+                <p style="font-size: 9pt; font-family: Verdana, sans-serif; font-weight: 700; color: rgb(245, 130, 61); background-color: transparent; margin: 0;">
+                    Canadian Women for Women in Afghanistan
+                </p>
+                <p style="color: rgb(34, 34, 34); font-family: Arial, sans-serif; font-size: 9pt; line-height: 1.656; margin: 0;">
+                    <a href="http://www.cw4wafghan.ca/" style="color: rgb(17, 85, 204); font-family: Verdana, sans-serif; background-color: transparent;">
+                        www.cw4wafghan.ca
+                    </a>
+                    <span style="font-family: Verdana, sans-serif;">
+                        &nbsp;| Follow us @cw4wafghan
+                    </span>
+                </p>
+                <p style="font-size: 9pt; font-family: Georgia, serif; color: rgb(0, 0, 0); background-color: transparent;line-height: 1.656; margin: 0;font-style: italic;">
                     <br>
-                    <img src="{{ asset('handbook-images/5.png') }}" class="w-100">
-
-                </div>
-                <p>
-                    منتظر بمانید تا لیست بیاید و بعد در لیست (Darakht-e Danesh Courses (DDC را انتخاب کنید
+                    <span>
+                        Making the&nbsp;
+                    </span>
+                    <span style="font-weight: 700;">
+                        Right to Learn
+                    </span>
+                    <span>
+                        &nbsp;a Reality
+                    </span>
                 </p>
-                <img src="{{ asset('handbook-images/6.png') }}" class="w-100">
-
-                <br>
-                <p>در صفحه آخری از شما ایمیل و رمز حساب شما پرسیده می‌شود که در جدول بالا برای‌تان داده شده. ایمیل و رمز
-                    حساب هر
-                    شاگرد متفاوت می‌باشد. بعد از نوشتن ایمیل و رمز تان دکمه LOG IN که به رنگ نارنجی است، را کلیک کنید.
-                </p>
-                <img src="{{ asset('handbook-images/7.png') }}" class="w-100">
-            </div>
+            </div> --}}
         </div>
+
 
         <script src="{{ asset('assets/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
