@@ -8,7 +8,7 @@
 
     <!-- Bootstrap CSS -->
     <link href="{{ asset('assets/bootstrap/css/bootstrap.rtl.min.css') }}" rel="stylesheet">
-    <title>{{ $student->fa_name.' - '.$student->fa_father_name }} - صنف {{ $student->subGrade->grade->number}}</title>
+    <title>{{ $student->fa_name . ' - ' . $student->fa_father_name }} - صنف {{ $student->subGrade->grade->number }}</title>
     <style>
         table {
             page-break-inside: avoid;
@@ -17,8 +17,11 @@
         td {
             page-break-inside: avoid;
         }
+
         @media print {
-            .body { direction:rtl;}
+            .body {
+                direction: rtl;
+            }
         }
     </style>
 </head>
@@ -26,7 +29,7 @@
 <body style="padding:20px;" dir="rtl">
     <div class="container">
         <button onclick="printDiv('container')" class="btn btn-success my-2">چاپ</button>
-        <a href="{{ url('email-handbook/'.$student->uuid) }}" style="float:left">
+        <a href="{{ url('email-handbook/' . $student->uuid) }}" style="float:left">
             <button class="btn btn-success my-2">ایمیل به شاگرد</button>
         </a>
 
@@ -91,7 +94,7 @@
                     </th>
                 </tr>
                 <tr>
-                    <th>گروپ تلگرام - ویدیوهای آموزشی  </th>
+                    <th>گروپ تلگرام - ویدیوهای آموزشی </th>
                     <th class="text-end"><a href="https://t.me/+ooZAZgJMm0kwYTNl">https://t.me/+ooZAZgJMm0kwYTNl</a>
                     </th>
                 </tr>
@@ -113,7 +116,7 @@
             <br>
             باتشکر
             <br>
-             {{ auth()->user()->name }}
+            {{ auth()->user()->name }}
 
 
             {{-- <div dir="ltr">
