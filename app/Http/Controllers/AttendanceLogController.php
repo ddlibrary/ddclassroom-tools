@@ -193,17 +193,17 @@ class AttendanceLogController extends Controller
                     'absent' => function ($query) use ($student) {
                         return $query->where('student_id', $student->id);
                     },
-                    ])
+                ])
                 ->withCount([
                     'late' => function ($query) use ($student) {
                         return $query->where('student_id', $student->id);
                     },
-                    ])
+                ])
                 ->withCount([
                     'excused' => function ($query) use ($student) {
                         return $query->where('student_id', $student->id);
                     },
-                    ])->get();
+                ])->get();
             Attendance::insert([
                 'type' => $request->type,
                 'year' => $request->year,
