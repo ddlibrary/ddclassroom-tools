@@ -19,8 +19,8 @@ class SubjectScore
         'homework' => 5,
         'evaluation' => 10,
         'attendance' => 0,
-        'written' => 20,
-        'oral' => 10,
+        'written' => 40, // 30-40
+        'oral' => 20, // 10 - 20
         'total' => 60,
     ];
 
