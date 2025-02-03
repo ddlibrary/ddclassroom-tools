@@ -15,13 +15,13 @@ class SubjectScore
     ];
 
     private $finalScoreConfig = [
-        'activity' => 5,
-        'homework' => 5,
-        'evaluation' => 10,
-        'attendance' => 0,
-        'written' => 40, // 30-40
-        'oral' => 20, // 10 - 20
-        'total' => 60,
+        'activity' => 20,
+        'homework' => 20,
+        'evaluation' => 20,
+        'attendance' => 10,
+        'written' => 60, // 30-40
+        'oral' => 30, // 10 - 20
+        'total' => 100,
     ];
 
     private $type;
