@@ -158,7 +158,7 @@
                         </td>
 
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a :href="'/student-result-card/' + score.student.uuid + '/' + score.year" target="_blank"
+                            <a :href="'/student-result-card/' + score.student.uuid + '/' + score.year + '/'+score.id" target="_blank"
                                 class="text-indigo-600 mr-2 hover:text-indigo-900">
                                 Result Card</a>
 
