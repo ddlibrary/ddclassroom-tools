@@ -155,15 +155,15 @@
                                             class="result-bg text-danger text-start">Result</th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ getResultName($student->studentResult->middle_result_name) }}
+                                            {{ getResultName($studentResult->middle_result_name) }}
                                         </th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $final > 0 ? getResultName($student->studentResult->final_result_name) : '' }}
+                                            {{ $final > 0 ? getResultName($studentResult->final_result_name) : '' }}
                                         </th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $final > 0 ? getResultName($student->studentResult->result_name) : '' }}
+                                            {{ $final > 0 ? getResultName($studentResult->result_name) : '' }}
                                         </th>
                                     </tr>
                                     <tr>
