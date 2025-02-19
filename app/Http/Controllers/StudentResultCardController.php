@@ -25,27 +25,29 @@ class StudentResultCardController extends Controller
             ->with('middleAttendance', function ($query) use ($year, $subGradeId) {
                 $query->where([
                     'year' => $year,
-                    'sub_grade_id' => $subGradeId
+                    'sub_grade_id' => $subGradeId,
                 ]);
             })
             ->with('finalAttendance', function ($query) use ($year, $subGradeId) {
                 $query->where([
                     'year' => $year,
-                    'sub_grade_id' => $subGradeId
+                    'sub_grade_id' => $subGradeId,
                 ]);
             })
             ->firstOrFail();
 
-        $responsible = ClassResponsible::with('teacher:id,name,signature')->where([
-            'year' => $year,
-            'sub_grade_id' => $student->sub_grade_id,
-        ])->first();
+        $responsible = ClassResponsible::with('teacher:id,name,signature')
+            ->where([
+                'year' => $year,
+                'sub_grade_id' => $student->sub_grade_id,
+            ])
+            ->first();
 
         $studentId = $student->id;
         $where = [
             'year' => $year,
             'student_id' => $studentId,
-            'sub_grade_id' => $subGradeId
+            'sub_grade_id' => $subGradeId,
         ];
 
         $subjects = GradeSubject::with(['grade:id,name', 'subject'])
@@ -58,7 +60,8 @@ class StudentResultCardController extends Controller
             ->with('subject.finalResult', function ($query) use ($where) {
                 $query->where($where);
             })
-            ->where('grade_id', $student->subGrade->grade_id)->get();
+            ->where('grade_id', $student->subGrade->grade_id)
+            ->get();
         $results = Result::all();
 
         if ($request->en_result) {
