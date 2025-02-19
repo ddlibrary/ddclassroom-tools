@@ -69,7 +69,7 @@
 <body style="padding:20px;">
     <div class="container">
         <button onclick="printDiv('container')" id="print" class="btn btn-success my-2">چاپ</button>
-        <a href="{{ url('student-result-card/' . $student->uuid . '/' . $year . '?en_result=true') }}"
+        <a href="{{ url('student-result-card/' . $student->uuid . '/' . $year . '/' . $studentResult->id . '?en_result=true') }}"
             style="float:left">English Result Card</a>
         <div>
             <div style="direction:rtl;position: relative;" id="container">
@@ -156,15 +156,15 @@
                                             class="result-bg text-danger text-start">نتیجه</th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $student->studentResult->middle_result_name }}
+                                            {{ $studentResult->middle_result_name }}
                                         </th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $final > 0 ? $student->studentResult->final_result_name : '' }}
+                                            {{ $final > 0 ? $studentResult->final_result_name : '' }}
                                         </th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $final > 0 ? $student->studentResult->result_name : '' }}
+                                            {{ $final > 0 ? $studentResult->result_name : '' }}
                                         </th>
                                     </tr>
                                     <tr>
@@ -185,15 +185,15 @@
                                             class="result-bg text-danger text-start">فیصدی</th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ round($student->studentResult->middle_percentage, 2) }}%
+                                            {{ round($studentResult->middle_percentage, 2) }}%
                                         </th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $final > 0 ? round($student->studentResult->final_percentage, 2) . '%' : '' }}
+                                            {{ $final > 0 ? round($studentResult->final_percentage, 2) . '%' : '' }}
                                         </th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $final > 0 ? round($student->studentResult->percentage, 2) . '%' : '' }}
+                                            {{ $final > 0 ? round($studentResult->percentage, 2) . '%' : '' }}
                                         </th>
                                     </tr>
                                     <tr>
@@ -201,15 +201,15 @@
                                             class="result-bg text-danger text-start">درجه</th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $student->studentResult->middleResult->name }}
+                                            {{ $studentResult->middleResult->name }}
                                         </th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $final > 0 ? $student->studentResult->finalResult->name : '' }}
+                                            {{ $final > 0 ? $studentResult->finalResult->name : '' }}
                                         </th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $final > 0 ? $student->studentResult->result->name : '' }}
+                                            {{ $final > 0 ? $studentResult->result->name : '' }}
                                         </th>
                                     </tr>
                                 </table>
