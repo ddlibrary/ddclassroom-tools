@@ -94,7 +94,7 @@ Route::middleware(['auth', 'verified', '2fa'])->group(function () {
 
     Route::controller(StudentResultCardController::class)->group(function () {
         Route::get('student-hand-book/{uuid}', 'studentHandBook');
-        Route::get('student-result-card/{uuid}/{year}', 'studentResultCard');
+        Route::get('student-result-card/{uuid}/{year}/{studentResult}', 'studentResultCard');
     });
 
     Route::controller(ScoreController::class)->group(function () {
