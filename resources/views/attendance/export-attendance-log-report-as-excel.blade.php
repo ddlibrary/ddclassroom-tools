@@ -50,7 +50,7 @@
                 <td  style="text-align: center;border:1px solid #000 !important">{{ $student->excused_count }}</td>
                 <td  style="text-align: center;border:1px solid #000 !important">
                 <?php
-                    $absent = (isset($student->attendance_logs_count) && ($student->attendance_logs_count > 0)) ? ($student->absent_count * 100 / $student->attendance_logs_count) : 0;
+                    $absent = $$student->attendance_logs_count == 0 ? 100 : (isset($student->attendance_logs_count) && ($student->attendance_logs_count > 0)) ? ($student->absent_count * 100 / $student->attendance_logs_count) : 0;
                 ?>
                 {{ $absent >= 20 ? 'No' : 'Yes'}}
                 </td>
