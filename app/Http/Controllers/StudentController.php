@@ -172,7 +172,11 @@ class StudentController extends Controller
 
     public function editStudentInfo()
     {
-        return inertia('Student/EditStudentInfo');
+        $grades = SubGrade::whereIsActive(true)->get();
+        $years = Year::all(['id', 'name']);
+        $countries = Country::all(['id', 'name']);
+
+        return inertia('Student/EditStudentInfo', ['grades' => $grades, 'years' => $years, 'countries' => $countries]);
     }
 
     public function storeMultipleStudents(CreateMultipleStudentsRequest $request)

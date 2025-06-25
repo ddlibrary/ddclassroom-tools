@@ -32,7 +32,57 @@
                                 </p>
 
                                 <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                                    <div class="sm:col-span-2">
+                                        <label for="grade_id"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Grade
+                                        </label>
+                                        <div class="mt-2">
+                                            <select v-model="form.grade_id" name="grade" id="grade"
+                                                autocomplete="grade"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">...</option>
+                                                <option v-for="grade in grades" :value="grade.id"
+                                                    :key="grade">{{ grade . full_name }}</option>
+                                            </select>
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.grade_id">
+                                                {{ errors . grade_id }}</p>
+                                        </div>
+                                    </div>
 
+                                    <!-- Year -->
+                                    <div class="sm:col-span-2">
+                                        <label for="year"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Year
+                                        </label>
+                                        <div class="mt-2">
+                                            <select v-model="form.year" name="year" id="year"
+                                                autocomplete="year"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">...</option>
+                                                <option v-for="year in years" :value="year.name"
+                                                    :key="year">{{ year . name }}</option>
+                                            </select>
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.year">
+                                                {{ errors . year }}</p>
+                                        </div>
+                                    </div>
+                                    <!-- Country -->
+                                    <div class="sm:col-span-2">
+                                        <label for="country"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Country
+                                        </label>
+                                        <div class="mt-2">
+                                            <select v-model="form.country_id" name="country" id="country"
+                                                autocomplete="country"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">...</option>
+                                                <option v-for="country in countries" :value="country.id"
+                                                    :key="country">{{ country . name }}</option>
+                                            </select>
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.country">
+                                                {{ errors . country }}</p>
+                                        </div>
+                                    </div>
                                     <div class="sm:col-span-6">
                                         <label for="photo" class="block text-sm font-medium text-gray-700">
                                             File
@@ -105,10 +155,13 @@
         router
     } from '@inertiajs/vue3';
 
-    const props = defineProps(['errors']);
+    const props = defineProps(['grades', 'errors', 'years', 'countries']);
 
     const form = reactive({
         file: null,
+        grade_id: '',
+        year: '',
+        country_id: '',
     });
 
     function selectFile($event) {
