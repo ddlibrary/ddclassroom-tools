@@ -58,8 +58,8 @@
                     <td style="text-align: center;border:1px solid #000 !important">{{ $result->student->fa_father_name }}
                     <td style="text-align: center;border:1px solid #000 !important">{{ $result->student->id_number }}</td>
                     <td style="text-align: center;border:1px solid #000 !important">{{ $result->student->country?->name }}</td>
-                    <td style="text-align: center;border:1px solid #000 !important">{{ $result->subGrade->grade_id }} {{ $result
-                    ->subGrade->level }}</td>
+                    <td style="text-align: center;border:1px solid #000 !important">{{ $result->subGrade?->grade_id }} {{ $result
+                    ->subGrade?->level }}</td>
                     <td style="text-align: center;border:1px solid #000 !important">{{ $result->year }}</td>
                     <td style="text-align: center;border:1px solid #000 !important">{{ $result->middle }}</td>
                     <td style="text-align: center;border:1px solid #000 !important">{{ $result->final }}</td>
