@@ -26,7 +26,8 @@ class ExportStudentResult implements FromView, ShouldAutoSize
             })
             ->with([
                 'subGrade' => function ($query) use ($year) {
-                    $query->where('year', $year)->with([
+                  //  $query->where('year', $year)->with([
+                    $query->with([
                         'responsible' => function ($query) use ($year) {
                             $query->where('year', $year)->with(['teacher:id,name']);
                         },
