@@ -36,7 +36,6 @@ use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 */
 
 Route::middleware(['auth', 'verified', '2fa'])->group(function () {
-
     Route::post('general-attendance-score', [AttendanceLogController::class, 'generalAttendanceScore'])->name('general-attendance-score');
     Route::get('create-student-shoqa-score', [ShoqaController::class, 'createStudentShoqaScore']);
     Route::get('clear-all-attendance-log', [AttendanceLogController::class, 'clearAllAttendanceLog']);
@@ -108,7 +107,6 @@ Route::middleware(['auth', 'verified', '2fa'])->group(function () {
         Route::put('student-score/{score}', 'update')->name('student-score.update');
         Route::get('add-midterm-score-based-on-final', 'createMidtermScoreBasedOnFinal');
         Route::post('add-midterm-score-based-on-final', 'storeMidtermScoreBasedOnFinal')->name('add-midterm-score-based-on-final');
-
     });
 
     Route::post('get-students', [EnrollmentController::class, 'getStudents'])->name('get-students');
@@ -126,10 +124,12 @@ Route::middleware(['auth', 'verified', '2fa'])->group(function () {
     });
 });
 
-Route::middleware(['auth'])->controller(TwoFactorAuthSetupController::class)->group(function () {
-    Route::get('2fa/index', 'index');
-    Route::get('2fa/enable', 'store')->name('enable-2fa');
-    Route::post('2fa/disable', 'destroy')->name('disable-2fa');
-
-});
+Route::middleware(['auth'])
+    ->controller(TwoFactorAuthSetupController::class)
+    ->group(function () {
+        Route::get('2fa/index', 'index');
+        Route::get('2fa/enable', 'store')->name('enable-2fa');
+        Route::post('2fa/disable', 'destroy')->name('disable-2fa');
+    });
 Route::get('two-factor-challenge-backup-code', [TwoFactorChallengeController::class, 'index']);
+Route::get('result-card/{uuid}/{year}/{studentResult}', StudentResultCardController::class, 'resultCard');
