@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <?php $image = asset('images/main-logo.jpeg'); ?>
+    <?php $image = asset('images/logo.png'); ?>
     <!-- Bootstrap CSS -->
     <link href="{{ asset('assets/bootstrap/css/bootstrap.rtl.min.css') }}" rel="stylesheet">
     <title>اطلاعنامه {{ $student->fa_name }} {{ $student->fa_father_name }} - {{ $student->subGrade->name }}</title>
@@ -43,11 +43,12 @@
             position: absolute;
             top: 20%;
             bottom: 20%;
-            right: 20%;
-            left: 20%;
+            right: 5%;
+            left: 5%;
             background-repeat: no-repeat;
             background-position: center;
-            opacity: 0.1;
+            background-size: contain;
+            opacity: 0.15;
         }
 
         @media print {
@@ -56,11 +57,12 @@
                 position: absolute;
                 top: 20%;
                 bottom: 20%;
-                right: 20%;
-                left: 20%;
+                right: 5%;
+                left: 5%;
                 background-repeat: no-repeat;
                 background-position: center;
-                opacity: 0.1;
+                background-size: contain;
+                opacity: 0.15;
             }
         }
     </style>
@@ -74,13 +76,9 @@
         <div>
             <div style="direction:rtl;position: relative;" id="container">
                 <div style="background-image:url('{{ $image }}') !important;position: absolute;
-                top: 20%;
-                bottom: 20%;
-                right: 20%;
-                left: 20%;
                 background-repeat: no-repeat;
                 background-position: center;
-                opacity: 0.04;"
+                opacity: 0.15;"
                     id="logo"></div>
                 <div style=";padding:25px;border:1px solid black;border-radius:12px;">
 
@@ -321,7 +319,7 @@
         <script type="text/javascript">
             document.addEventListener("DOMContentLoaded", function() {
                 var div = document.getElementById("print");
-                div.click();
+                // div.click();
             });
 
             var qrcode = new QRCode(document.getElementById("qrcode"), {
@@ -343,4 +341,5 @@
             makeCode("{{ $qrCode }}")
         </script>
 </body>
+
 </html>
