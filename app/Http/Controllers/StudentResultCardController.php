@@ -18,8 +18,9 @@ class StudentResultCardController extends Controller
         return view('students.show', compact('student'));
     }
 
-    public function studentResultCard(Request $request, $uuid, $year, StudentResult $studentResult)
+    public function studentResultCard(Request $request, $uuid, $year, $studentResultId)
     {
+        $studentResult = StudentResult::find($studentResultId);
         $subGradeId = $studentResult->sub_grade_id;
         $student = Student::where('uuid', $uuid)
             ->with('middleAttendance', function ($query) use ($year, $subGradeId) {
@@ -64,12 +65,75 @@ class StudentResultCardController extends Controller
             ->get();
         $results = Result::all();
 
+        $year = base64_encode($year);
+
+        $studentResultId = base64_encode($studentResultId);
+
+        $qrCode = url("result-card/$uuid/$year/$studentResultId");
+
         if ($request->en_result) {
-            return view('students.student-en-result-card', compact('student', 'subjects', 'results', 'responsible', 'studentResult'));
+            return view('students.student-en-result-card', compact('student', 'subjects', 'results', 'responsible', 'studentResult', 'qrCode'));
         }
 
-        return view('students.student-result-card', compact('student', 'subjects', 'results', 'responsible', 'year', 'studentResult'));
+        return view('students.student-result-card', compact('student', 'subjects', 'results', 'responsible', 'year', 'studentResult', 'qrCode'));
     }
 
-    public function resultCards() {}
+    public function resultCard(Request $request, $uuid, $year, $studentResultId)
+    {
+        $year = base64_decode($year);
+        $studentResultId = base64_decode($studentResultId);
+        $studentResult = StudentResult::findOrFail($studentResultId);
+
+        $subGradeId = $studentResult->sub_grade_id;
+        $student = Student::where('uuid', $uuid)
+            ->with('middleAttendance', function ($query) use ($year, $subGradeId) {
+                $query->where([
+                    'year' => $year,
+                    'sub_grade_id' => $subGradeId,
+                ]);
+            })
+            ->with('finalAttendance', function ($query) use ($year, $subGradeId) {
+                $query->where([
+                    'year' => $year,
+                    'sub_grade_id' => $subGradeId,
+                ]);
+            })
+            ->firstOrFail();
+
+        $responsible = ClassResponsible::with('teacher:id,name,signature')
+            ->where([
+                'year' => $year,
+                'sub_grade_id' => $student->sub_grade_id,
+            ])
+            ->first();
+
+        $studentId = $student->id;
+        $where = [
+            'year' => $year,
+            'student_id' => $studentId,
+            'sub_grade_id' => $subGradeId,
+        ];
+
+        $subjects = GradeSubject::with(['grade:id,name', 'subject'])
+            ->with('subject.middle', function ($query) use ($where) {
+                $query->where($where);
+            })
+            ->with('subject.final', function ($query) use ($where) {
+                $query->where($where);
+            })
+            ->with('subject.finalResult', function ($query) use ($where) {
+                $query->where($where);
+            })
+            ->where('grade_id', $student->subGrade->grade_id)
+            ->get();
+        $results = Result::all();
+
+        $year = base64_encode($year);
+
+        $studentResultId = base64_encode($studentResultId);
+
+        $qrCode = url("result-card/$uuid/$year/$studentResultId");
+
+        return view('students.result-card', compact('student', 'subjects', 'results', 'responsible', 'year', 'studentResult', 'qrCode'));
+    }
 }
