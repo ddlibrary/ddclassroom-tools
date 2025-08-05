@@ -86,7 +86,7 @@
                 <div style=";padding:25px;border:1px solid black;border-radius:12px;">
 
                     <div class="text-center">
-                        <img src="{{ asset('images/logo.webp') }}" style="width: 200px;">
+                        <img src="{{ asset('images/logo.png') }}" style="width: 200px;">
                     </div>
                     <h3 class="text-center">Result Card</h3>
                     <table class="table table-bordered border-dark">

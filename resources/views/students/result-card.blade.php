@@ -68,9 +68,6 @@
 
 <body style="padding:20px;">
     <div class="container">
-        <button onclick="printDiv('container')" id="print" class="btn btn-success my-2">چاپ</button>
-        <a href="{{ url('student-result-card/' . $student->uuid . '/' . $year . '/' . $studentResult->id . '?en_result=true') }}"
-            style="float:left">English Result Card</a>
         <div>
             <div style="direction:rtl;position: relative;" id="container">
                 <div style="background-image:url('{{ $image }}') !important;position: absolute;
@@ -303,6 +300,7 @@
                                 <div style="flex:1"></div>
                                 <div style="226px !important;">
                                     <div id="qrcode"></div>
+                                    {{-- <svg id="qrcode" xmlns="http://www.w3.org/2000/svg"></svg> --}}
                                 </div>
                             </div>
                         </div>
@@ -315,15 +313,9 @@
         <script src="{{ asset('assets/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
         <script src="{{ asset('assets/js/jquery-min.js') }}"></script>
-        <script src="{{ asset('assets/js/print-this.js') }}"></script>
-        <script src="{{ asset('assets/js/myjs.js') }}"></script>
         <script src="{{ asset('assets/js/qrcode.js') }}"></script>
-        <script type="text/javascript">
-            document.addEventListener("DOMContentLoaded", function() {
-                var div = document.getElementById("print");
-                div.click();
-            });
 
+        <script type="text/javascript">
             var qrcode = new QRCode(document.getElementById("qrcode"), {
                 width: 170,
                 height: 170,
@@ -343,4 +335,5 @@
             makeCode("{{ $qrCode }}")
         </script>
 </body>
+
 </html>
