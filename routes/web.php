@@ -132,4 +132,4 @@ Route::middleware(['auth'])
         Route::post('2fa/disable', 'destroy')->name('disable-2fa');
     });
 Route::get('two-factor-challenge-backup-code', [TwoFactorChallengeController::class, 'index']);
-Route::get('result-card/{uuid}/{year}/{studentResult}', StudentResultCardController::class, 'resultCard');
+Route::get('result-card/{uuid}/{year}/{studentResult}', [StudentResultCardController::class, 'resultCard']);
