@@ -85,7 +85,7 @@
                 <div style=";padding:25px;border:1px solid black;border-radius:12px;">
 
                     <div class="text-center">
-                        <img src="{{ asset('images/logo.webp') }}" style="width: 200px;">
+                        <img src="{{ asset('images/logo.png') }}" style="width: 200px;">
                     </div>
                     <h3 class="text-center">اطلاعنامه</h3>
                     <table class="table table-bordered border-dark">
@@ -134,7 +134,7 @@
                                         $middleScore = $subject->subject?->middle?->total;
                                         $finalScore = $subject->subject?->final?->total;
                                         $totalScore = $subject->subject?->finalResult?->total;
-
+                                        
                                         $middle += $middleScore;
                                         $final += $finalScore;
                                         $total += $totalScore;
@@ -298,6 +298,13 @@
                                     </tr>
                                 </table>
                             </div>
+                            <div class="text-right" style="margin-top:120px;display:flex;">
+
+                                <div style="flex:1"></div>
+                                <div style="226px !important;">
+                                    <div id="qrcode"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -310,12 +317,30 @@
         <script src="{{ asset('assets/js/jquery-min.js') }}"></script>
         <script src="{{ asset('assets/js/print-this.js') }}"></script>
         <script src="{{ asset('assets/js/myjs.js') }}"></script>
-        <script>
+        <script src="{{ asset('assets/js/qrcode.js') }}"></script>
+        <script type="text/javascript">
             document.addEventListener("DOMContentLoaded", function() {
                 var div = document.getElementById("print");
                 div.click();
             });
+
+            var qrcode = new QRCode(document.getElementById("qrcode"), {
+                width: 170,
+                height: 170,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            function makeCode(url) {
+                if (!url) {
+                    alert("No URL provided");
+                    return;
+                }
+                qrcode.makeCode(url);
+            }
+
+            makeCode("{{ $qrCode }}")
         </script>
 </body>
-
 </html>
