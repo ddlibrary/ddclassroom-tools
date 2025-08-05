@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <?php $image = asset('images/main-logo.jpeg'); ?>
+    <?php $image = asset('images/logo.png'); ?>
     <!-- Bootstrap CSS -->
     <link href="{{ asset('assets/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     <title>اطلاعنامه {{ $student->name }} {{ $student->father_name }} - {{ $student->subGrade->name }}</title>
@@ -43,24 +43,26 @@
             position: absolute;
             top: 20%;
             bottom: 20%;
-            right: 20%;
-            left: 20%;
+            right: 5%;
+            left: 5%;
             background-repeat: no-repeat;
             background-position: center;
-            opacity: 0.1;
+            background-size: contain;
+            opacity: 0.15;
         }
 
-        @media print{
-            #logo{
-                background-image:url('{{ $image }}') !important;
+        @media print {
+            #logo {
+                background-image: url('{{ $image }}') !important;
                 position: absolute;
-            top: 20%;
-            bottom: 20%;
-            right: 20%;
-            left: 20%;
-            background-repeat: no-repeat;
-            background-position: center;
-            opacity: 0.1;
+                top: 20%;
+                bottom: 20%;
+                right: 5%;
+                left: 5%;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: contain;
+                opacity: 0.15;
             }
         }
     </style>
@@ -78,11 +80,12 @@
                 <div style="background-image:url('{{ $image }}') !important;position: absolute;
                 top: 20%;
                 bottom: 20%;
-                right: 20%;
-                left: 20%;
+                right: 5%;
+                left: 5%;
                 background-repeat: no-repeat;
                 background-position: center;
-                opacity: 0.04;" id="logo"></div>
+                opacity: 0.15;"
+                    id="logo"></div>
                 <div style=";padding:25px;border:1px solid black;border-radius:12px;">
 
                     <div class="text-center">
@@ -91,7 +94,8 @@
                     <h3 class="text-center">Result Card</h3>
                     <table class="table table-bordered border-dark">
                         <tr>
-                            <th class="text-center" style="background: #ffa800 !important;" colspan="2"> Student Information
+                            <th class="text-center" style="background: #ffa800 !important;" colspan="2"> Student
+                                Information
                             </th>
                         </tr>
                         <tr>
@@ -100,11 +104,13 @@
                         </tr>
                         <tr>
                             <th class="text-right" style="width: 150px;">Student Name</th>
-                            <th class="text-start">{{ $student->name ? $student->name : $student->name }} {{ $student->last_name ? $student->last_name : $student->last_name }}</th>
+                            <th class="text-start">{{ $student->name ? $student->name : $student->name }}
+                                {{ $student->last_name ? $student->last_name : $student->last_name }}</th>
                         </tr>
                         <tr>
                             <th>Father Name</th>
-                            <th class="text-start">{{ $student->father_name ? $student->father_name : $student->father_name }}</th>
+                            <th class="text-start">
+                                {{ $student->father_name ? $student->father_name : $student->father_name }}</th>
                         </tr>
                         <tr>
                             <th>Course</th>
@@ -133,7 +139,7 @@
                                         $middleScore = $subject->subject?->middle?->total;
                                         $finalScore = $subject->subject?->final?->total;
                                         $totalScore = $subject->subject?->finalResult?->total;
-
+                                        
                                         $middle += $middleScore;
                                         $final += $finalScore;
                                         $total += $totalScore;
@@ -167,14 +173,17 @@
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th style="background-color: #ffa80054 !important" class="text-start text-danger">
+                                        <th style="background-color: #ffa80054 !important"
+                                            class="text-start text-danger">
                                             Total</th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">{{ $middle }}</th>
                                         <th style="background-color: #ffa80054 !important;"
-                                            class="result-bg text-danger text-center">{{ $final > 0 ? $final : '' }}</th>
+                                            class="result-bg text-danger text-center">{{ $final > 0 ? $final : '' }}
+                                        </th>
                                         <th style="background-color: #ffa80054 !important;"
-                                            class="result-bg text-danger text-center">{{ $total > $middle ? $total : '' }}</th>
+                                            class="result-bg text-danger text-center">
+                                            {{ $total > $middle ? $total : '' }}</th>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #ffa80054 !important;"
@@ -213,9 +222,10 @@
                             <div>
                                 <table class="table table-bordered border-dark">
                                     <tr>
-                                        <th class="text-center w-75" style="background: #ffa800 !important;"> Categorized Students based on
+                                        <th class="text-center w-75" style="background: #ffa800 !important;">
+                                            Categorized Students based on
                                             Percentage
-                                               </th>
+                                        </th>
                                         <th class="text-center w-25" style="background: #ffa800 !important;">Result</th>
                                     </tr>
                                     @foreach ($results as $result)
