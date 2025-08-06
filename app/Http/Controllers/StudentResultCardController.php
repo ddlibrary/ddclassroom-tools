@@ -71,8 +71,10 @@ class StudentResultCardController extends Controller
 
         $qrCode = url("result-card/$uuid/$year/$studentResultId");
 
-        if ($request->en_result) {
+        if ($request->en_result && $request->en_result == 'english') {
             return view('students.student-en-result-card', compact('student', 'subjects', 'results', 'responsible', 'studentResult', 'qrCode'));
+        }elseif ($request->en_result && $request->en_result == 'grade-9') {
+            return view('students.grade-9-result-card', compact('student', 'subjects', 'results', 'responsible', 'year', 'studentResult', 'qrCode'));
         }
 
         return view('students.student-result-card', compact('student', 'subjects', 'results', 'responsible', 'year', 'studentResult', 'qrCode'));
