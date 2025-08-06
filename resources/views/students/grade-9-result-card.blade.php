@@ -140,7 +140,7 @@
                                     $final = 0;
                                     $total = 0;
                                     ?>
-                                    @foreach ($subjects->whereIn('id', [1, 3, 4, 6, 11]) as $subject)
+                                    @foreach ($subjects->whereIn('subject_id', [1, 3, 4, 6, 11]) as $subject)
                                         <?php
                                         $totalScore = $subject->subject?->finalResult?->total;
                                         
@@ -151,7 +151,7 @@
                                             <td class="text-start">{{ $subject->subject->en_name }}</td>
 
                                             <td class="text-center">
-                                                {{ $totalScore }}
+                                                {{ floatval($totalScore) }}
                                             </td>
                                         </tr>
                                     @endforeach
@@ -161,7 +161,7 @@
 
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ number_format($total / 5) }}
+                                            {{ floatval($total / 5) }}
                                         </th>
                                     </tr>
                                     <tr>
@@ -171,7 +171,7 @@
 
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $total }}</th>
+                                            {{ floatval($total) }}</th>
                                     </tr>
                                 </table>
                             </div>
