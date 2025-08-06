@@ -72,7 +72,7 @@
     <div class="container">
         <button onclick="printDiv('container')" id="print" class="btn btn-success my-2">چاپ</button>
         <?php $param = $student->subGrade->grade_id == 9 ? '?en_result=grade-9' : '?en_result=english';?>
-        <a href="{{ url('student-result-card/' . $student->uuid . '/' . $year . '/' . $studentResult->id .$param) }}"
+        <a href="{{ url('student-result-card/' . $student->uuid . '/' . base64_decode($year) . '/' . $studentResult->id .$param) }}"
             style="float:left">English Result Card</a>
         <div>
             <div style="direction:rtl;position: relative;" id="container">
