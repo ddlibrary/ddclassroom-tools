@@ -63,6 +63,7 @@ class StudentResultCardController extends Controller
             })
             ->where('grade_id', $student->subGrade->grade_id)
             ->get();
+
         $results = Result::all();
 
         $year = base64_encode($year);
