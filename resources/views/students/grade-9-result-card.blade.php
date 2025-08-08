@@ -9,7 +9,7 @@
     <?php $image = asset('images/logo.png'); ?>
     <!-- Bootstrap CSS -->
     <link href="{{ asset('assets/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-    <title>اطلاعنامه {{ $student->name }} {{ $student->father_name }} - {{ $student->subGrade->name }}</title>
+    <title>Certificate {{ $student->name }} {{ $student->father_name }} - {{ $student->subGrade->name }}</title>
     <style>
         table {
             page-break-inside: avoid;
@@ -90,14 +90,14 @@
                 <div style=";padding:25px;border:1px solid black;border-radius:12px;">
                     <div class="d-flex">
                         <div class="flex-fill">
-                            <div class="h2">
+                            <div class="h3">
                                 Darakht-e Danesh School
                             </div>
-                            <div class="h2">
+                            <div class="h3">
                                 Grade 9 Report Card
                             </div>
-                             <div class="h4">
-                                Academic Year: {{ date("Y") }} - Semester 1
+                            <div class="h5">
+                                Academic Year: {{ date('Y') }} - Semester 1
                             </div>
                         </div>
                         <div class="flex-fill text-end">
@@ -188,7 +188,7 @@
                                             {{ floatval($total) }}</th>
                                     </tr>
 
-                                     <tr>
+                                    <tr>
                                         <th style="background-color: #ffa80054 !important"
                                             class="text-start text-danger">
                                             Promotion Status</th>
@@ -196,7 +196,7 @@
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
                                             {{ $total >= 250 ? 'Passed' : 'Failed' }}
-                                            </th>
+                                        </th>
                                     </tr>
                                 </table>
                             </div>
@@ -240,6 +240,14 @@
                                         </th>
                                     </tr>
                                 </table>
+
+                                <div class="text-right" style="margin-top:10px;display:flex;">
+
+                                    <div style="flex:1"></div>
+                                    <div>
+                                        <div id="qrcode"></div>
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
@@ -280,6 +288,26 @@
         <script src="{{ asset('assets/js/jquery-min.js') }}"></script>
         <script src="{{ asset('assets/js/print-this.js') }}"></script>
         <script src="{{ asset('assets/js/myjs.js') }}"></script>
+        <script src="{{ asset('assets/js/qrcode.js') }}"></script>
+        <script type="text/javascript">
+            var qrcode = new QRCode(document.getElementById("qrcode"), {
+                width: 170,
+                height: 170,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            function makeCode(url) {
+                if (!url) {
+                    alert("No URL provided");
+                    return;
+                }
+                qrcode.makeCode(url);
+            }
+
+            makeCode("{{ $qrCode }}")
+        </script>
 </body>
 
 </html>
