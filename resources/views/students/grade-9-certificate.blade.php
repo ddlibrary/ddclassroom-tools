@@ -70,9 +70,7 @@
 
 <body style="padding:20px;">
     <div class="container">
-        <button onclick="printDiv('container')" id="print" class="btn btn-success my-2">Print</button>
-        <a href="{{ url('email-handbook/' . $student->uuid) }}" style="float:left">
-        </a>
+
 
         <div>
 
@@ -286,8 +284,6 @@
         <script src="{{ asset('assets/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
         <script src="{{ asset('assets/js/jquery-min.js') }}"></script>
-        <script src="{{ asset('assets/js/print-this.js') }}"></script>
-        <script src="{{ asset('assets/js/myjs.js') }}"></script>
         <script src="{{ asset('assets/js/qrcode.js') }}"></script>
         <script type="text/javascript">
             var qrcode = new QRCode(document.getElementById("qrcode"), {
