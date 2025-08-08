@@ -84,6 +84,7 @@
                 left: 5%;
                 background-repeat: no-repeat;
                 background-position: center;
+                background-size: contain;
                 opacity: 0.15;"
                     id="logo"></div>
                 <div style=";padding:25px;border:1px solid black;border-radius:12px;">
