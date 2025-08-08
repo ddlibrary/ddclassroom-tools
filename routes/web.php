@@ -133,3 +133,5 @@ Route::middleware(['auth'])
     });
 Route::get('two-factor-challenge-backup-code', [TwoFactorChallengeController::class, 'index']);
 Route::get('result-card/{uuid}/{year}/{studentResult}', [StudentResultCardController::class, 'resultCard']);
+Route::get('certificate/{uuid}/{year}/{studentResult}', [StudentResultCardController::class, 'grade9Certificate']);
+
