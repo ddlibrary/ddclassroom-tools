@@ -195,7 +195,7 @@
 
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $total >= 500 ? 'Passed' : 'Failed' }}
+                                            {{ $total >= 250 ? 'Passed' : 'Failed' }}
                                             </th>
                                     </tr>
                                 </table>
