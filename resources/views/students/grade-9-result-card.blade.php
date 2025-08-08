@@ -87,11 +87,24 @@
                 opacity: 0.15;"
                     id="logo"></div>
                 <div style=";padding:25px;border:1px solid black;border-radius:12px;">
-
-                    <div class="text-center">
-                        <img src="{{ asset('images/logo.png') }}" style="width: 200px;">
+                    <div class="d-flex">
+                        <div class="flex-fill">
+                            <div class="h2">
+                                Darakht-e Danesh School
+                            </div>
+                            <div class="h2">
+                                Grade 9 Report Card
+                            </div>
+                             <div class="h4">
+                                Academic Year: {{ date("Y") }} - Semester 1
+                            </div>
+                        </div>
+                        <div class="flex-fill text-end">
+                            <img src="{{ asset('images/logo.png') }}" style="width: 250px;">
+                        </div>
                     </div>
-                    <h3 class="text-center">Result Card</h3>
+                    <div class="text-center">
+                    </div>
                     <table class="table table-bordered border-dark">
                         <tr>
                             <th class="text-center" style="background: #ffa800 !important;" colspan="2"> Student
@@ -173,6 +186,17 @@
                                             class="result-bg text-danger text-center">
                                             {{ floatval($total) }}</th>
                                     </tr>
+
+                                     <tr>
+                                        <th style="background-color: #ffa80054 !important"
+                                            class="text-start text-danger">
+                                            Promotion Status</th>
+
+                                        <th style="background-color: #ffa80054 !important;"
+                                            class="result-bg text-danger text-center">
+                                            {{ $total >= 500 ? 'Passed' : 'Failed' }}
+                                            </th>
+                                    </tr>
                                 </table>
                             </div>
 
@@ -218,7 +242,7 @@
                             </div>
 
                         </div>
-                        <div style="display: flex;gap:50px">
+                        <div style="gap:50px" class="d-flex">
                             <div class="text-center" style="margin-top:120px;flex:1">
                                 Signature of Course Representative
                                 <table class="table table-bordered border-dark">
