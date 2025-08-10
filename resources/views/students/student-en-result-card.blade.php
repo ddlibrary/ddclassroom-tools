@@ -43,8 +43,8 @@
             position: absolute;
             top: 20%;
             bottom: 20%;
-            right: 5%;
-            left: 5%;
+            right: 15%;
+            left: 15%;
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;
@@ -57,8 +57,8 @@
                 position: absolute;
                 top: 20%;
                 bottom: 20%;
-                right: 5%;
-                left: 5%;
+                right: 15%;
+                left: 15%;
                 background-repeat: no-repeat;
                 background-position: center;
                 background-size: contain;
@@ -80,8 +80,8 @@
                 <div style="background-image:url('{{ $image }}') !important;position: absolute;
                 top: 20%;
                 bottom: 20%;
-                right: 5%;
-                left: 5%;
+                right: 15%;
+                left: 15%;
                 background-repeat: no-repeat;
                 background-position: center;
                 opacity: 0.15;"
