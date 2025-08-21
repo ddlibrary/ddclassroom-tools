@@ -185,7 +185,7 @@
 
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ floatval(round($total / $totalSubjects),2) }}
+                                            {{ floatval(round($total / $totalSubjects,2)) }}
                                         </th>
                                     </tr>
                                     <tr>
