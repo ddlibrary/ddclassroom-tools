@@ -90,10 +90,10 @@
                 <div style=";padding:25px;border:1px solid black;border-radius:12px;">
                     <div class="d-flex">
                         <div class="flex-fill">
-                            <div class="h3">
+                            <div class="h4">
                                 Darakht-e Danesh School
                             </div>
-                            <div class="h3">
+                            <div class="h4">
                                 Grade 9 Report Card
                             </div>
                             <div class="h5">
@@ -238,17 +238,12 @@
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th>Vocation</th>
+                                        <th>Vacation</th>
                                         <th class="text-start">
-                                            {{ $student->middleAttendance?->permission + $student->finalAttendance?->permission }}
+                                            {{ $student->middleAttendance?->permission + $student->finalAttendance?->permission + $student->middleAttendance?->patien + $student->finalAttendance?->patien }}
                                         </th>
                                     </tr>
-                                    <tr>
-                                        <th>Sickness</th>
-                                        <th class="text-start">
-                                            {{ $student->middleAttendance?->patien + $student->finalAttendance?->patien }}
-                                        </th>
-                                    </tr>
+                                   
                                 </table>
 
                                 <div class="text-right" style="margin-top:10px;display:flex;">

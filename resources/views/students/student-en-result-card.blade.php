@@ -268,7 +268,7 @@
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th>Vocation</th>
+                                        <th>Vacation</th>
                                         <th class="text-start">
                                             {{ $student->middleAttendance?->permission + $student->finalAttendance?->permission }}
                                         </th>

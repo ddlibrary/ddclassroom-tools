@@ -88,10 +88,10 @@
                 <div style=";padding:25px;border:1px solid black;border-radius:12px;">
                     <div class="d-flex">
                         <div class="flex-fill">
-                            <div class="h3">
+                            <div class="h4">
                                 Darakht-e Danesh School
                             </div>
-                            <div class="h3">
+                            <div class="h4">
                                 Grade 9 Report Card
                             </div>
                             <div class="h5">
@@ -153,11 +153,12 @@
                                     $total = 0;
                                     $allowSubjects = [];
                                     $totalSubjects = 1;
-                                    if ($student->country_id == 2) {
+                                    if($student->country_id == 2){
                                         $totalSubjects = 5;
                                         $allowSubjects = [1, 3, 4, 6, 11];
-                                    } elseif ($student->country_id == 3) {
-                                        $allowSubjects = [2, 10, 9, 5, 7, 8];
+                                    }elseif($student->country_id == 3){
+
+                                        $allowSubjects = [2,10,9,5,7,8];
                                         $totalSubjects = 6;
                                     }
                                     ?>
@@ -202,7 +203,7 @@
 
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $total >= ($totalSubjects * 100) / 2 ? 'Passed' : 'Failed' }}
+                                            {{ $total >= ($totalSubjects * 100 / 2) ? 'Passed' : 'Failed' }}
                                         </th>
                                     </tr>
                                 </table>
@@ -235,15 +236,9 @@
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th>Vocation</th>
+                                        <th>Vacation</th>
                                         <th class="text-start">
-                                            {{ $student->middleAttendance?->permission + $student->finalAttendance?->permission }}
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th>Sickness</th>
-                                        <th class="text-start">
-                                            {{ $student->middleAttendance?->patien + $student->finalAttendance?->patien }}
+                                            {{ $student->middleAttendance?->permission + $student->finalAttendance?->permission + $student->middleAttendance?->patien + $student->finalAttendance?->patien }}
                                         </th>
                                     </tr>
                                 </table>
