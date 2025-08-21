@@ -153,8 +153,18 @@
                                     $middle = 0;
                                     $final = 0;
                                     $total = 0;
+                                    $allowSubjects = [];
+                                    $totalSubjects = 1;
+                                    if($student->country_id == 2){
+                                        $totalSubjects = 5;
+                                        $allowSubjects = [1, 3, 4, 6, 11];
+                                    }elseif($student->country_id == 3){
+
+                                        $allowSubjects = [2,10,9,5,7,8];
+                                        $totalSubjects = 6;
+                                    }
                                     ?>
-                                    @foreach ($subjects->whereIn('subject_id', [1, 3, 4, 6, 11]) as $subject)
+                                    @foreach ($subjects->whereIn('subject_id', $allowSubjects) as $subject)
                                         <?php
                                         $totalScore = $subject->subject?->finalResult?->total;
                                         
@@ -175,7 +185,7 @@
 
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ floatval($total / 5) }}
+                                            {{ floatval($total / $totalSubjects) }}
                                         </th>
                                     </tr>
                                     <tr>
@@ -195,7 +205,7 @@
 
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $total >= 250 ? 'Passed' : 'Failed' }}
+                                            {{ $total >= ($totalSubjects * 100 / 2) ? 'Passed' : 'Failed' }}
                                         </th>
                                     </tr>
                                 </table>
