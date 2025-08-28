@@ -7,7 +7,7 @@ class SubjectScore
     private $midtermScoreConfig = [
         'activity' => 5,
         'homework' => 5,
-        'evaluation' => 5,
+        'evaluation' => 10,
         'attendance' => 5,
         'written' => 20,
         'oral' => 20,
