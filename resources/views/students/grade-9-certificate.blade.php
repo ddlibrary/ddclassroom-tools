@@ -153,12 +153,22 @@
                                     $total = 0;
                                     $allowSubjects = [];
                                     $totalSubjects = 1;
-                                    if($student->country_id == 2){
+                                    $oldClasses = [2, 10, 9, 5, 7, 8];
+                                    $newClasses = [1, 3, 4, 6, 11];
+                                    if ($student->country_id == 1) {
+                                        if ($student->sub_grade_id == 13 || $student->sub_grade_id == 14) {
+                                            $totalSubjects = 5;
+                                    
+                                            $allowSubjects = $newClasses;
+                                        } elseif ($student->sub_grade_id == 11 || $student->sub_grade_id == 12) {
+                                            $totalSubjects = 6;
+                                            $allowSubjects = $oldClasses;
+                                        }
+                                    } elseif ($student->country_id == 2) {
                                         $totalSubjects = 5;
-                                        $allowSubjects = [1, 3, 4, 6, 11];
-                                    }elseif($student->country_id == 3){
-
-                                        $allowSubjects = [2,10,9,5,7,8];
+                                        $allowSubjects = $newClasses;
+                                    } elseif ($student->country_id == 3) {
+                                        $allowSubjects = $oldClasses;
                                         $totalSubjects = 6;
                                     }
                                     ?>
