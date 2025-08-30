@@ -173,12 +173,17 @@
                                         $allowSubjects = $oldClasses;
                                         $totalSubjects = 6;
                                     }
+                                    $state = 'Passed';
                                     ?>
                                     @foreach ($subjects->whereIn('subject_id', $allowSubjects) as $subject)
                                         <?php
                                         $totalScore = $subject->subject?->finalResult?->total;
                                         
                                         $total += $totalScore;
+
+                                        if($totalScore < 50){
+                                            $state = 'Failed';
+                                        }
                                         ?>
 
                                         <tr>
@@ -215,7 +220,11 @@
 
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $total >= ($totalSubjects * 100) / 2 ? 'Passed' : 'Failed' }}
+                                            @if($state == 'Passed')
+                                            {{ $total >= ($totalSubjects * 100 / 2) ? 'Passed' : 'Failed' }}
+                                            @else
+                                                {{ $state }}
+                                            @endif
                                         </th>
                                     </tr>
                                 </table>
