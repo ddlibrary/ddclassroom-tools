@@ -126,7 +126,7 @@
                         </tr>
                         <tr>
                             <th>Class</th>
-                            <th class="text-start">{{ $student->subGrade->name }}</th>
+                            <th class="text-start">{{ $studentResult->subGrade->name }}</th>
                         </tr>
                         <tr>
                             <th>Homeroom Teacher</th>

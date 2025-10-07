@@ -112,7 +112,7 @@
                         </tr>
                         <tr>
                             <th>صنف</th>
-                            <th class="text-start">{{ $student->subGrade->name }}</th>
+                            <th class="text-start">{{ $studentResult->subGrade->name }}</th>
                         </tr>
                     </table>
                     <br>

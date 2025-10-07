@@ -114,7 +114,7 @@
                         </tr>
                         <tr>
                             <th>Course</th>
-                            <th class="text-start">{{ $student->subGrade->name }}</th>
+                            <th class="text-start">{{ $studentResult->subGrade->name }}</th>
                         </tr>
                     </table>
                     <br>
