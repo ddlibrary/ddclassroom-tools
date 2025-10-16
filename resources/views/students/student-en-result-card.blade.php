@@ -190,15 +190,15 @@
                                             class="result-bg text-danger text-start">Percentage</th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ round($student->studentResult->middle_percentage, 2) }}%
+                                            {{ round($studentResult->middle_percentage, 2) }}%
                                         </th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $final > 0 ? round($student->studentResult->final_percentage, 2) . '%' : '' }}
+                                            {{ $final > 0 ? round($studentResult->final_percentage, 2) . '%' : '' }}
                                         </th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $final > 0 ? round($student->studentResult->percentage, 2) . '%' : '' }}
+                                            {{ $final > 0 ? round($studentResult->percentage, 2) . '%' : '' }}
                                         </th>
                                     </tr>
                                     <tr>
@@ -206,15 +206,15 @@
                                             class="result-bg text-danger text-start">Grade</th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $student->studentResult->middleResult->name }}
+                                            {{ $studentResult->middleResult->name }}
                                         </th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $final > 0 ? $student->studentResult->finalResult->name : '' }}
+                                            {{ $final > 0 ? $studentResult->finalResult->name : '' }}
                                         </th>
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            {{ $final > 0 ? $student->studentResult->result->name : '' }}
+                                            {{ $final > 0 ? $studentResult->result->name : '' }}
                                         </th>
                                     </tr>
                                 </table>
