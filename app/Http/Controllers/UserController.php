@@ -55,6 +55,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         $user->name = $request->name;
+        $user->en_name = $request->en_name;
         $user->email = $request->email;
         $user->user_type_id = $request->user_type_id;
         $user->is_active = $request->is_active == 1 ? true : false;
