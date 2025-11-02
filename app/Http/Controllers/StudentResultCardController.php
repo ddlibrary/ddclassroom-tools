@@ -37,7 +37,7 @@ class StudentResultCardController extends Controller
             })
             ->firstOrFail();
 
-        $responsible = ClassResponsible::with('teacher:id,name,signature')
+        $responsible = ClassResponsible::with('teacher:id,name,signature,en_name')
             ->where([
                 'year' => $year,
                 'sub_grade_id' => $student->sub_grade_id,
@@ -104,7 +104,7 @@ class StudentResultCardController extends Controller
             })
             ->firstOrFail();
 
-        $responsible = ClassResponsible::with('teacher:id,name,signature')
+        $responsible = ClassResponsible::with('teacher:id,name,signature,en_name')
             ->where([
                 'year' => $year,
                 'sub_grade_id' => $student->sub_grade_id,
@@ -163,7 +163,7 @@ class StudentResultCardController extends Controller
             })
             ->firstOrFail();
 
-        $responsible = ClassResponsible::with('teacher:id,name,signature')
+        $responsible = ClassResponsible::with('teacher:id,name,signature,en_name')
             ->where([
                 'year' => $year,
                 'sub_grade_id' => $student->sub_grade_id,
