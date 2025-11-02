@@ -38,6 +38,19 @@
                                             </p>
                                         </div>
                                     </div>
+                                    <div class="sm:col-span-3">
+                                        <label for="en_name"
+                                            class="block text-sm font-medium leading-6 text-gray-900">
+                                            English Name</label>
+                                        <div class="mt-2">
+                                            <input id="en_name" v-model="form.en_name" name="en_name" type="text"
+                                                autocomplete="English Name"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.en_name">
+                                                {{ errors . en_name }}
+                                            </p>
+                                        </div>
+                                    </div>
 
                                     <!-- Email Address -->
                                     <div class="sm:col-span-3">
@@ -68,6 +81,8 @@
                                             </select>
                                         </div>
                                     </div>
+
+
 
                                     <!-- Is Active -->
                                     <div class="sm:col-span-2">
@@ -229,6 +244,7 @@
     const form = reactive({
         id: props.user.id,
         name: props.user.name,
+        en_name: props.user.en_name,
         email: props.user.email,
         user_type_id: props.user.user_type_id,
         is_active: props.user.is_active,
