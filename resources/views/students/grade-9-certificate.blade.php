@@ -130,7 +130,7 @@
                         </tr>
                         <tr>
                             <th>Homeroom Teacher</th>
-                            <th class="text-start">{{ $responsible?->teacher?->name }}</th>
+                            <th class="text-start">{{ $responsible?->teacher?->en_name }}</th>
                         </tr>
                         <tr>
                             <th>Reporting Date</th>
@@ -158,7 +158,7 @@
                                     if ($student->country_id == 1) {
                                         if ($student->sub_grade_id == 13 || $student->sub_grade_id == 14) {
                                             $totalSubjects = 5;
-                                    
+
                                             $allowSubjects = $newClasses;
                                         } elseif ($student->sub_grade_id == 11 || $student->sub_grade_id == 12) {
                                             $totalSubjects = 6;
@@ -176,7 +176,7 @@
                                     @foreach ($subjects->whereIn('subject_id', $allowSubjects) as $subject)
                                         <?php
                                         $totalScore = $subject->subject?->finalResult?->total;
-                                        
+
                                         $total += $totalScore;
 
                                         if($totalScore < 50){
