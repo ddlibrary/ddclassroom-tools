@@ -132,10 +132,10 @@
                                                 <div>
                                                     <h3 class="text-lg leading-6 font-medium text-gray-900">
                                                         <span v-if="form.id">
-                                                            Update class responsible
+                                                            Update Homeroom Teacher
                                                         </span>
                                                         <span v-else>
-                                                            Create new class responsible
+                                                            Create new Homeroom Teacher
                                                         </span>
                                                     </h3>
                                                 </div>
