@@ -20,4 +20,9 @@ trait HasOneAttendanceDetail
     {
         return $this->HasOne(AttendanceDetail::class)->where('type', 2);
     }
+
+    public function attendanceDetails()
+    {
+        return $this->hasMany(AttendanceDetail::class);
+    }
 }
