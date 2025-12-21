@@ -20,4 +20,9 @@ trait HasOneStudentAttendance
     {
         return $this->HasOne(Attendance::class);
     }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
 }
