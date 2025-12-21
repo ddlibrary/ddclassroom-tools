@@ -47,12 +47,19 @@ class StudentAttendanceLogImport implements ToModel, WithHeadingRow
                 $to = 4;
             }
 
+
             $subject = isset($row['course_name']) ? $row['course_name'] : null;
             $subjectId = Cache::remember('subject_name_'.substr($subject, $from, $to), 3600, function () use ($subject, $from, $to) {
                 return Subject::where('en_name', 'like', substr($subject, $from, $to).'%')->value('id');
             });
 
             if ($subjectId) {
+                if(request()->sub_grade_id)
+                {
+                    if(request()->sub_grade_id != $student->sub_grade_id){
+                        return [];
+                    }
+                }
                 $createdAt = now();
                 if (isset($row['date'])) {
                     $dateValue = $row['date'];

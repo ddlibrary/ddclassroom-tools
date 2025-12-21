@@ -125,11 +125,13 @@ class AttendanceLogController extends Controller
 
         $years = Year::all(['id', 'name']);
         $months = Month::all(['id', 'name']);
+        $subGrades = SubGrade::all();
 
         return inertia('AttendanceLog/CreateMultipleStudentsAttendanceLog', [
             'months' => $months,
             'terms' => $terms,
             'years' => $years,
+            'subGrades' => $subGrades,
             'locations' => $locations,
         ]);
     }

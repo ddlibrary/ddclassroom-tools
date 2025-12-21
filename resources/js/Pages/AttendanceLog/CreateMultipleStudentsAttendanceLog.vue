@@ -69,6 +69,9 @@
                                         </div>
                                     </div>
 
+
+
+
                                     <!-- Term -->
                                     <div class="sm:col-span-1">
                                         <label for="term_id"
@@ -99,6 +102,23 @@
                                             </select>
                                             <p class="mt-2 text-sm text-red-500" v-if="errors.id">
                                                 {{ errors . location }}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-1">
+                                        <label for="grade_id"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Grade
+                                        </label>
+                                        <div class="mt-2">
+                                            <select v-model="form.sub_grade_id" name="sub_grade" id="sub_grade"
+                                                autocomplete="sub_grade"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">...</option>
+                                                <option v-for="subGrade in subGrades" :value="subGrade.id"
+                                                    :key="subGrade">{{ subGrade . full_name }}</option>
+                                            </select>
+                                            <p class="mt-2 text-sm text-red-500" v-if="errors.sub_grade_id">
+                                                {{ errors . sub_grade_id }}</p>
                                         </div>
                                     </div>
 
@@ -176,14 +196,15 @@
         router
     } from '@inertiajs/vue3';
 
-    const props = defineProps(['terms', 'errors', 'years', 'months', 'subjects', 'locations']);
+    const props = defineProps(['terms', 'errors', 'years', 'months', 'subjects', 'locations','subGrades']);
 
     const form = reactive({
         file: null,
         month_id: '',
         year: '',
         term: 1,
-        location: ''
+        location: '',
+        sub_grade_id: ''
     });
 
     function selectFile($event) {
