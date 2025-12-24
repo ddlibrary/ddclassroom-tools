@@ -85,6 +85,7 @@ Route::middleware(['auth', 'verified', '2fa'])->group(function () {
     Route::resource('results', ResultController::class);
     Route::post('toggle-result-is-active', [ResultController::class, 'toggleIsActive']);
     Route::resource('sub-grades', SubGradeController::class);
+    Route::resource('sub-grade-subject-semesters', \App\Http\Controllers\SubGradeSubjectSemesterController::class);
     Route::resource('class-responsible', ClassResponsibleController::class);
     Route::post('toggle-sub-grade-is-active', [SubGradeController::class, 'toggleIsActive']);
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -140,5 +141,5 @@ Route::middleware(['auth'])
     });
 Route::get('two-factor-challenge-backup-code', [TwoFactorChallengeController::class, 'index']);
 Route::get('result-card/{uuid}/{year}/{studentResult}', [StudentResultCardController::class, 'resultCard']);
-Route::get('certificate/{uuid}/{year}/{studentResult}', [StudentResultCardController::class, 'grade9Certificate']);
+Route::get('certificate/{uuid}/{year}/{studentResult}/{semester?}', [StudentResultCardController::class, 'grade9Certificate']);
 
