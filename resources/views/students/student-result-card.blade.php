@@ -71,9 +71,14 @@
 <body style="padding:20px;">
     <div class="container">
         <button onclick="printDiv('container')" id="print" class="btn btn-success my-2">چاپ</button>
-        <?php $param = $studentResult->subGrade->grade_id == 9 ? '?en_result=grade-9' : '?en_result=english';?>
-        <a href="{{ url('student-result-card/' . $student->uuid . '/' . base64_decode($year) . '/' . $studentResult->id .$param) }}"
+        <?php $param = $studentResult->subGrade->grade_id == 9 ? '?en_result=grade-9' : '?en_result=english'; ?>
+        <a href="{{ url('student-result-card/' . $student->uuid . '/' . base64_decode($year) . '/' . $studentResult->id . $param) }}"
             style="float:left">English Result Card</a>
+
+        @if ($studentResult->subGrade->grade_id == 9)
+            <a href="{{ url('student-result-card/' . $student->uuid . '/' . base64_decode($year) . '/' . $studentResult->id . $param . '&semester=2') }}"
+                style="float:left" class="mx-2">Second Semester</a>
+        @endif
         <div>
             <div style="direction:rtl;position: relative;" id="container">
                 <div style="background-image:url('{{ $image }}') !important;position: absolute;
@@ -137,7 +142,7 @@
                                         $middleScore = $subject->subject?->middle?->total;
                                         $finalScore = $subject->subject?->final?->total;
                                         $totalScore = $subject->subject?->finalResult?->total;
-                                        
+
                                         $middle += $middleScore;
                                         $final += $finalScore;
                                         $total += $totalScore;

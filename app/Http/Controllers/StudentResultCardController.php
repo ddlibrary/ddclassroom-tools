@@ -7,6 +7,7 @@ use App\Models\GradeSubject;
 use App\Models\Result;
 use App\Models\Student;
 use App\Models\StudentResult;
+use App\Models\SubGradeSubjectSemester;
 use Illuminate\Http\Request;
 
 class StudentResultCardController extends Controller
@@ -20,6 +21,7 @@ class StudentResultCardController extends Controller
 
     public function studentResultCard(Request $request, $uuid, $year, $studentResultId)
     {
+
         $studentResult = StudentResult::find($studentResultId);
         $subGradeId = $studentResult->sub_grade_id;
         $student = Student::where('uuid', $uuid)
@@ -68,6 +70,8 @@ class StudentResultCardController extends Controller
 
         $year = base64_encode($year);
 
+        $semester = $request->semester ? $request->semester: 1;
+
         $studentResultId = base64_encode($studentResultId);
 
         $qrCode = url("result-card/$uuid/$year/$studentResultId");
@@ -75,8 +79,9 @@ class StudentResultCardController extends Controller
         if ($request->en_result && $request->en_result == 'english') {
             return view('students.student-en-result-card', compact('student', 'subjects', 'results', 'responsible', 'studentResult', 'year', 'qrCode'));
         } elseif ($request->en_result && $request->en_result == 'grade-9') {
-            $qrCode = url("certificate/$uuid/$year/$studentResultId");
-            return view('students.grade-9-result-card', compact('student', 'subjects', 'results', 'responsible', 'year', 'studentResult', 'qrCode'));
+            $semesterEncode = base64_encode($semester);
+            $qrCode = url("certificate/$uuid/$year/$studentResultId/$semesterEncode");
+            return view('students.grade-9-result-card', compact('student', 'subjects', 'results', 'responsible', 'semester', 'year', 'studentResult', 'qrCode'));
         }
 
         return view('students.student-result-card', compact('student', 'subjects', 'results', 'responsible', 'year', 'studentResult', 'qrCode'));
@@ -141,7 +146,7 @@ class StudentResultCardController extends Controller
         return view('students.result-card', compact('student', 'subjects', 'results', 'responsible', 'year', 'studentResult', 'qrCode'));
     }
 
-    public function grade9Certificate(Request $request, $uuid, $year, $studentResultId)
+    public function grade9Certificate(Request $request, $uuid, $year, $studentResultId, $semester)
     {
         $year = base64_decode($year);
         $studentResultId = base64_decode($studentResultId);
@@ -177,26 +182,49 @@ class StudentResultCardController extends Controller
             'sub_grade_id' => $subGradeId,
         ];
 
+        // Get semester from request, default to 1 (first semester)
+        $semester = base64_decode($semester);
+
+        // Get sub_grade-specific semester assignments for this year
+        $subGradeSemesterSubjects = SubGradeSubjectSemester::where('sub_grade_id', $subGradeId)
+            ->where('semester', $semester)
+            ->where('year', $year)
+            ->with(['subject' => function ($query) use ($where) {
+                $query->with(['middle' => function ($q) use ($where) {
+                    $q->where($where);
+                }])
+                ->with(['final' => function ($q) use ($where) {
+                    $q->where($where);
+                }])
+                ->with(['finalResult' => function ($q) use ($where) {
+                    $q->where($where);
+                }]);
+            }])
+            ->get();
+
+        // Map to match the expected structure for the view
         $subjects = GradeSubject::with(['grade:id,name', 'subject'])
-            ->with('subject.middle', function ($query) use ($where) {
+           ->with('subject.middle', function ($query) use ($where) {
                 $query->where($where);
             })
             ->with('subject.final', function ($query) use ($where) {
                 $query->where($where);
             })
             ->with('subject.finalResult', function ($query) use ($where) {
-                $query->where($where);
+               $query->where($where);
             })
             ->where('grade_id', $student->subGrade->grade_id)
             ->get();
+
+
         $results = Result::all();
 
         $year = base64_encode($year);
 
         $studentResultId = base64_encode($studentResultId);
 
-        $qrCode = url("certificate/$uuid/$year/$studentResultId");
+        $qrCode = url("certificate/$uuid/$year/$studentResultId/".base64_encode($semester));
 
-        return view('students.grade-9-certificate', compact('student', 'subjects', 'results', 'responsible', 'year', 'studentResult', 'qrCode'));
+        return view('students.grade-9-certificate', compact('student', 'subjects', 'results', 'responsible', 'year', 'studentResult', 'qrCode', 'semester'));
     }
 }

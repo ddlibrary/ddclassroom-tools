@@ -7,6 +7,7 @@ use App\Enums\SubjectMinScoreEnum;
 use App\Models\Score;
 use App\Models\Student;
 use App\Models\StudentResult;
+use App\Models\SubGradeSubjectSemester;
 
 trait StoreStudentScoreTrait
 {
@@ -117,15 +118,54 @@ trait StoreStudentScoreTrait
         $secondTerm = Score::where($studentResultWhere)->where('type', 2)->sum('total');
         $final = $firstTerm + $secondTerm;
 
-        $firstTermSubjectPassedCount = Score::where($studentResultWhere)
-            ->where(['type' => 1, 'is_passed' => true])
-            ->count();
-        $secondTermSubjectPassedCount = Score::where($studentResultWhere)
-            ->where(['type' => 2, 'is_passed' => true])
-            ->count();
-        $finalSubjectPassedCount = Score::where($studentResultWhere)
-            ->where(['type' => 3, 'is_passed' => true])
-            ->count();
+        // Check if this is a semester-based grade (like Grade 9)
+        if ($grade->is_semester_based) {
+            // Get the sub_grade_id and year from studentResultWhere
+            $subGradeId = $studentResultWhere['sub_grade_id'];
+            $year = $studentResultWhere['year'];
+            
+            // Get sub_grade-specific semester assignments for this year
+            $firstSemesterSubjectIds = SubGradeSubjectSemester::where('sub_grade_id', $subGradeId)
+                ->where('semester', 1)
+                ->where('year', $year)
+                ->pluck('subject_id')
+                ->toArray();
+            
+            $secondSemesterSubjectIds = SubGradeSubjectSemester::where('sub_grade_id', $subGradeId)
+                ->where('semester', 2)
+                ->where('year', $year)
+                ->pluck('subject_id')
+                ->toArray();
+
+            // Count passed subjects for first semester (middle term)
+            $firstTermSubjectPassedCount = Score::where($studentResultWhere)
+                ->where(['type' => 1, 'is_passed' => true])
+                ->whereIn('subject_id', $firstSemesterSubjectIds)
+                ->count();
+            
+            // Count passed subjects for second semester (final term)
+            $secondTermSubjectPassedCount = Score::where($studentResultWhere)
+                ->where(['type' => 2, 'is_passed' => true])
+                ->whereIn('subject_id', $secondSemesterSubjectIds)
+                ->count();
+            
+            // For final result, count all passed subjects from both semesters
+            $finalSubjectPassedCount = Score::where($studentResultWhere)
+                ->where(['type' => 3, 'is_passed' => true])
+                ->whereIn('subject_id', array_merge($firstSemesterSubjectIds, $secondSemesterSubjectIds))
+                ->count();
+        } else {
+            // For non-semester-based grades, use the original logic
+            $firstTermSubjectPassedCount = Score::where($studentResultWhere)
+                ->where(['type' => 1, 'is_passed' => true])
+                ->count();
+            $secondTermSubjectPassedCount = Score::where($studentResultWhere)
+                ->where(['type' => 2, 'is_passed' => true])
+                ->count();
+            $finalSubjectPassedCount = Score::where($studentResultWhere)
+                ->where(['type' => 3, 'is_passed' => true])
+                ->count();
+        }
 
         $middleMaxScore = $grade->middle_max_number;
         $finalMaxScore = $grade->final_max_number;
@@ -178,15 +218,39 @@ trait StoreStudentScoreTrait
 
     private function resultStatus($grade, $studentResult, $type)
     {
-        if ($type == 2) {
-            if ($grade->total_subjects > $studentResult->final_subject_passed + 3 || $studentResult->final_result_id == 5) {
-                return ResultCardEnum::Repeat->value;
-            } elseif ($grade->total_subjects > $studentResult->final_subject_passed && $studentResult->final_result_id != 5) {
-                return ResultCardEnum::TrayAgain->value;
+        // For semester-based grades, get the total subjects for the specific semester
+        if ($grade->is_semester_based) {
+            $semester = $type == 1 ? 1 : 2; // type 1 = middle (first semester), type 2 = final (second semester)
+            
+            // Get sub_grade-specific semester assignments for this year
+            $totalSubjectsForSemester = SubGradeSubjectSemester::where('sub_grade_id', $studentResult->sub_grade_id)
+                ->where('semester', $semester)
+                ->where('year', $studentResult->year)
+                ->count();
+            
+            if ($type == 2) {
+                if ($totalSubjectsForSemester > $studentResult->final_subject_passed + 3 || $studentResult->final_result_id == 5) {
+                    return ResultCardEnum::Repeat->value;
+                } elseif ($totalSubjectsForSemester > $studentResult->final_subject_passed && $studentResult->final_result_id != 5) {
+                    return ResultCardEnum::TrayAgain->value;
+                }
+            } else {
+                if ($totalSubjectsForSemester > $studentResult->middle_subject_passed || $studentResult->middle_result_id == 5) {
+                    return 'ناکام';
+                }
             }
         } else {
-            if ($grade->total_subjects > $studentResult->middle_subject_passed || $studentResult->middle_result_id == 5) {
-                return 'ناکام';
+            // Original logic for non-semester-based grades
+            if ($type == 2) {
+                if ($grade->total_subjects > $studentResult->final_subject_passed + 3 || $studentResult->final_result_id == 5) {
+                    return ResultCardEnum::Repeat->value;
+                } elseif ($grade->total_subjects > $studentResult->final_subject_passed && $studentResult->final_result_id != 5) {
+                    return ResultCardEnum::TrayAgain->value;
+                }
+            } else {
+                if ($grade->total_subjects > $studentResult->middle_subject_passed || $studentResult->middle_result_id == 5) {
+                    return 'ناکام';
+                }
             }
         }
 
@@ -195,10 +259,26 @@ trait StoreStudentScoreTrait
 
     private function finalResult($grade, $studentResult)
     {
-        if ($grade->total_subjects > $studentResult->subject_passed + 3 || $studentResult->result_id == 5) {
-            return ResultCardEnum::Repeat->value;
-        } elseif ($grade->total_subjects > $studentResult->subject_passed && $studentResult->result_id != 5) {
-            return ResultCardEnum::TrayAgain->value;
+        // For semester-based grades, get the total subjects for both semesters
+        if ($grade->is_semester_based) {
+            // Get sub_grade-specific semester assignments for this year
+            $totalSubjectsForBothSemesters = SubGradeSubjectSemester::where('sub_grade_id', $studentResult->sub_grade_id)
+                ->whereIn('semester', [1, 2])
+                ->where('year', $studentResult->year)
+                ->count();
+            
+            if ($totalSubjectsForBothSemesters > $studentResult->subject_passed + 3 || $studentResult->result_id == 5) {
+                return ResultCardEnum::Repeat->value;
+            } elseif ($totalSubjectsForBothSemesters > $studentResult->subject_passed && $studentResult->result_id != 5) {
+                return ResultCardEnum::TrayAgain->value;
+            }
+        } else {
+            // Original logic for non-semester-based grades
+            if ($grade->total_subjects > $studentResult->subject_passed + 3 || $studentResult->result_id == 5) {
+                return ResultCardEnum::Repeat->value;
+            } elseif ($grade->total_subjects > $studentResult->subject_passed && $studentResult->result_id != 5) {
+                return ResultCardEnum::TrayAgain->value;
+            }
         }
 
         return 'کامیاب';

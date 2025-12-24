@@ -142,6 +142,7 @@ const teams = [
         current: false,
     },
     { id: 3, name: "Subject", href: "/subjects", icon: DocumentDuplicateIcon, current: false },
+    { id: 7, name: "Semester Subjects", href: "/sub-grade-subject-semesters", icon: DocumentDuplicateIcon, current: false },
     { id: 4, name: "Years", href: "/years", icon: DocumentDuplicateIcon, current: false },
     { id: 5, name: "Homeroom Teacher", href: "/class-responsible", icon: DocumentDuplicateIcon, current: false },
     { id: 6, name: "2FA", href: "/2fa/index", icon: DocumentDuplicateIcon, current: false },
