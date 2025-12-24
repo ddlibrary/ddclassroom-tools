@@ -30,7 +30,7 @@ return new class extends Migration
                     ->onDelete('cascade');
                 
                 // Year column for tracking which year this assignment belongs to
-                $table->string('year')->after('semester');
+                $table->string('year');
                 
                 // Unique constraint: each sub_grade can have a subject in a specific semester and year only once
                 $table->unique(['sub_grade_id', 'subject_id', 'semester', 'year'], 'sub_grade_subject_semester_year_unique');

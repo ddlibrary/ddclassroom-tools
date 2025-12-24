@@ -53,15 +53,29 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Check if the new unique constraint exists and drop it
+        $indexes = DB::select("SHOW INDEX FROM sub_grade_subject_semesters WHERE Key_name = 'sub_grade_subject_semester_year_unique'");
+        if (!empty($indexes)) {
+            try {
+                DB::statement('ALTER TABLE sub_grade_subject_semesters DROP INDEX sub_grade_subject_semester_year_unique');
+            } catch (\Exception $e) {
+                // If it fails, continue anyway
+            }
+        }
+
         Schema::table('sub_grade_subject_semesters', function (Blueprint $table) {
-            // Drop the new unique constraint
-            $table->dropUnique('sub_grade_subject_semester_year_unique');
-            
             // Remove year column
-            $table->dropColumn('year');
-            
-            // Restore old unique constraint
-            $table->unique(['sub_grade_id', 'subject_id', 'semester'], 'sub_grade_subject_semester_unique');
+            if (Schema::hasColumn('sub_grade_subject_semesters', 'year')) {
+                $table->dropColumn('year');
+            }
         });
+
+        // Restore old unique constraint if it doesn't exist
+        $oldIndexes = DB::select("SHOW INDEX FROM sub_grade_subject_semesters WHERE Key_name = 'sub_grade_subject_semester_unique'");
+        if (empty($oldIndexes)) {
+            Schema::table('sub_grade_subject_semesters', function (Blueprint $table) {
+                $table->unique(['sub_grade_id', 'subject_id', 'semester'], 'sub_grade_subject_semester_unique');
+            });
+        }
     }
 };
