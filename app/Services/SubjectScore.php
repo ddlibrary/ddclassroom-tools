@@ -5,13 +5,20 @@ namespace App\Services;
 class SubjectScore
 {
     private $midtermScoreConfig = [
-        'activity' => 5,
-        'homework' => 5,
-        'evaluation' => 10,
-        'attendance' => 5,
-        'written' => 20,
-        'oral' => 20,
-        'total' => 40,
+        // 'activity' => 5,
+        // 'homework' => 5,
+        // 'evaluation' => 10,
+        // 'attendance' => 5,
+        // 'written' => 20,
+        // 'oral' => 20,
+        // 'total' => 40,
+        'activity' => 20,
+        'homework' => 20,
+        'evaluation' => 20,
+        'attendance' => 10,
+        'written' => 60, // 30-40
+        'oral' => 30, // 10 - 20
+        'total' => 100,
     ];
 
     private $finalScoreConfig = [
