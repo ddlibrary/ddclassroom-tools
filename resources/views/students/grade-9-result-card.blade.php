@@ -97,7 +97,7 @@
                                 Grade 9 Report Card
                             </div>
                             <div class="h5">
-                                Academic Year: {{ date('Y') }} - Semester 1
+                                Academic Year: {{ date('Y') }} - Semester {{ $semester }}
                             </div>
                         </div>
                         <div class="flex-fill text-end">
@@ -157,31 +157,38 @@
                                     $totalSubjects = 1;
                                     $oldClasses = [2, 10, 9, 5, 7, 8];
                                     $newClasses = [1, 3, 4, 6, 11];
-                                    if ($student->country_id == 1) {
-                                        if ($student->sub_grade_id == 13 || $student->sub_grade_id == 14) {
-                                            $totalSubjects = 5;
+                                    $totalSubject = $semester == 1 ? $student->subGrade->getFirstSemesterSubjectCountForYear(base64_decode($year)) : $student->subGrade->getSecondSemesterSubjectCountForYear(base64_decode($year));
+                                    if ($totalSubject > 0) {
+                                        $allowSubjects = $semester == 1 ? $student->subGrade->firstSemesterSubjectsForYear(base64_decode($year))->pluck('subject_id')->toArray() : $student->subGrade->secondSemesterSubjectsForYear(base64_decode($year))->pluck('subject_id')->toArray();
+                                    } else {
+                                        if ($student->country_id == 1) {
+                                            if ($student->sub_grade_id == 13 || $student->sub_grade_id == 14) {
+                                                $totalSubjects = 5;
 
+                                                $allowSubjects = $newClasses;
+                                            } elseif ($student->sub_grade_id == 11 || $student->sub_grade_id == 12) {
+                                                $totalSubjects = 6;
+                                                $allowSubjects = $oldClasses;
+                                            }
+                                        } elseif ($student->country_id == 2) {
+                                            $totalSubjects = 5;
                                             $allowSubjects = $newClasses;
-                                        } elseif ($student->sub_grade_id == 11 || $student->sub_grade_id == 12) {
-                                            $totalSubjects = 6;
+                                        } elseif ($student->country_id == 3) {
                                             $allowSubjects = $oldClasses;
+                                            $totalSubjects = 6;
                                         }
-                                    } elseif ($student->country_id == 2) {
-                                        $totalSubjects = 5;
-                                        $allowSubjects = $newClasses;
-                                    } elseif ($student->country_id == 3) {
-                                        $allowSubjects = $oldClasses;
-                                        $totalSubjects = 6;
                                     }
+
                                     $state = 'Passed';
                                     ?>
                                     @foreach ($subjects->whereIn('subject_id', $allowSubjects) as $subject)
                                         <?php
-                                        $totalScore = $subject->subject?->finalResult?->total;
+
+                                        $totalScore = $semester == 2 ? $subject->subject?->final?->total : $subject->subject?->middle?->total;
 
                                         $total += $totalScore;
 
-                                        if($totalScore < 50){
+                                        if ($totalScore < 50) {
                                             $state = 'Failed';
                                         }
                                         ?>
@@ -220,8 +227,8 @@
 
                                         <th style="background-color: #ffa80054 !important;"
                                             class="result-bg text-danger text-center">
-                                            @if($state == 'Passed')
-                                            {{ $total >= ($totalSubjects * 100 / 2) ? 'Passed' : 'Failed' }}
+                                            @if ($state == 'Passed')
+                                                {{ $total >= ($totalSubjects * 100) / 2 ? 'Passed' : 'Failed' }}
                                             @else
                                                 {{ $state }}
                                             @endif
