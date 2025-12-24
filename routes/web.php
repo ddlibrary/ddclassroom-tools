@@ -17,6 +17,7 @@ use App\Http\Controllers\StudentResultCardController;
 use App\Http\Controllers\StudentResultController;
 use App\Http\Controllers\SubGradeController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\TwoFactorAuthSetupController;
 use App\Http\Controllers\TwoFactorChallengeController;
 use App\Http\Controllers\UserController;
@@ -121,6 +122,12 @@ Route::middleware(['auth', 'verified', '2fa'])->group(function () {
     Route::controller(StudentClassPromotionController::class)->group(function () {
         Route::get('student-class-promotion', 'index');
         Route::post('student-class-promotion', 'store')->name('student-class-promotion');
+    });
+
+    // Backup routes - only accessible by user id = 1 (checked in controller)
+    Route::controller(BackupController::class)->group(function () {
+        Route::get('backup', 'index')->name('backup.index');
+        Route::get('backup/download/{disk}/{path}', 'download')->name('backup.download')->where('path', '.*');
     });
 });
 
