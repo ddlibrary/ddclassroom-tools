@@ -92,7 +92,7 @@
             style="float:left" class="mx-2">Persian Result Card</a>
 
         <div>
-             <div style="direction:ltr;position: relative;" id="container">
+            <div style="direction:ltr;position: relative;" id="container">
                 <div style="background-image:url('{{ $image }}') !important;position: absolute;
                     top: 20%;
                     bottom: 20%;
@@ -121,12 +121,14 @@
                         <div class="col-12">
                             <table class="table table-bordered border-dark">
                                 <tr>
-                                    <th class="text-center" style="background: #ffa800 !important;" colspan="3">Student
+                                    <th class="text-center" style="background: #ffa800 !important;" colspan="3">
+                                        Student
                                         Information</th>
                                 </tr>
                                 <tr>
                                     <th style="width: 200px;">ID#</th>
-                                    <th class="text-start">{{ $student->id_number ? $student->id_number : $student->id }}
+                                    <th class="text-start">
+                                        {{ $student->id_number ? $student->id_number : $student->id }}
                                     </th>
                                     <th style="width: 200px;" rowspan="6">
                                         <div id="qrcode"></div>
@@ -141,7 +143,8 @@
                                 <tr>
                                     <th>Father Name</th>
                                     <th class="text-start">
-                                        {{ $student->father_name ? $student->father_name : $student->father_name }}</th>
+                                        {{ $student->father_name ? $student->father_name : $student->father_name }}
+                                    </th>
                                 </tr>
                                 <tr>
                                     <th>Class</th>
@@ -162,123 +165,8 @@
                     <?php
                     // Get subjects for both semesters
                     $yearDecoded = base64_decode($year);
-                    $allowSubjectsSem1 = [];
-                    $allowSubjectsSem2 = [];
-                    $totalSubjectsSem1 = 1;
-                    $totalSubjectsSem2 = 1;
-                    $oldClasses = [2, 10, 9, 5, 7, 8];
-                    $newClasses = [1, 3, 4, 6, 11];
-
-                    $totalSubjectSem1 = $student->subGrade->getFirstSemesterSubjectCountForYear($yearDecoded);
-                    $totalSubjectSem2 = $student->subGrade->getSecondSemesterSubjectCountForYear($yearDecoded);
-
-                    if ($totalSubjectSem1 > 0) {
-                        $allowSubjectsSem1 = $student->subGrade->firstSemesterSubjectsForYear($yearDecoded)->pluck('subject_id')->toArray();
-                        $totalSubjectsSem1 = $totalSubjectSem1;
-                    } else {
-                        if ($student->country_id == 1) {
-                            if ($student->sub_grade_id == 13 || $student->sub_grade_id == 14) {
-                                $totalSubjectsSem1 = 5;
-                                $allowSubjectsSem1 = $newClasses;
-                            } elseif ($student->sub_grade_id == 11 || $student->sub_grade_id == 12) {
-                                $totalSubjectsSem1 = 6;
-                                $allowSubjectsSem1 = $oldClasses;
-                            }
-                        } elseif ($student->country_id == 2) {
-                            $totalSubjectsSem1 = 5;
-                            $allowSubjectsSem1 = $newClasses;
-                        } elseif ($student->country_id == 3) {
-                            $allowSubjectsSem1 = $oldClasses;
-                            $totalSubjectsSem1 = 6;
-                        }
-                    }
-
-                    if ($totalSubjectSem2 > 0) {
-                        $allowSubjectsSem2 = $student->subGrade->secondSemesterSubjectsForYear($yearDecoded)->pluck('subject_id')->toArray();
-                        $totalSubjectsSem2 = $totalSubjectSem2;
-                    } else {
-                        if ($student->country_id == 1) {
-                            if ($student->sub_grade_id == 13 || $student->sub_grade_id == 14) {
-                                $totalSubjectsSem2 = 5;
-                                $allowSubjectsSem2 = $newClasses;
-                            } elseif ($student->sub_grade_id == 11 || $student->sub_grade_id == 12) {
-                                $totalSubjectsSem2 = 6;
-                                $allowSubjectsSem2 = $oldClasses;
-                            }
-                        } elseif ($student->country_id == 2) {
-                            $totalSubjectsSem2 = 5;
-                            $allowSubjectsSem2 = $newClasses;
-                        } elseif ($student->country_id == 3) {
-                            $allowSubjectsSem2 = $oldClasses;
-                            $totalSubjectsSem2 = 6;
-                        }
-                    }
-
-                    // Calculate Semester 1 results
-                    $sem1Total = 0;
-                    $sem1State = 'Passed';
-                    $sem1Scores = [];
-                    foreach ($subjects->whereIn('subject_id', $allowSubjectsSem1) as $subject) {
-                        $score = $subject->subject?->middle?->total ?? 0;
-                        $sem1Total += $score;
-                        $sem1Scores[] = [
-                            'name' => $subject->subject->en_name,
-                            'score' => $score
-                        ];
-                        if ($score < 50) {
-                            $sem1State = 'Failed';
-                        }
-                    }
-                    $sem1Average = $totalSubjectsSem1 > 0 ? round($sem1Total / $totalSubjectsSem1, 2) : 0;
-                    $sem1PromotionStatus = ($sem1State == 'Passed' && $sem1Total >= ($totalSubjectsSem1 * 100) / 2) ? 'Passed' : 'Failed';
-
-                    // Calculate Semester 2 results
-                    $sem2Total = 0;
-                    $sem2State = 'Passed';
-                    $sem2Scores = [];
-                    foreach ($subjects->whereIn('subject_id', $allowSubjectsSem2) as $subject) {
-                        $score = $subject->subject?->final?->total ?? 0;
-                        $sem2Total += $score;
-                        $sem2Scores[] = [
-                            'name' => $subject->subject->en_name,
-                            'score' => $score
-                        ];
-                        if ($score < 50) {
-                            $sem2State = 'Failed';
-                        }
-                    }
-                    $sem2Average = $totalSubjectsSem2 > 0 ? round($sem2Total / $totalSubjectsSem2, 2) : 0;
-                    $sem2PromotionStatus = ($sem2State == 'Passed' && $sem2Total >= ($totalSubjectsSem2 * 100) / 2) ? 'Passed' : 'Failed';
-
-                    // Get all unique subjects from both semesters for display
-                    $allSubjectIds = array_unique(array_merge($allowSubjectsSem1, $allowSubjectsSem2));
-                    $allSubjectsData = [];
-                    foreach ($subjects->whereIn('subject_id', $allSubjectIds) as $subject) {
-                        $sem1Score = in_array($subject->subject_id, $allowSubjectsSem1) ? ($subject->subject?->middle?->total ?? 0) : 0;
-                        $sem2Score = in_array($subject->subject_id, $allowSubjectsSem2) ? ($subject->subject?->final?->total ?? 0) : 0;
-                        $allSubjectsData[] = [
-                            'name' => $subject->subject->en_name,
-                            'sem1' => $sem1Score,
-                            'sem2' => $sem2Score
-                        ];
-                    }
-
-                    // Cumulative Results
-                    $cumulativeTotal = $sem1Total + $sem2Total;
-                    $totalSubjects = max($totalSubjectsSem1, $totalSubjectsSem2);
-                    // Yearly average: average of both semester averages
-                    $yearlyAverage = ($totalSubjectsSem1 > 0 && $totalSubjectsSem2 > 0) ? round(($sem1Average + $sem2Average) / 2, 2) : ($totalSubjectsSem1 > 0 ? $sem1Average : ($totalSubjectsSem2 > 0 ? $sem2Average : 0));
-                    $totalPassedSubjects = 0;
-                    foreach ($allSubjectsData as $subj) {
-                        if ($subj['sem1'] >= 50) {
-                            $totalPassedSubjects++;
-                        }
-                        if ($subj['sem2'] >= 50) {
-                            $totalPassedSubjects++;
-                        }
-                    }
-                    $overallResult = ($yearlyAverage >= 50 && $sem1PromotionStatus == 'Passed' && $sem2PromotionStatus == 'Passed') ? 'Passed' : 'Failed';
                     ?>
+
 
                     <!-- Semester Results Section -->
                     <div class="row mb-4">
@@ -286,38 +174,75 @@
                         <div class="col-6" id="score">
                             <table class="table table-bordered border-dark">
                                 <tr>
-                                    <th class="text-center" style="background: #ffa800 !important;" colspan="2">Semester-1
+                                    <th class="text-center" style="background: #ffa800 !important;" colspan="2">
+                                        Semester-1
                                     </th>
                                 </tr>
                                 <tr>
                                     <th class="text-start" style="width: 60%;">Subject</th>
                                     <th class="text-center">Total</th>
                                 </tr>
-                                @foreach ($allSubjectsData as $subject)
-                                    @if ($subject['sem1'] > 0)
-                                        <tr>
-                                            <td class="text-start">{{ $subject['name'] }}</td>
-                                            <td class="text-center">{{ floatval($subject['sem1']) }}</td>
-                                        </tr>
-                                    @endif
+                                <?php
+                                $total1 = 0;
+                                $total2 = 0;
+                                $totalSubjectPassed = 0;
+                                $state = 'Passed';
+                                $allowSubjectsSem1 = [];
+                                $allowSubjectsSem2 = [];
+                                $totalSubjectSem1 = $student->subGrade->getFirstSemesterSubjectCountForYear(base64_decode($year));
+                                if ($totalSubjectSem1 > 0) {
+                                    $allowSubjectsSem1 = $student->subGrade->firstSemesterSubjectsForYear(base64_decode($year))->pluck('subject_id')->toArray();
+                                }
+
+                                $totalSubjectsSem2 = $student->subGrade->getSecondSemesterSubjectCountForYear(base64_decode($year));
+                                if ($totalSubjectsSem2 > 0) {
+                                    $allowSubjectsSem2 = $student->subGrade->secondSemesterSubjectsForYear(base64_decode($year))->pluck('subject_id')->toArray();
+                                }
+                                ?>
+
+
+                                @foreach ($subjects->whereIn('subject_id', $allowSubjectsSem1) as $subject)
+                                    <?php
+
+                                    $totalScore = $subject->subject?->middle?->total;
+
+                                    $total1 += $totalScore;
+
+                                    if ($totalScore < 50) {
+                                        $state = 'Failed';
+                                    } else {
+                                        $totalSubjectPassed++;
+                                    }
+                                    ?>
+                                    <tr>
+                                        <td class="text-start">{{ $subject->subject->en_name }}</td>
+                                        <td class="text-center">{{ floatval($totalScore) }}</td>
+                                    </tr>
                                 @endforeach
                                 <tr>
                                     <th class="text-start result-bg" style="background-color: #ffa80054 !important;">
                                         Average</th>
                                     <th class="text-center result-bg" style="background-color: #ffa80054 !important;">
-                                        {{ floatval($sem1Average) }}</th>
+                                        {{ floatval(round($totalSubjectSem1 > 0 ? $total1 / $totalSubjectSem1 : 0, 2)) }}
+                                    </th>
                                 </tr>
                                 <tr>
-                                    <th class="text-start result-bg" style="background-color: #ffa80054 !important;">Total
+                                    <th class="text-start result-bg" style="background-color: #ffa80054 !important;">
+                                        Total
                                     </th>
                                     <th class="text-center result-bg" style="background-color: #ffa80054 !important;">
-                                        {{ floatval($sem1Total) }}</th>
+                                        {{ floatval($total1) }}</th>
                                 </tr>
                                 <tr>
                                     <th class="text-start result-bg" style="background-color: #ffa80054 !important;">
                                         Promotion Status</th>
                                     <th class="text-center result-bg" style="background-color: #ffa80054 !important;">
-                                        {{ $sem1PromotionStatus }}</th>
+                                        @if ($state == 'Passed')
+                                            {{ $total1 >= ($totalSubjects * 100) / 2 ? 'Passed' : 'Failed' }}
+                                        @else
+                                            {{ $state }}
+                                        @endif
+                                    </th>
                                 </tr>
                             </table>
                         </div>
@@ -326,38 +251,70 @@
                         <div class="col-6" id="score">
                             <table class="table table-bordered border-dark">
                                 <tr>
-                                    <th class="text-center" style="background: #ffa800 !important;" colspan="2">Semester-2
+                                    <th class="text-center" style="background: #ffa800 !important;" colspan="2">
+                                        Semester-2
                                     </th>
                                 </tr>
                                 <tr>
                                     <th class="text-start" style="width: 60%;">Subject</th>
                                     <th class="text-center">Total</th>
                                 </tr>
-                                @foreach ($allSubjectsData as $subject)
-                                    @if ($subject['sem2'] > 0)
-                                        <tr>
-                                            <td class="text-start">{{ $subject['name'] }}</td>
-                                            <td class="text-center">{{ floatval($subject['sem2']) }}</td>
-                                        </tr>
-                                    @endif
+                                @foreach ($subjects->whereIn('subject_id', $allowSubjectsSem2) as $subject)
+                                    <?php
+
+                                    $totalScore = $subject->subject?->middle?->total;
+
+                                    $total2 += $totalScore;
+
+                                    if ($totalScore < 50) {
+                                        $state = 'Failed';
+                                    } else {
+                                        $totalSubjectPassed++;
+                                    }
+                                    ?>
+                                    <tr>
+                                        <td class="text-start">{{ $subject->subject->en_name }}</td>
+                                        <td class="text-center">{{ floatval($totalScore) }}</td>
+                                    </tr>
                                 @endforeach
+                                @if (empty($allowSubjectsSem2))
+                                    @foreach ($subjects->whereIn('subject_id', $allowSubjectsSem1) as $subject)
+                                        <?php
+
+                                        $state = '';
+
+                                        ?>
+                                        <tr>
+                                            <td class="text-start">{{ $subject->subject->en_name }}</td>
+                                            <td class="text-center"></td>
+                                        </tr>
+                                    @endforeach
+
+                                @endif
                                 <tr>
                                     <th class="text-start result-bg" style="background-color: #ffa80054 !important;">
                                         Average</th>
                                     <th class="text-center result-bg" style="background-color: #ffa80054 !important;">
-                                        {{ floatval($sem2Average) }}</th>
+                                        {{ floatval(round($totalSubjectsSem2 > 0 ? $total2 / $totalSubjecstSem2 : 0, 2)) }}
+                                    </th>
                                 </tr>
                                 <tr>
-                                    <th class="text-start result-bg" style="background-color: #ffa80054 !important;">Total
+                                    <th class="text-start result-bg" style="background-color: #ffa80054 !important;">
+                                        Total
                                     </th>
                                     <th class="text-center result-bg" style="background-color: #ffa80054 !important;">
-                                        {{ floatval($sem2Total) }}</th>
+                                        {{ floatval($total2) }}</th>
                                 </tr>
                                 <tr>
                                     <th class="text-start result-bg" style="background-color: #ffa80054 !important;">
                                         Promotion Status</th>
                                     <th class="text-center result-bg" style="background-color: #ffa80054 !important;">
-                                        {{ $sem2PromotionStatus }}</th>
+                                        @if ($state == 'Passed')
+                                            {{ $total2 >= ($totalSubjects * 100) / 2 ? 'Passed' : 'Failed' }}
+                                        @else
+                                            {{ $state }}
+                                        @endif
+                                    </th>
                                 </tr>
                             </table>
                         </div>
@@ -369,24 +326,30 @@
                         <div class="col-6">
                             <table class="table table-bordered border-dark">
                                 <tr>
-                                    <th class="text-center" style="background: #ffa800 !important;" colspan="2">Cumulative
+                                    <th class="text-center" style="background: #ffa800 !important;" colspan="2">
+                                        Cumulative
                                         Result</th>
                                 </tr>
                                 <tr>
-                                    <th class="text-start" style="width: 60%;font-size:14px;">Total Marks Obtained (All Semesters)</th>
-                                    <th class="text-center">{{ $cumulativeTotal }}</th>
+                                    <th class="text-start" style="width: 60%;font-size:14px;">Total Marks Obtained (All
+                                        Semesters)</th>
+                                    <th class="text-center">{{ $total1 + $total2 }}</th>
                                 </tr>
                                 <tr>
                                     <th class="text-start">Yearly Average (%)</th>
-                                    <th class="text-center">{{ $yearlyAverage }}</th>
+                                    <th class="text-center">
+                                        {{ floatval(round($totalSubjectsSem2 + $totalSubjectSem1 > 0 ? ($total2 + $total1) / ($totalSubjectsSem2 + $totalSubjectSem1) : 0, 2)) }}
+                                    </th>
                                 </tr>
                                 <tr>
                                     <th class="text-start">Total Passed Subjects</th>
-                                    <th class="text-center">{{ $totalPassedSubjects }}</th>
+                                    <th class="text-center">{{ $totalSubjectPassed }}</th>
                                 </tr>
                                 <tr>
                                     <th class="text-start">Overall Result (Pass/Fail)</th>
-                                    <th class="text-center">{{ $overallResult }}</th>
+                                    <th class="text-center">
+                                        {{ $allowSubjectsSem1 + $allowSubjectsSem2 == $totalSubjectPassed ? 'Pussed' : 'Fail' }}
+                                    </th>
                                 </tr>
                             </table>
                         </div>
@@ -395,7 +358,8 @@
                         <div class="col-6">
                             <table class="table table-bordered border-dark">
                                 <tr>
-                                    <th class="text-center" style="background: #ffa800 !important;" colspan="2">Attendance
+                                    <th class="text-center" style="background: #ffa800 !important;" colspan="2">
+                                        Attendance
                                     </th>
                                 </tr>
                                 <tr>
@@ -435,7 +399,8 @@
                                     <tr>
                                         <th class="text-center" style="height: 80px !important">
                                             @if ($responsible)
-                                                <img src="{{ $responsible->teacher->signature }}" style="height: 70px;">
+                                                <img src="{{ $responsible->teacher->signature }}"
+                                                    style="height: 70px;">
                                             @endif
                                         </th>
                                     </tr>
@@ -486,4 +451,3 @@
 </body>
 
 </html>
-
