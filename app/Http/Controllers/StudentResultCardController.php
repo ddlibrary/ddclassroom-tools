@@ -79,6 +79,12 @@ class StudentResultCardController extends Controller
         if ($request->en_result && $request->en_result == 'english') {
             return view('students.student-en-result-card', compact('student', 'subjects', 'results', 'responsible', 'studentResult', 'year', 'qrCode'));
         } elseif ($request->en_result && $request->en_result == 'grade-9') {
+            // Check if full report is requested (both semesters)
+            if ($request->full_report == '1' || $request->full_report == 'true') {
+                $qrCode = url("result-card/$uuid/$year/$studentResultId");
+                return view('students.grade-9-report-card', compact('student', 'subjects', 'results', 'responsible', 'year', 'studentResult', 'qrCode'));
+            }
+            // Otherwise show single semester view
             $semesterEncode = base64_encode($semester);
             $qrCode = url("certificate/$uuid/$year/$studentResultId/$semesterEncode");
             return view('students.grade-9-result-card', compact('student', 'subjects', 'results', 'responsible', 'semester', 'year', 'studentResult', 'qrCode'));
