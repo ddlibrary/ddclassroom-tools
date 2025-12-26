@@ -81,7 +81,8 @@ class StudentResultCardController extends Controller
         } elseif ($request->en_result && $request->en_result == 'grade-9') {
             // Check if full report is requested (both semesters)
             if ($request->full_report == '1' || $request->full_report == 'true') {
-                $qrCode = url("result-card/$uuid/$year/$studentResultId");
+
+                $qrCode = url("certificate/$uuid/$year/$studentResultId/2?final_report=1&en_result=english");
                 return view('students.grade-9-report-card', compact('student', 'subjects', 'results', 'responsible', 'year', 'studentResult', 'qrCode'));
             }
             // Otherwise show single semester view
@@ -230,6 +231,16 @@ class StudentResultCardController extends Controller
         $studentResultId = base64_encode($studentResultId);
 
         $qrCode = url("certificate/$uuid/$year/$studentResultId/".base64_encode($semester));
+
+        if($request->final_report){
+            if($request->final_report == 1){
+
+                $qrCode = url("certificate/$uuid/$year/$studentResultId/".base64_encode($semester).'?en_result=english&final_report=1');
+
+                return view('students.public-grade-9-result-card', compact('student', 'subjects', 'results', 'responsible', 'year', 'studentResult', 'qrCode', 'semester'));
+            }
+            return abort(404, 'Page not found');
+        }
 
         return view('students.grade-9-certificate', compact('student', 'subjects', 'results', 'responsible', 'year', 'studentResult', 'qrCode', 'semester'));
     }
