@@ -92,8 +92,16 @@
             style="float:left" class="mx-2">Persian Result Card</a>
 
         <div>
-            <div style="direction:ltr;position: relative;" id="container">
-                <div class="watermark" id="logo"></div>
+             <div style="direction:ltr;position: relative;" id="container">
+                <div style="background-image:url('{{ $image }}') !important;position: absolute;
+                    top: 20%;
+                    bottom: 20%;
+                    right: 15%;
+                    left: 15%;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    opacity: 0.15;"
+                    id="logo"></div>
                 <div style="padding:25px;border:1px solid black;border-radius:12px;">
 
                     <!-- Header Section -->
