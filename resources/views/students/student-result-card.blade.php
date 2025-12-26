@@ -78,6 +78,9 @@
         @if ($studentResult->subGrade->grade_id == 9)
             <a href="{{ url('student-result-card/' . $student->uuid . '/' . base64_decode($year) . '/' . $studentResult->id . $param . '&semester=2') }}"
                 style="float:left" class="mx-2">Second Semester</a>
+
+            <a href="{{ url('student-result-card/' . $student->uuid . '/' . base64_decode($year) . '/' . $studentResult->id . $param . '&semester=2&full_report=1') }}"
+                style="float:left" class="mx-2">Grade 9 Result Card</a>
         @endif
         <div>
             <div style="direction:rtl;position: relative;" id="container">
