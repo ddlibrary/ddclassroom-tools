@@ -261,7 +261,7 @@
                                 @foreach ($subjects->whereIn('subject_id', $allowSubjectsSem2) as $subject)
                                     <?php
 
-                                    $totalScore = $subject->subject?->middle?->total;
+                                    $totalScore = $subject->subject?->final?->total;
 
                                     $total2 += $totalScore;
 
@@ -347,7 +347,20 @@
                                 <tr>
                                     <th class="text-start">Overall Result (Pass/Fail)</th>
                                     <th class="text-center">
-                                        {{ $allowSubjectsSem1 + $allowSubjectsSem2 == $totalSubjectPassed ? 'Pussed' : 'Fail' }}
+                                        @if ($total2 > 0)
+                                            @if ($state == 'Passed')
+                                                {{ $total2 >= ($totalSubjectsSem2 * 100) / 2 ? 'Passed' : 'Failed' }}
+                                            @else
+                                                {{ $state }}
+                                            @endif
+                                        @else
+                                            @if ($state == 'Passed')
+                                                {{ $total1 >= ($totalSubjectsSem1 * 100) / 2 ? 'Passed' : 'Failed' }}
+                                            @else
+                                                {{ $state }}
+                                            @endif
+
+                                        @endif
                                     </th>
                                 </tr>
                             </table>
