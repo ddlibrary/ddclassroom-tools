@@ -238,7 +238,7 @@
                                         Promotion Status</th>
                                     <th class="text-center result-bg" style="background-color: #ffa80054 !important;">
                                         @if ($state == 'Passed')
-                                            {{ $total1 >= ($totalSubjects * 100) / 2 ? 'Passed' : 'Failed' }}
+                                            {{ $total1 >= ($totalSubjectSem1 * 100) / 2 ? 'Passed' : 'Failed' }}
                                         @else
                                             {{ $state }}
                                         @endif
@@ -310,7 +310,7 @@
                                         Promotion Status</th>
                                     <th class="text-center result-bg" style="background-color: #ffa80054 !important;">
                                         @if ($state == 'Passed')
-                                            {{ $total2 >= ($totalSubjects * 100) / 2 ? 'Passed' : 'Failed' }}
+                                            {{ $total2 >= ($totalSubjectsSem2 * 100) / 2 ? 'Passed' : 'Failed' }}
                                         @else
                                             {{ $state }}
                                         @endif
