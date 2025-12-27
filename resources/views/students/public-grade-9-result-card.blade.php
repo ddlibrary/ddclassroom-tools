@@ -188,8 +188,8 @@
                                 $state = 'Passed';
                                 $allowSubjectsSem1 = [];
                                 $allowSubjectsSem2 = [];
-                                $totalSubjectSem1 = $student->subGrade->getFirstSemesterSubjectCountForYear(base64_decode($year));
-                                if ($totalSubjectSem1 > 0) {
+                                $totalSubjectsSem1 = $student->subGrade->getFirstSemesterSubjectCountForYear(base64_decode($year));
+                                if ($totalSubjectsSem1 > 0) {
                                     $allowSubjectsSem1 = $student->subGrade->firstSemesterSubjectsForYear(base64_decode($year))->pluck('subject_id')->toArray();
                                 }
 
@@ -222,7 +222,7 @@
                                     <th class="text-start result-bg" style="background-color: #ffa80054 !important;">
                                         Average</th>
                                     <th class="text-center result-bg" style="background-color: #ffa80054 !important;">
-                                        {{ floatval(round($totalSubjectSem1 > 0 ? $total1 / $totalSubjectSem1 : 0, 2)) }}
+                                        {{ floatval(round($totalSubjectsSem1 > 0 ? $total1 / $totalSubjectsSem1 : 0, 2)) }}
                                     </th>
                                 </tr>
                                 <tr>
@@ -237,7 +237,7 @@
                                         Promotion Status</th>
                                     <th class="text-center result-bg" style="background-color: #ffa80054 !important;">
                                         @if ($state == 'Passed')
-                                            {{ $total1 >= ($totalSubjectSem1 * 100) / 2 ? 'Passed' : 'Failed' }}
+                                            {{ $total1 >= ($totalSubjectsSem1 * 100) / 2 ? 'Passed' : 'Failed' }}
                                         @else
                                             {{ $state }}
                                         @endif
@@ -294,7 +294,7 @@
                                     <th class="text-start result-bg" style="background-color: #ffa80054 !important;">
                                         Average</th>
                                     <th class="text-center result-bg" style="background-color: #ffa80054 !important;">
-                                        {{ floatval(round($totalSubjectsSem2 > 0 ? $total2 / $totalSubjecstSem2 : 0, 2)) }}
+                                        {{ floatval(round($totalSubjectsSem2 > 0 ? $total2 / $totalSubjectsSem2 : 0, 2)) }}
                                     </th>
                                 </tr>
                                 <tr>
@@ -309,7 +309,7 @@
                                         Promotion Status</th>
                                     <th class="text-center result-bg" style="background-color: #ffa80054 !important;">
                                         @if ($state == 'Passed')
-                                            {{ $total2 >= ($totalSubjectSem2 * 100) / 2 ? 'Passed' : 'Failed' }}
+                                            {{ $total2 >= ($totalSubjectsSem2 * 100) / 2 ? 'Passed' : 'Failed' }}
                                         @else
                                             {{ $state }}
                                         @endif
@@ -337,7 +337,7 @@
                                 <tr>
                                     <th class="text-start">Yearly Average (%)</th>
                                     <th class="text-center">
-                                        {{ floatval(round($totalSubjectsSem2 + $totalSubjectSem1 > 0 ? ($total2 + $total1) / ($totalSubjectsSem2 + $totalSubjectSem1) : 0, 2)) }}
+                                        {{ floatval(round($totalSubjectsSem2 + $totalSubjectsSem1 > 0 ? ($total2 + $total1) / ($totalSubjectsSem2 + $totalSubjectsSem1) : 0, 2)) }}
                                     </th>
                                 </tr>
                                 <tr>
