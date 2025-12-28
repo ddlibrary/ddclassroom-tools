@@ -258,6 +258,10 @@
                                     <th class="text-start" style="width: 60%;">Subject</th>
                                     <th class="text-center">Total</th>
                                 </tr>
+                                <?php
+                                $firstSemesterState = $state;
+                                $state = 'Passed';
+                                ?>
                                 @foreach ($subjects->whereIn('subject_id', $allowSubjectsSem2) as $subject)
                                     <?php
 
@@ -354,10 +358,10 @@
                                                 {{ $state }}
                                             @endif
                                         @else
-                                            @if ($state == 'Passed')
+                                            @if ($firstSemesterState == 'Passed')
                                                 {{ $total1 >= ($totalSubjectsSem1 * 100) / 2 ? 'Passed' : 'Failed' }}
                                             @else
-                                                {{ $state }}
+                                                {{ $firstSemesterState }}
                                             @endif
 
                                         @endif
