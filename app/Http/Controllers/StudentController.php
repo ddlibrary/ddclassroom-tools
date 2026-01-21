@@ -10,7 +10,11 @@ use App\Imports\UpdateStudentInfoImport;
 use App\Jobs\SendEmailJob;
 use App\Models\Country;
 use App\Models\Enrollment;
+use App\Models\Grade;
+use App\Models\Score;
 use App\Models\Student;
+use App\Models\StudentResult;
+use App\Models\Subject;
 use App\Models\SubGrade;
 use App\Models\Year;
 use Illuminate\Http\Request;
@@ -86,6 +90,12 @@ class StudentController extends Controller
         }
 
         return redirect('students');
+    }
+
+    public function show(Student $student)
+    {
+        // Redirect to edit page since there's no dedicated show page
+        return redirect()->route('students.edit', $student);
     }
 
     public function edit(Student $student)
@@ -246,6 +256,349 @@ class StudentController extends Controller
         });
 
         return redirect()->back()->with('success', 'Result card sent successfully!');
+    }
+
+    public function filter(Request $request)
+    {
+        $grades = Grade::where('is_active', true)->get(['id', 'name']);
+        $subGrades = SubGrade::whereIsActive(true)->get(['id', 'full_name', 'grade_id']);
+        $years = Year::all(['id', 'name']);
+        $countries = Country::where('is_active', true)->get(['id', 'name']);
+        $subjects = Subject::all(['id', 'name']);
+
+        // If subject is selected, query Score model instead of StudentResult
+        if ($request->subject_id) {
+            $query = Score::query()
+                ->select([
+                    'scores.id',
+                    'scores.written',
+                    'scores.verbal',
+                    'scores.attendance',
+                    'scores.activity',
+                    'scores.homework',
+                    'scores.evaluation',
+                    'scores.total',
+                    'scores.type', // Explicitly include type field
+                    'scores.is_passed',
+                    'scores.year',
+                    'scores.student_id',
+                    'scores.sub_grade_id',
+                    'scores.subject_id',
+                    'scores.teacher_id',
+                    'scores.user_id',
+                    'scores.created_at',
+                    'scores.updated_at'
+                ])
+                ->with([
+                    'student:id,name,father_name,country_id,fa_name,fa_father_name,uuid,id_number,email',
+                    'subject:id,name',
+                    'subGrade:id,full_name,grade_id',
+                    'subGrade.grade:id,name',
+                    'teacher:id,name'
+                ]);
+
+            // Filter by subject_id
+            $query->where('subject_id', $request->subject_id);
+
+            // Filter by student_id (id_number)
+            if ($request->student_id) {
+                $query->whereHas('student', function ($q) use ($request) {
+                    $q->where('id_number', 'like', "%{$request->student_id}%");
+                });
+            }
+
+            // Filter by email
+            if ($request->email) {
+                $query->whereHas('student', function ($q) use ($request) {
+                    $q->where('email', 'like', "%{$request->email}%");
+                });
+            }
+
+            // Filter by country_id
+            if ($request->country_id) {
+                $query->whereHas('student', function ($q) use ($request) {
+                    $q->where('country_id', $request->country_id);
+                });
+            }
+
+            // Filter by grade_id (through sub_grades)
+            if ($request->grade_id) {
+                $query->whereHas('subGrade', function ($q) use ($request) {
+                    $q->where('grade_id', $request->grade_id);
+                });
+            }
+
+            // Filter by sub_grade_id
+            if ($request->sub_grade_id) {
+                $query->where('sub_grade_id', $request->sub_grade_id);
+            }
+
+            // Filter by year
+            if ($request->year) {
+                $query->where('year', $request->year);
+            }
+
+            // Filter by exam type:
+            // type=1 => midterm
+            // type=2 => final exam
+            // type=3 => final result (combination of midterm and final exam)
+            if ($request->exam_type === 'midterm') {
+                $query->where('type', 1); // Midterm
+            } elseif ($request->exam_type === 'final') {
+                $query->where('type', 2); // Final exam
+            } elseif ($request->exam_type === 'result') {
+                $query->where('type', 3); // Final result (combination of midterm and final exam)
+            } else {
+                // Default to final result (type 3) when no exam_type selected
+                $query->where('type', 3);
+            }
+
+            // Filter by status (passed/failed)
+            if ($request->status === 'passed') {
+                $query->where('is_passed', true);
+            } elseif ($request->status === 'failed') {
+                $query->where('is_passed', false);
+            }
+
+            $results = $query->orderByDesc('id')->paginate(35)->appends($request->query());
+
+            // Calculate total passed and failed counts
+            $totalPassed = Score::query()
+                ->where('subject_id', $request->subject_id)
+                ->where('is_passed', true);
+            
+            $totalFailed = Score::query()
+                ->where('subject_id', $request->subject_id)
+                ->where('is_passed', false);
+
+            // Apply same filters as main query
+            if ($request->student_id) {
+                $totalPassed->whereHas('student', function ($q) use ($request) {
+                    $q->where('id_number', 'like', "%{$request->student_id}%");
+                });
+                $totalFailed->whereHas('student', function ($q) use ($request) {
+                    $q->where('id_number', 'like', "%{$request->student_id}%");
+                });
+            }
+            if ($request->email) {
+                $totalPassed->whereHas('student', function ($q) use ($request) {
+                    $q->where('email', 'like', "%{$request->email}%");
+                });
+                $totalFailed->whereHas('student', function ($q) use ($request) {
+                    $q->where('email', 'like', "%{$request->email}%");
+                });
+            }
+            if ($request->country_id) {
+                $totalPassed->whereHas('student', function ($q) use ($request) {
+                    $q->where('country_id', $request->country_id);
+                });
+                $totalFailed->whereHas('student', function ($q) use ($request) {
+                    $q->where('country_id', $request->country_id);
+                });
+            }
+            if ($request->grade_id) {
+                $totalPassed->whereHas('subGrade', function ($q) use ($request) {
+                    $q->where('grade_id', $request->grade_id);
+                });
+                $totalFailed->whereHas('subGrade', function ($q) use ($request) {
+                    $q->where('grade_id', $request->grade_id);
+                });
+            }
+            if ($request->sub_grade_id) {
+                $totalPassed->where('sub_grade_id', $request->sub_grade_id);
+                $totalFailed->where('sub_grade_id', $request->sub_grade_id);
+            }
+            if ($request->year) {
+                $totalPassed->where('year', $request->year);
+                $totalFailed->where('year', $request->year);
+            }
+            if ($request->exam_type === 'midterm') {
+                $totalPassed->where('type', 1);
+                $totalFailed->where('type', 1);
+            } elseif ($request->exam_type === 'final') {
+                $totalPassed->where('type', 2);
+                $totalFailed->where('type', 2);
+            } elseif ($request->exam_type === 'result') {
+                $totalPassed->where('type', 3);
+                $totalFailed->where('type', 3);
+            } else {
+                $totalPassed->where('type', 3);
+                $totalFailed->where('type', 3);
+            }
+
+            $passedCount = $totalPassed->count();
+            $failedCount = $totalFailed->count();
+
+            return inertia('Student/Filter', [
+                'results' => $results,
+                'grades' => $grades,
+                'subGrades' => $subGrades,
+                'years' => $years,
+                'countries' => $countries,
+                'subjects' => $subjects,
+                'hasSubject' => true,
+                'passedCount' => $passedCount,
+                'failedCount' => $failedCount,
+            ]);
+        }
+
+        // Default: Query StudentResult model
+        $query = StudentResult::query()->with([
+            'student:id,name,father_name,country_id,fa_name,fa_father_name,uuid,id_number,email',
+            'middleResult:id,name',
+            'subGrade:id,full_name,grade_id',
+            'subGrade.grade:id,name',
+            'teacher:id,name'
+        ]);
+
+        // Filter by student_id (id_number)
+        if ($request->student_id) {
+            $query->whereHas('student', function ($q) use ($request) {
+                $q->where('id_number', 'like', "%{$request->student_id}%");
+            });
+        }
+
+        // Filter by email
+        if ($request->email) {
+            $query->whereHas('student', function ($q) use ($request) {
+                $q->where('email', 'like', "%{$request->email}%");
+            });
+        }
+
+        // Filter by country_id
+        if ($request->country_id) {
+            $query->whereHas('student', function ($q) use ($request) {
+                $q->where('country_id', $request->country_id);
+            });
+        }
+
+        // Filter by grade_id (through sub_grades)
+        if ($request->grade_id) {
+            $query->whereHas('subGrade', function ($q) use ($request) {
+                $q->where('grade_id', $request->grade_id);
+            });
+        }
+
+        // Filter by sub_grade_id
+        if ($request->sub_grade_id) {
+            $query->where('sub_grade_id', $request->sub_grade_id);
+        }
+
+        // Filter by year
+        if ($request->year) {
+            $query->where('year', $request->year);
+        }
+
+        // Filter by exam type (midterm or final)
+        if ($request->exam_type) {
+            if ($request->exam_type === 'midterm') {
+                // Filter results that have midterm scores (middle field is not null and > 0)
+                $query->whereNotNull('middle')->where('middle', '>', 0);
+            } elseif ($request->exam_type === 'final') {
+                // Filter results that have final scores (final field is not null and > 0)
+                $query->whereNotNull('final')->where('final', '>', 0);
+            }
+        }
+
+        $results = $query->orderByDesc('id')->paginate(35)->appends($request->query());
+
+        // Calculate total counts for کامیاب (successful), ناکام (failed), and مشروط (conditional)
+        $totalKamyab = StudentResult::query();
+        $totalNakam = StudentResult::query();
+        $totalMashroot = StudentResult::query();
+
+        // Apply same filters as main query
+        if ($request->student_id) {
+            $totalKamyab->whereHas('student', function ($q) use ($request) {
+                $q->where('id_number', 'like', "%{$request->student_id}%");
+            });
+            $totalNakam->whereHas('student', function ($q) use ($request) {
+                $q->where('id_number', 'like', "%{$request->student_id}%");
+            });
+            $totalMashroot->whereHas('student', function ($q) use ($request) {
+                $q->where('id_number', 'like', "%{$request->student_id}%");
+            });
+        }
+        if ($request->email) {
+            $totalKamyab->whereHas('student', function ($q) use ($request) {
+                $q->where('email', 'like', "%{$request->email}%");
+            });
+            $totalNakam->whereHas('student', function ($q) use ($request) {
+                $q->where('email', 'like', "%{$request->email}%");
+            });
+            $totalMashroot->whereHas('student', function ($q) use ($request) {
+                $q->where('email', 'like', "%{$request->email}%");
+            });
+        }
+        if ($request->country_id) {
+            $totalKamyab->whereHas('student', function ($q) use ($request) {
+                $q->where('country_id', $request->country_id);
+            });
+            $totalNakam->whereHas('student', function ($q) use ($request) {
+                $q->where('country_id', $request->country_id);
+            });
+            $totalMashroot->whereHas('student', function ($q) use ($request) {
+                $q->where('country_id', $request->country_id);
+            });
+        }
+        if ($request->grade_id) {
+            $totalKamyab->whereHas('subGrade', function ($q) use ($request) {
+                $q->where('grade_id', $request->grade_id);
+            });
+            $totalNakam->whereHas('subGrade', function ($q) use ($request) {
+                $q->where('grade_id', $request->grade_id);
+            });
+            $totalMashroot->whereHas('subGrade', function ($q) use ($request) {
+                $q->where('grade_id', $request->grade_id);
+            });
+        }
+        if ($request->sub_grade_id) {
+            $totalKamyab->where('sub_grade_id', $request->sub_grade_id);
+            $totalNakam->where('sub_grade_id', $request->sub_grade_id);
+            $totalMashroot->where('sub_grade_id', $request->sub_grade_id);
+        }
+        if ($request->year) {
+            $totalKamyab->where('year', $request->year);
+            $totalNakam->where('year', $request->year);
+            $totalMashroot->where('year', $request->year);
+        }
+        if ($request->exam_type === 'midterm') {
+            $totalKamyab->whereNotNull('middle')->where('middle', '>', 0);
+            $totalNakam->whereNotNull('middle')->where('middle', '>', 0);
+            $totalMashroot->whereNotNull('middle')->where('middle', '>', 0);
+        } elseif ($request->exam_type === 'final') {
+            $totalKamyab->whereNotNull('final')->where('final', '>', 0);
+            $totalNakam->whereNotNull('final')->where('final', '>', 0);
+            $totalMashroot->whereNotNull('final')->where('final', '>', 0);
+        }
+
+        // Filter by result status
+        $totalKamyab->where('result_name', 'کامیاب');
+        $totalNakam->where(function($q) {
+            $q->where('result_name', 'تکرار صنف')
+              ->orWhere('result_name', 'ناکام');
+        });
+        $totalMashroot->where(function($q) {
+            $q->where('result_name', 'تکرار بیشتر')
+              ->orWhere('result_name', 'مشروط');
+        });
+
+        $kamyabCount = $totalKamyab->count();
+        $nakamCount = $totalNakam->count();
+        $mashrootCount = $totalMashroot->count();
+
+        return inertia('Student/Filter', [
+            'results' => $results,
+            'grades' => $grades,
+            'subGrades' => $subGrades,
+            'years' => $years,
+            'countries' => $countries,
+            'subjects' => $subjects,
+            'hasSubject' => false,
+            'kamyabCount' => $kamyabCount,
+            'nakamCount' => $nakamCount,
+            'mashrootCount' => $mashrootCount,
+        ]);
     }
 
     public function destroy(Student $student)
