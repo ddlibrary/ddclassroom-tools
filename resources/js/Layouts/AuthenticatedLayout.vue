@@ -30,13 +30,22 @@ import {
     Bars3Icon,
     BellIcon,
     CalendarIcon,
+    ChartBarIcon,
     ChartPieIcon,
     ChevronRightIcon,
     Cog6ToothIcon,
+    DocumentChartBarIcon,
     DocumentDuplicateIcon,
     FaceSmileIcon,
     FolderIcon,
+    GlobeAltIcon,
     HomeIcon,
+    KeyIcon,
+    ListBulletIcon,
+    AcademicCapIcon,
+    BookOpenIcon,
+    ClockIcon,
+    UserGroupIcon,
     UsersIcon,
     XMarkIcon,
 } from "@heroicons/vue/24/outline";
@@ -44,43 +53,56 @@ import { ChevronDownIcon, MagnifyingGlassIcon } from "@heroicons/vue/20/solid";
 
 const showingNavigationDropdown = ref(false);
 
-const navigation = [
-    { name: "Dashboard", href: "/", icon: HomeIcon, current: false },
+// Get current URL path
+const currentUrl = computed(() => {
+    return page.url;
+});
+
+// Function to check if a route is active
+const isActive = (href) => {
+    if (href === '/') {
+        return currentUrl.value === '/';
+    }
+    return currentUrl.value.startsWith(href);
+};
+
+// Function to check if any child is active
+const hasActiveChild = (children) => {
+    if (!children) return false;
+    return children.some(child => isActive(child.href));
+};
+
+const navigation = computed(() => [
+    { name: "Dashboard", href: "/", icon: HomeIcon },
     {
         name: "Student",
         href: "/",
-        icon: DocumentDuplicateIcon,
-        current: false,
+        icon: UserGroupIcon,
         children: [
             {
                 name: "Student List",
                 href: "/students",
-                icon: DocumentDuplicateIcon,
-                current: false,
+                icon: ListBulletIcon,
             },
             {
                 name: "Handbooks",
                 href: "/handbooks",
-                icon: DocumentDuplicateIcon,
-                current: false,
+                icon: BookOpenIcon,
             },
             {
                 name: "Student Result",
                 href: "/student-result",
-                icon: DocumentDuplicateIcon,
-                current: false,
+                icon: DocumentChartBarIcon,
             },
             {
                 name: "Class Promotion",
                 href: "/student-class-promotion",
-                icon: DocumentDuplicateIcon,
-                current: false,
+                icon: AcademicCapIcon,
             },
             {
                 name: "Delete Student Score",
                 href: "/student-score/delete-scores",
                 icon: DocumentDuplicateIcon,
-                current: false,
             },
         ],
     },
@@ -88,65 +110,91 @@ const navigation = [
     {
         name: "Attendance",
         href: "/",
-        icon: DocumentDuplicateIcon,
-        current: false,
+        icon: ClockIcon,
         children: [
             {
                 name: "Attendance List",
                 href: "/student-attendance",
-                icon: DocumentDuplicateIcon,
-                current: false,
+                icon: ListBulletIcon,
             },
             {
                 name: "Attendance Log",
                 href: "/student-attendance-log",
-                icon: DocumentDuplicateIcon,
-                current: false,
-            },
-            {
-                name: "Attendance Log Report",
-                href: "/students-attendance-log-reports",
-                icon: DocumentDuplicateIcon,
-                current: false,
+                icon: CalendarIcon,
             },
             {
                 name: "Attendance Shoqa",
                 href: "/create-student-shoqa-score",
-                icon: DocumentDuplicateIcon,
-                current: false,
+                icon: ChartBarIcon,
+            },
+        ],
+    },
+
+    {
+        name: "Report",
+        href: "/",
+        icon: ChartBarIcon,
+        children: [
+            {
+                name: "Student Results",
+                href: "/reports/student-results",
+                icon: DocumentChartBarIcon,
+            },
+            {
+                name: "Subject Scores",
+                href: "/reports/subject-scores",
+                icon: DocumentChartBarIcon,
+            },
+            {
+                name: "Subject Statistics",
+                href: "/reports/subject-statistics",
+                icon: ChartPieIcon,
+            },
+            {
+                name: "Grade 9 Report",
+                href: "/reports/grade-9",
+                icon: DocumentChartBarIcon,
+            },
+            {
+                name: "All Students Subject Scores",
+                href: "/reports/all-students-subject-scores",
+                icon: DocumentChartBarIcon,
+            },
+            {
+                name: "Attendance Log",
+                href: "/reports/attendance-log",
+                icon: CalendarIcon,
             },
         ],
     },
     {
         name: "Student Score",
         href: "/student-score",
-        icon: DocumentDuplicateIcon,
-        current: false,
+        icon: AcademicCapIcon,
     },
 
-    { name: "Shoqa", href: "/shoqa", icon: ChartPieIcon, current: false },
-];
-const teams = [
+    { name: "Shoqa", href: "/shoqa", icon: ChartBarIcon },
+]);
+
+const teams = computed(() => [
     {
         id: 1,
         name: "Country",
         href: "/countries",
-        icon: DocumentDuplicateIcon,
-        current: false,
+        icon: GlobeAltIcon,
     },
     {
         id: 2,
         name: "Grades",
         href: "/sub-grades",
-        icon: DocumentDuplicateIcon,
-        current: false,
+        icon: AcademicCapIcon,
     },
-    { id: 3, name: "Subject", href: "/subjects", icon: DocumentDuplicateIcon, current: false },
-    { id: 7, name: "Semester Subjects", href: "/sub-grade-subject-semesters", icon: DocumentDuplicateIcon, current: false },
-    { id: 4, name: "Years", href: "/years", icon: DocumentDuplicateIcon, current: false },
-    { id: 5, name: "Homeroom Teacher", href: "/class-responsible", icon: DocumentDuplicateIcon, current: false },
-    { id: 6, name: "2FA", href: "/2fa/index", icon: DocumentDuplicateIcon, current: false },
-];
+    { id: 3, name: "Subject", href: "/subjects", icon: BookOpenIcon },
+    { id: 7, name: "Semester Subjects", href: "/sub-grade-subject-semesters", icon: BookOpenIcon },
+    { id: 4, name: "Years", href: "/years", icon: CalendarIcon },
+    { id: 5, name: "Homeroom Teacher", href: "/class-responsible", icon: UsersIcon },
+    { id: 6, name: "2FA", href: "/2fa/index", icon: KeyIcon },
+]);
 const userNavigation = [{ name: "Your profile", href: "#" }];
 
 const sidebarOpen = ref(false);
@@ -237,11 +285,52 @@ const sidebarOpen = ref(false);
                                                     v-for="item in navigation"
                                                     :key="item.name"
                                                 >
+                                                    <div v-if="item.children" class="space-y-1">
+                                                        <div
+                                                            :class="[
+                                                                hasActiveChild(item.children)
+                                                                    ? 'bg-gray-700 text-white'
+                                                                    : 'text-gray-400 hover:text-white hover:bg-gray-800',
+                                                                'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
+                                                            ]"
+                                                        >
+                                                            <component
+                                                                :is="item.icon"
+                                                                class="h-6 w-6 shrink-0"
+                                                                aria-hidden="true"
+                                                            />
+                                                            {{ item.name }}
+                                                        </div>
+                                                        <ul class="ml-4 space-y-1">
+                                                            <li
+                                                                v-for="child in item.children"
+                                                                :key="child.name"
+                                                            >
+                                                                <Link
+                                                                    :href="child.href"
+                                                                    :class="[
+                                                                        isActive(child.href)
+                                                                            ? 'bg-gray-700 text-white'
+                                                                            : 'text-gray-400 hover:text-white hover:bg-gray-800',
+                                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
+                                                                    ]"
+                                                                >
+                                                                    <component
+                                                                        :is="child.icon"
+                                                                        class="h-6 w-6 shrink-0"
+                                                                        aria-hidden="true"
+                                                                    />
+                                                                    {{ child.name }}
+                                                                </Link>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                                     <Link
+                                                        v-else
                                                         :href="item.href"
                                                         :class="[
-                                                            item.current
-                                                                ? 'bg-gray-800 text-white'
+                                                            isActive(item.href)
+                                                                ? 'bg-gray-700 text-white'
                                                                 : 'text-gray-400 hover:text-white hover:bg-gray-800',
                                                             'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
                                                         ]"
@@ -273,18 +362,17 @@ const sidebarOpen = ref(false);
                                                     <Link
                                                         :href="team.href"
                                                         :class="[
-                                                            team.current
-                                                                ? 'bg-gray-800 text-white'
+                                                            isActive(team.href)
+                                                                ? 'bg-gray-700 text-white'
                                                                 : 'text-gray-400 hover:text-white hover:bg-gray-800',
                                                             'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
                                                         ]"
                                                     >
-                                                        <span
-                                                            class="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-[0.625rem] font-medium text-gray-400 group-hover:text-white"
-                                                            >{{
-                                                                team.initial
-                                                            }}</span
-                                                        >
+                                                        <component
+                                                            :is="team.icon"
+                                                            class="h-6 w-6 shrink-0"
+                                                            aria-hidden="true"
+                                                        />
                                                         <span
                                                             class="truncate"
                                                             >{{
@@ -298,7 +386,12 @@ const sidebarOpen = ref(false);
                                         <li class="mt-auto">
                                             <Link
                                                 href="/users"
-                                                class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
+                                                :class="[
+                                                    isActive('/users')
+                                                        ? 'bg-gray-700 text-white'
+                                                        : 'text-gray-400 hover:bg-gray-800 hover:text-white',
+                                                    'group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
+                                                ]"
                                             >
                                                 <Cog6ToothIcon
                                                     class="h-6 w-6 shrink-0"
@@ -339,8 +432,8 @@ const sidebarOpen = ref(false);
                                     <Link
                                         :href="item.href"
                                         :class="[
-                                            item.current
-                                                ? 'bg-gray-900 text-white'
+                                            isActive(item.href)
+                                                ? 'bg-gray-700 text-white'
                                                 : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                                             'group flex items-center px-2 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400',
                                         ]"
@@ -348,7 +441,7 @@ const sidebarOpen = ref(false);
                                         <component
                                             :is="item.icon"
                                             :class="[
-                                                item.current
+                                                isActive(item.href)
                                                     ? 'text-gray-300'
                                                     : 'text-gray-400 group-hover:text-gray-300',
                                                 'mr-3 flex-shrink-0 h-6 w-6',
@@ -363,32 +456,40 @@ const sidebarOpen = ref(false);
                                     as="div"
                                     class="space-y-1"
                                     v-slot="{ open }"
+                                    :default-open="hasActiveChild(item.children)"
                                 >
                                     <DisclosureButton
                                         :class="[
-                                            item.current
-                                                ? 'bg-gray-900 text-white'
+                                            hasActiveChild(item.children)
+                                                ? 'menu-parent-active'
                                                 : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                                             'group w-full flex items-center pl-2 pr-1 py-2 text-left text-sm font-medium rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400',
                                         ]"
                                     >
-                                        <component
-                                            :is="item.icon"
-                                            class="mr-3 h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                                            aria-hidden="true"
-                                        />
-                                        <span class="flex-1">{{
-                                            item.name
-                                        }}</span>
-                                        <ChevronRightIcon
-                                            :class="[
-                                                open
-                                                    ? 'text-gray-400 !rotate-90'
-                                                    : 'text-gray-300',
-                                                'ml-3 h-5 w-5 flex-shrink-0 transform transition-all duration-150 ease-in-out group-hover:text-gray-400',
-                                            ]"
-                                        />
-                                    </DisclosureButton>
+                                            <component
+                                                :is="item.icon"
+                                                :class="[
+                                                    hasActiveChild(item.children)
+                                                        ? 'text-gray-300'
+                                                        : 'text-gray-400 group-hover:text-gray-500',
+                                                    'mr-3 h-6 w-6 flex-shrink-0',
+                                                ]"
+                                                aria-hidden="true"
+                                            />
+                                            <span class="flex-1">{{
+                                                item.name
+                                            }}</span>
+                                            <ChevronRightIcon
+                                                :class="[
+                                                    open
+                                                        ? 'text-gray-400 !rotate-90'
+                                                        : hasActiveChild(item.children)
+                                                        ? 'text-gray-300'
+                                                        : 'text-gray-300',
+                                                    'ml-3 h-5 w-5 flex-shrink-0 transform transition-all duration-150 ease-in-out group-hover:text-gray-400',
+                                                ]"
+                                            />
+                                        </DisclosureButton>
                                     <DisclosurePanel class="space-y-1">
                                         <DisclosureButton
                                             v-for="subItem in item.children"
@@ -398,11 +499,21 @@ const sidebarOpen = ref(false);
                                         >
                                             <Link
                                                 :href="subItem.href"
-                                                class="group flex w-full items-center rounded-md py-2 pl-11 pr-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-1 focus:ring-gray-400"
+                                                :class="[
+                                                    isActive(subItem.href)
+                                                        ? 'bg-gray-700 text-white'
+                                                        : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                                    'group flex w-full items-center rounded-md py-2 pl-11 pr-2 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-gray-400',
+                                                ]"
                                             >
                                                 <component
                                                     :is="subItem.icon"
-                                                    class="mr-3 h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                                                    :class="[
+                                                        isActive(subItem.href)
+                                                            ? 'text-gray-300'
+                                                            : 'text-gray-400 group-hover:text-gray-500',
+                                                        'mr-3 h-6 w-6 flex-shrink-0',
+                                                    ]"
                                                     aria-hidden="true"
                                                 />
                                                 {{ subItem.name }}
@@ -423,8 +534,8 @@ const sidebarOpen = ref(false);
                                     <Link
                                         :href="item.href"
                                         :class="[
-                                            item.current
-                                                ? 'bg-gray-900 text-white'
+                                            isActive(item.href)
+                                                ? 'bg-gray-700 text-white'
                                                 : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                                             'group flex items-center px-2 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400',
                                         ]"
@@ -432,7 +543,7 @@ const sidebarOpen = ref(false);
                                         <component
                                             :is="item.icon"
                                             :class="[
-                                                item.current
+                                                isActive(item.href)
                                                     ? 'text-gray-300'
                                                     : 'text-gray-400 group-hover:text-gray-300',
                                                 'mr-3 flex-shrink-0 h-6 w-6',
@@ -499,7 +610,12 @@ const sidebarOpen = ref(false);
                         <li class="mt-auto">
                             <Link
                                 :href="'/users'"
-                                class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
+                                :class="[
+                                    isActive('/users')
+                                        ? 'bg-gray-800 text-white'
+                                        : 'text-gray-400 hover:bg-gray-800 hover:text-white',
+                                    'group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
+                                ]"
                             >
                                 <Cog6ToothIcon
                                     class="h-6 w-6 shrink-0"

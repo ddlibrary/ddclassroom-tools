@@ -21,7 +21,14 @@ class StudentResultController extends Controller
 {
     public function index(Request $request)
     {
-        $query = StudentResult::query()->with(['student:id,name,father_name,country_id,fa_name,fa_father_name,uuid', 'middleResult:id,name', 'subGrade:id,full_name', 'teacher:id,name']);
+        $query = StudentResult::query()->with(['student:id,name,father_name,country_id,fa_name,fa_father_name,uuid,id_number', 'middleResult:id,name', 'subGrade:id,full_name', 'teacher:id,name']);
+
+        // Filter by student_id (id_number)
+        if ($request->student_id) {
+            $query->whereHas('student', function ($q) use ($request) {
+                $q->where('id_number', 'like', "%{$request->student_id}%");
+            });
+        }
 
         if ($request->search || $request->country_id) {
             $countryId = $request->country_id;
@@ -34,6 +41,7 @@ class StudentResultController extends Controller
                     if ($countryId) {
                         $query->where('country_id', $countryId);
                     }
+                    $query->where('is_active', true);
                 });
                 if ($name) {
                     $query->orWhere('result_name', 'like', $name.'%');
@@ -46,6 +54,17 @@ class StudentResultController extends Controller
 
         if ($request->year) {
             $query->where('year', $request->year);
+        }
+
+        // Filter by exam type (midterm or final)
+        if ($request->exam_type) {
+            if ($request->exam_type === 'midterm') {
+                // Filter results that have midterm scores (middle field is not null and > 0)
+                $query->whereNotNull('middle')->where('middle', '>', 0);
+            } elseif ($request->exam_type === 'final') {
+                // Filter results that have final scores (final field is not null and > 0)
+                $query->whereNotNull('final')->where('final', '>', 0);
+            }
         }
 
         $scores = $query->paginate(350);

@@ -37,4 +37,12 @@ class Student extends Model
     }
 
     protected $guarded = [];
+
+    /**
+     * Get all student results for this student
+     */
+    public function studentResults()
+    {
+        return $this->hasMany(StudentResult::class);
+    }
 }

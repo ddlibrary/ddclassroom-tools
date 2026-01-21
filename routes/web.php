@@ -8,6 +8,7 @@ use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\HandBookController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\ScoreController;
 use App\Http\Controllers\ShoqaController;
@@ -43,8 +44,25 @@ Route::middleware(['auth', 'verified', '2fa'])->group(function () {
     Route::get('/', [HomeController::class, 'index']);
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
-    Route::resource('students', StudentController::class);
+    
+    // Report routes
+    Route::controller(ReportController::class)->group(function () {
+        Route::get('reports/student-results', 'studentResults')->name('reports.student-results');
+        Route::get('reports/subject-scores', 'subjectScores')->name('reports.subject-scores');
+        Route::get('reports/subject-statistics', 'subjectStatistics')->name('reports.subject-statistics');
+        Route::get('reports/grade-9', 'grade9Report')->name('reports.grade-9');
+        Route::get('reports/all-students-subject-scores', 'allStudentsSubjectScores')->name('reports.all-students-subject-scores');
+        
+        // Export routes
+        Route::get('reports/student-results/export', 'exportStudentResults')->name('reports.student-results.export');
+        Route::get('reports/subject-scores/export', 'exportSubjectScores')->name('reports.subject-scores.export');
+        Route::get('reports/subject-statistics/export', 'exportSubjectStatistics')->name('reports.subject-statistics.export');
+        Route::get('reports/grade-9/export', 'exportGrade9')->name('reports.grade-9.export');
+        Route::get('reports/all-students-subject-scores/export', 'exportAllStudentsSubjectScores')->name('reports.all-students-subject-scores.export');
+    });
+    
     Route::get('students/create/multiple', [StudentController::class, 'createMultipleStudents']);
+    Route::resource('students', StudentController::class);
     Route::get('edit-student-info', [StudentController::class, 'editStudentInfo']);
 
     Route::post('update-student-info', [StudentController::class, 'updateStudentInfo'])->name('students.update-student-info');
@@ -74,7 +92,7 @@ Route::middleware(['auth', 'verified', '2fa'])->group(function () {
         Route::post('student-attendance-log.send-score', 'sendScore')->name('student-attendance-log.send-attendance');
         Route::get('student-attendance-log/create/multiple', 'createMultipleStudentAttendance');
         Route::post('store-multiple-students-attendance-log', 'storeMultipleStudentsAttendanceLog')->name('student-attendance-log.store-multiple-student-attendance');
-        Route::get('students-attendance-log-reports', 'studentAttendanceLogReports')->name('student-attendance-log.students-attendance-log-reports');
+        Route::get('reports/attendance-log', 'studentAttendanceLogReports')->name('reports.attendance-log');
         Route::get('get-attendance-log-report-as-excel', 'getAttendanceLogReportAsExcel');
     });
 

@@ -46,8 +46,17 @@
 
             <div class="space-y-9 divide-y divide-gray-200">
                 <div
-                    class="mt-6  grid xs:grid-cols-2 gap-y-8 sm:grid-cols-6 md:grid-cols-6 sm:gap-x-6 lg:grid-cols-10 xl:gap-x-8 mr-2">
+                    class="mt-6  grid xs:grid-cols-2 gap-y-8 sm:grid-cols-6 md:grid-cols-6 sm:gap-x-6 lg:grid-cols-12 xl:gap-x-8 mr-2">
                     <div class="sm:col-span-2">
+                        <label for="student_id" class="block text-sm font-medium text-gray-700 mb-1">Student ID</label>
+                        <div class="mt-1 rounded-md shadow-sm flex">
+                            <input name="student_id" v-model="form.student_id" id="student_id" autocomplete="student_id"
+                                placeholder="Enter Student ID"
+                                class="focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
                         <div class="mt-1 rounded-md shadow-sm flex">
                             <input name="name" v-model="form.search" id="search" autocomplete="search"
                                 placeholder="Search"
@@ -55,32 +64,46 @@
                         </div>
                     </div>
                     <div class="sm:col-span-2">
+                        <label for="country_id" class="block text-sm font-medium text-gray-700 mb-1">Country</label>
                         <div class="mt-1 rounded-md shadow-sm flex">
                             <select name="name" v-model="form.country_id"
                                 class="focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
-                                <option value="">...</option>
+                                <option value="">All Countries</option>
                                 <option v-for="country in countries" :value="country.id" :key="country">
                                     {{ country . name }}</option>
                             </select>
                         </div>
                     </div>
                     <div class="sm:col-span-2">
+                        <label for="year" class="block text-sm font-medium text-gray-700 mb-1">Year</label>
                         <div class="mt-1 rounded-md shadow-sm flex">
                             <select name="name" v-model="form.year"
                                 class="focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
-                                <option value="">...</option>
+                                <option value="">All Years</option>
                                 <option v-for="year in years" :value="year.name" :key="year">
                                     {{ year . name }}</option>
                             </select>
                         </div>
                     </div>
                     <div class="sm:col-span-2">
+                        <label for="grade_id" class="block text-sm font-medium text-gray-700 mb-1">Grade</label>
                         <div class="mt-1 rounded-md shadow-sm flex">
                             <select name="name" v-model="form.grade_id"
                                 class="focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
-                                <option value="">...</option>
+                                <option value="">All Grades</option>
                                 <option v-for="grade in grades" :value="grade.id" :key="grade">
                                     {{ grade . full_name }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="exam_type" class="block text-sm font-medium text-gray-700 mb-1">Exam Type</label>
+                        <div class="mt-1 rounded-md shadow-sm flex">
+                            <select name="exam_type" v-model="form.exam_type"
+                                class="focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
+                                <option value="">All Exams</option>
+                                <option value="midterm">Midterm</option>
+                                <option value="final">Final</option>
                             </select>
                         </div>
                     </div>
@@ -237,10 +260,12 @@
     }
 
     const form = reactive({
+        student_id: '',
         search: null,
         year: '',
         grade_id: '',
-        country_id: ''
+        country_id: '',
+        exam_type: ''
     });
 
     watch(form, debounce(() => {
