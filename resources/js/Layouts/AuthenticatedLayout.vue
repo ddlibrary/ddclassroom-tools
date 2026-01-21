@@ -104,14 +104,47 @@ const navigation = [
                 current: false,
             },
             {
-                name: "Attendance Log Report",
-                href: "/students-attendance-log-reports",
+                name: "Attendance Shoqa",
+                href: "/create-student-shoqa-score",
+                icon: DocumentDuplicateIcon,
+                current: false,
+            },
+        ],
+    },
+
+    {
+        name: "Report",
+        href: "/",
+        icon: ChartPieIcon,
+        current: false,
+        children: [
+            {
+                name: "Student Results",
+                href: "/reports/student-results",
                 icon: DocumentDuplicateIcon,
                 current: false,
             },
             {
-                name: "Attendance Shoqa",
-                href: "/create-student-shoqa-score",
+                name: "Subject Scores",
+                href: "/reports/subject-scores",
+                icon: DocumentDuplicateIcon,
+                current: false,
+            },
+            {
+                name: "Subject Statistics",
+                href: "/reports/subject-statistics",
+                icon: DocumentDuplicateIcon,
+                current: false,
+            },
+            {
+                name: "Grade 9 Report",
+                href: "/reports/grade-9",
+                icon: DocumentDuplicateIcon,
+                current: false,
+            },
+            {
+                name: "Attendance Log",
+                href: "/reports/attendance-log",
                 icon: DocumentDuplicateIcon,
                 current: false,
             },
