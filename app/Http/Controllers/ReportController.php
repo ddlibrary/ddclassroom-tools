@@ -11,6 +11,7 @@ use App\Models\Country;
 use App\Models\Grade;
 use App\Models\GradeSubject;
 use App\Models\Score;
+use App\Models\Student;
 use App\Models\StudentResult;
 use App\Models\Subject;
 use App\Models\SubGrade;
@@ -21,9 +22,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
-    /**
-     * Student Results Report (when no subject is selected)
-     */
     public function studentResults(Request $request)
     {
         $grades = Grade::where('is_active', true)->get(['id', 'name']);
@@ -31,10 +29,7 @@ class ReportController extends Controller
         $years = Year::all(['id', 'name']);
         $countries = Country::where('is_active', true)->get(['id', 'name']);
 
-        // Only fetch data if search button was clicked (search parameter must be present)
-        // Don't fetch data on initial page load - only when Search button is clicked
         if (!$request->has('search')) {
-            // Return empty results if no search parameters
             $paginatedResults = new \Illuminate\Pagination\LengthAwarePaginator(
                 collect(),
                 0,
@@ -56,7 +51,6 @@ class ReportController extends Controller
             ]);
         }
 
-        // Build main query with filters
         $query = StudentResult::query()->with([
             'student:id,name,father_name,country_id,fa_name,fa_father_name,uuid,id_number,email',
             'middleResult:id,name',
@@ -70,7 +64,6 @@ class ReportController extends Controller
         $this->applyStudentResultFilters($query, $request);
         $results = $query->orderByDesc('id')->paginate(350)->appends($request->query());
 
-        // Calculate statistics
         $kamyabCount = $this->getKamyabCount($request);
         $nakamCount = $this->getNakamCount($request);
         $mashrootCount = $this->getMashrootCount($request);
@@ -94,31 +87,27 @@ class ReportController extends Controller
      */
     private function applyStudentResultFilters($query, Request $request)
     {
-        // Filter by student_id (id_number)
         if ($request->student_id) {
             $query->whereHas('student', function ($q) use ($request) {
                 $q->where('id_number', 'like', "%{$request->student_id}%");
             });
         }
 
-        // Filter by email
         if ($request->email) {
             $query->whereHas('student', function ($q) use ($request) {
                 $q->where('email', 'like', "%{$request->email}%");
             });
         }
 
-        // Filter by country_id
         if ($request->country_id) {
             $query->whereHas('student', function ($q) use ($request) {
                 $q->where('country_id', $request->country_id);
             });
         }
 
-        // Filter by grade_id (through sub_grades) - support array for multi-select
         if ($request->grade_id) {
             $gradeIds = is_array($request->grade_id) ? $request->grade_id : [$request->grade_id];
-            $gradeIds = array_filter($gradeIds); // Remove empty values
+            $gradeIds = array_filter($gradeIds);
             if (!empty($gradeIds)) {
                 $query->whereHas('subGrade', function ($q) use ($gradeIds) {
                     $q->whereIn('grade_id', $gradeIds);
@@ -126,21 +115,19 @@ class ReportController extends Controller
             }
         }
 
-        // Filter by sub_grade_id - support array for multi-select
         if ($request->sub_grade_id) {
             $subGradeIds = is_array($request->sub_grade_id) ? $request->sub_grade_id : [$request->sub_grade_id];
-            $subGradeIds = array_filter($subGradeIds); // Remove empty values
+            $subGradeIds = array_filter($subGradeIds);
             if (!empty($subGradeIds)) {
                 $query->whereIn('sub_grade_id', $subGradeIds);
             }
         }
 
-        // Filter by year
+
         if ($request->year) {
             $query->where('year', $request->year);
         }
 
-        // Filter by exam type (midterm or final)
         if ($request->exam_type === 'midterm') {
             $query->whereNotNull('middle')->where('middle', '>', 0);
         } elseif ($request->exam_type === 'final') {
@@ -216,10 +203,7 @@ class ReportController extends Controller
         $countries = Country::where('is_active', true)->get(['id', 'name']);
         $subjects = Subject::all(['id', 'name']);
 
-        // Only fetch data if search button was clicked (search parameter must be present)
-        // Don't fetch data on initial page load - only when Search button is clicked
         if (!$request->has('search')) {
-            // Return empty results if no search parameters
             return inertia('Report/SubjectScores', [
                 'results' => new \Illuminate\Pagination\LengthAwarePaginator(
                     collect(),
@@ -270,34 +254,29 @@ class ReportController extends Controller
                 $q->where('is_active', true);
             });
 
-        // Filter by subject_id
         $query->where('subject_id', $request->subject_id);
 
-        // Filter by student_id (id_number)
         if ($request->student_id) {
             $query->whereHas('student', function ($q) use ($request) {
                 $q->where('id_number', 'like', "%{$request->student_id}%");
             });
         }
 
-        // Filter by email
         if ($request->email) {
             $query->whereHas('student', function ($q) use ($request) {
                 $q->where('email', 'like', "%{$request->email}%");
             });
         }
 
-        // Filter by country_id
         if ($request->country_id) {
             $query->whereHas('student', function ($q) use ($request) {
                 $q->where('country_id', $request->country_id);
             });
         }
 
-        // Filter by grade_id (through sub_grades) - support array for multi-select
         if ($request->grade_id) {
             $gradeIds = is_array($request->grade_id) ? $request->grade_id : [$request->grade_id];
-            $gradeIds = array_filter($gradeIds); // Remove empty values
+            $gradeIds = array_filter($gradeIds);
             if (!empty($gradeIds)) {
                 $query->whereHas('subGrade', function ($q) use ($gradeIds) {
                     $q->whereIn('grade_id', $gradeIds);
@@ -305,16 +284,15 @@ class ReportController extends Controller
             }
         }
 
-        // Filter by sub_grade_id - support array for multi-select
         if ($request->sub_grade_id) {
             $subGradeIds = is_array($request->sub_grade_id) ? $request->sub_grade_id : [$request->sub_grade_id];
-            $subGradeIds = array_filter($subGradeIds); // Remove empty values
+            $subGradeIds = array_filter($subGradeIds);
             if (!empty($subGradeIds)) {
                 $query->whereIn('sub_grade_id', $subGradeIds);
             }
         }
 
-        // Filter by year
+
         if ($request->year) {
             $query->where('year', $request->year);
         }
@@ -330,7 +308,6 @@ class ReportController extends Controller
         } elseif ($request->exam_type === 'result') {
             $query->where('type', 3); // Final result (combination of midterm and final exam)
         } else {
-            // Default to final result (type 3) when no exam_type selected
             $query->where('type', 3);
         }
 
@@ -343,7 +320,6 @@ class ReportController extends Controller
 
         $results = $query->orderByDesc('id')->paginate(350)->appends($request->query());
 
-        // Calculate total passed and failed counts
         $totalPassed = Score::query()
             ->where('subject_id', $request->subject_id)
             ->where('is_passed', true)
@@ -358,7 +334,6 @@ class ReportController extends Controller
                 $q->where('is_active', true);
             });
 
-        // Apply same filters as main query
         if ($request->student_id) {
             $totalPassed->whereHas('student', function ($q) use ($request) {
                 $q->where('id_number', 'like', "%{$request->student_id}%");
@@ -447,10 +422,7 @@ class ReportController extends Controller
         $countries = Country::where('is_active', true)->get(['id', 'name']);
         $subjects = Subject::all(['id', 'name']);
 
-        // Only fetch data if search button was clicked (search parameter must be present)
-        // Don't fetch data on initial page load - only when Search button is clicked
         if (!$request->has('search')) {
-            // Return empty results if no search parameters
             return inertia('Report/SubjectStatistics', [
                 'results' => collect(),
                 'grades' => $grades,
@@ -464,7 +436,6 @@ class ReportController extends Controller
             ]);
         }
 
-        // Build base query for subject statistics
         $query = Score::query()
             ->select('scores.subject_id', 'subjects.name as subject_name')
             ->selectRaw('COUNT(CASE WHEN scores.is_passed = 1 THEN 1 END) as passed_count')
@@ -475,7 +446,6 @@ class ReportController extends Controller
             ->where('students.is_active', true)
             ->groupBy('scores.subject_id', 'subjects.name');
 
-        // Apply filters
         if ($request->student_id) {
             $query->whereHas('student', function ($q) use ($request) {
                 $q->where('id_number', 'like', "%{$request->student_id}%");
@@ -516,7 +486,6 @@ class ReportController extends Controller
             $query->where('scores.year', $request->year);
         }
 
-        // Filter by exam type
         if ($request->exam_type === 'midterm') {
             $query->where('scores.type', 1);
         } elseif ($request->exam_type === 'final') {
@@ -524,14 +493,11 @@ class ReportController extends Controller
         } elseif ($request->exam_type === 'result') {
             $query->where('scores.type', 3);
         } else {
-            // Default to final result (type 3) when no exam_type selected
             $query->where('scores.type', 3);
         }
 
-        // Order by subject name
         $results = $query->orderBy('subjects.name')->get();
 
-        // Calculate totals
         $totalPassed = $results->sum('passed_count');
         $totalFailed = $results->sum('failed_count');
         $totalStudents = $results->sum('total_count');
@@ -549,13 +515,7 @@ class ReportController extends Controller
         ]);
     }
 
-    /**
-     * Grade 9 Report - Semester-based report for Grade 9 students
-     * Grade 9 has 2 semesters, each with specific subjects
-     * Students must score >= 50 in each subject to pass
-     * Final result: must pass all 11 subjects (>= 50 each)
-     * No "مشروط" status - only کامیاب or ناکام
-     */
+
     public function grade9Report(Request $request)
     {
         $subGrades = SubGrade::whereHas('grade', function ($q) {
@@ -565,10 +525,7 @@ class ReportController extends Controller
         $years = Year::all(['id', 'name']);
         $countries = Country::where('is_active', true)->get(['id', 'name']);
 
-        // Only fetch data if search button was clicked (search parameter must be present)
-        // Don't fetch data on initial page load - only when Search button is clicked
         if (!$request->has('search')) {
-            // Return empty results if no search parameters
             $paginatedResults = new \Illuminate\Pagination\LengthAwarePaginator(
                 collect(),
                 0,
@@ -588,7 +545,6 @@ class ReportController extends Controller
             ]);
         }
 
-        // Build query for Grade 9 students only
         $query = StudentResult::query()
             ->with([
                 'student:id,name,father_name,country_id,fa_name,fa_father_name,uuid,id_number,email',
@@ -602,7 +558,6 @@ class ReportController extends Controller
                 $q->where('is_active', true);
             });
 
-        // Apply filters
         if ($request->student_id) {
             $query->whereHas('student', function ($q) use ($request) {
                 $q->where('id_number', 'like', "%{$request->student_id}%");
@@ -635,7 +590,6 @@ class ReportController extends Controller
 
         $studentResults = $query->orderByDesc('id')->get();
 
-        // Process each student result to get semester-based scores
         $results = [];
         $totalKamyab = 0;
         $totalNakam = 0;
@@ -645,7 +599,6 @@ class ReportController extends Controller
             $subGrade = $studentResult->subGrade;
             $student = $studentResult->student;
 
-            // Get semester subjects for this sub_grade and year
             $semester1Subjects = SubGradeSubjectSemester::where('sub_grade_id', $subGrade->id)
                 ->where('semester', 1)
                 ->where('year', $year)
@@ -658,14 +611,11 @@ class ReportController extends Controller
                 ->with('subject:id,name')
                 ->get();
 
-            // Get all subject IDs for both semesters (should total 11)
             $allSubjectIds = $semester1Subjects->pluck('subject_id')
                 ->merge($semester2Subjects->pluck('subject_id'))
                 ->unique()
                 ->toArray();
 
-            // Get scores for Semester 1 (type 1 = midterm) and Semester 2 (type 2 = final)
-            // Each subject score is out of 100, so we need to use the correct type for each semester
             $semester1Scores = Score::where('student_id', $student->id)
                 ->where('sub_grade_id', $subGrade->id)
                 ->where('year', $year)
@@ -684,7 +634,6 @@ class ReportController extends Controller
                 ->get()
                 ->keyBy('subject_id');
 
-            // Process Semester 1 subjects (using type 1 = midterm scores, max 100)
             $semester1Data = [];
             $semester1Passed = 0;
             $semester1Failed = 0;
@@ -708,7 +657,6 @@ class ReportController extends Controller
                 }
             }
 
-            // Process Semester 2 subjects (using type 2 = final scores, max 100)
             $semester2Data = [];
             $semester2Passed = 0;
             $semester2Failed = 0;
@@ -732,7 +680,6 @@ class ReportController extends Controller
                 }
             }
 
-            // Calculate final result: must pass all 11 subjects (>= 50 each)
             $totalSubjects = count($allSubjectIds);
             $totalPassed = $semester1Passed + $semester2Passed;
             $isFinalPassed = ($totalPassed === $totalSubjects && $totalSubjects === 11);
@@ -770,7 +717,6 @@ class ReportController extends Controller
             ];
         }
 
-        // Paginate results
         $currentPage = $request->get('page', 1);
         $perPage = 350;
         $total = count($results);
@@ -839,20 +785,14 @@ class ReportController extends Controller
         );
     }
 
-    /**
-     * All Students with Subject Scores Report
-     * Displays all students with their scores for all subjects (midterm, final, result)
-     */
     public function allStudentsSubjectScores(Request $request)
     {
         $grades = Grade::where('is_active', true)->get(['id', 'name']);
         $subGrades = SubGrade::whereIsActive(true)->get(['id', 'full_name', 'grade_id']);
         $years = Year::all(['id', 'name']);
         $countries = Country::where('is_active', true)->get(['id', 'name']);
-        $subjects = Subject::all(['id', 'name']);
 
-        // Get all active students with filters
-        $query = \App\Models\Student::query()
+        $query = Student::query()
             ->where('is_active', true)
             ->with([
                 'subGrade:id,full_name,grade_id',
@@ -861,7 +801,6 @@ class ReportController extends Controller
             ])
             ->select(['id', 'name', 'father_name', 'fa_name', 'fa_father_name', 'id_number', 'email', 'sub_grade_id', 'country_id']);
 
-        // Apply filters
         if ($request->student_id) {
             $query->where('id_number', 'like', "%{$request->student_id}%");
         }
@@ -892,17 +831,15 @@ class ReportController extends Controller
             }
         }
 
-        // Only fetch data if search was explicitly triggered (check if any filter has a value or if search parameter exists)
-        $hasExplicitSearch = $request->filled('student_id') || 
-                            $request->filled('email') || 
-                            $request->filled('country_id') || 
-                            $request->filled('grade_id') || 
-                            $request->filled('sub_grade_id') || 
+        $hasExplicitSearch = $request->filled('student_id') ||
+                            $request->filled('email') ||
+                            $request->filled('country_id') ||
+                            $request->filled('grade_id') ||
+                            $request->filled('sub_grade_id') ||
                             ($request->has('year') && $request->year !== '') ||
                             ($request->has('exam_type') && $request->exam_type !== '');
-        
+
         if (!$hasExplicitSearch) {
-            // Return empty results if no explicit search was performed
             $paginatedResults = new \Illuminate\Pagination\LengthAwarePaginator(
                 collect(),
                 0,
@@ -910,7 +847,7 @@ class ReportController extends Controller
                 1,
                 ['path' => $request->url(), 'query' => $request->query()]
             );
-            
+
             return inertia('Report/AllStudentsSubjectScores', [
                 'results' => $paginatedResults,
                 'grades' => $grades,
@@ -921,15 +858,13 @@ class ReportController extends Controller
                 'examType' => 'result',
             ]);
         }
-        
+
         $students = $query->orderBy('name')->get();
 
-        // Build results array with scores for each student
         $results = [];
         $year = $request->year ?: date('Y');
         $examType = $request->exam_type ?: 'result'; // Default to result
 
-        // Map exam type to score relationship name
         $scoreRelationship = match($examType) {
             'midterm' => 'middle',
             'final' => 'final',
@@ -937,47 +872,39 @@ class ReportController extends Controller
             default => 'finalResult',
         };
 
-        // Group students by grade_id for efficient eager loading
         $studentsByGrade = $students->groupBy(function ($student) {
             return $student->subGrade->grade_id;
         });
 
         foreach ($studentsByGrade as $gradeId => $gradeStudents) {
-            // Get all subjects for this grade
             $gradeSubjects = GradeSubject::with(['grade:id,name', 'subject:id,name,en_name'])
                 ->where('grade_id', $gradeId)
                 ->get();
 
-            // Get all subjects
             $allSubjects = $gradeSubjects->pluck('subject')->unique('id')->values();
 
-            // Get all student IDs for this grade to eager load student results
             $studentIds = $gradeStudents->pluck('id')->toArray();
-            
-            // Eager load student results for all students in this grade
-            $studentResults = \App\Models\StudentResult::whereIn('student_id', $studentIds)
+
+            $studentResults = StudentResult::whereIn('student_id', $studentIds)
                 ->where('year', $year)
                 ->get()
                 ->keyBy('student_id');
-            
-            // For each student in this grade, eager load scores
+
             foreach ($gradeStudents as $student) {
                 $where = [
                     'year' => $year,
                     'student_id' => $student->id,
                     'sub_grade_id' => $student->sub_grade_id,
                 ];
-                
-                // Eager load scores for all subjects for this student
+
                 $subjectsWithScores = Subject::whereIn('id', $allSubjects->pluck('id'))
                     ->with([$scoreRelationship => function ($query) use ($where) {
                         $query->where($where);
                     }])
                     ->get();
-                
+
                 $studentScores = [];
-                
-                // Build scores array in the same order as allSubjects
+
                 foreach ($allSubjects as $subject) {
                     $subjectWithScore = $subjectsWithScores->find($subject->id);
                     $score = $subjectWithScore ? $subjectWithScore->{$scoreRelationship} : null;
@@ -991,8 +918,7 @@ class ReportController extends Controller
                         ] : null,
                     ];
                 }
-                
-                // Get student result status
+
                 $studentResult = $studentResults->get($student->id);
                 $resultStatus = $studentResult ? $studentResult->result_name : null;
 
@@ -1004,7 +930,6 @@ class ReportController extends Controller
             }
         }
 
-        // Paginate results
         $currentPage = $request->get('page', 1);
         $perPage = 350;
         $total = count($results);
@@ -1018,11 +943,10 @@ class ReportController extends Controller
             ['path' => $request->url(), 'query' => $request->query()]
         );
 
-        // Calculate result statistics
         $totalKamyab = 0;
         $totalMashroot = 0;
         $totalNakam = 0;
-        
+
         foreach ($results as $result) {
             $status = $result['result_status'] ?? '';
             if (str_contains($status, 'کامیاب')) {
@@ -1033,7 +957,7 @@ class ReportController extends Controller
                 $totalNakam++;
             }
         }
-        
+
         return inertia('Report/AllStudentsSubjectScores', [
             'results' => $paginatedResults,
             'grades' => $grades,
@@ -1048,9 +972,6 @@ class ReportController extends Controller
         ]);
     }
 
-    /**
-     * Export All Students Subject Scores Report to Excel
-     */
     public function exportAllStudentsSubjectScores(Request $request)
     {
         return Excel::download(
