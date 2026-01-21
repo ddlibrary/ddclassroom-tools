@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .menu-parent-active {
+        background-color: rgb(55 65 81) !important;
+        color: rgb(255 255 255) !important;
+    }
+    
+    .menu-parent-active .text-gray-400 {
+        color: rgb(209 213 219) !important;
+    }
+}
