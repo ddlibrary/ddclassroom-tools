@@ -62,6 +62,7 @@ Route::middleware(['auth', 'verified', '2fa'])->group(function () {
     });
     
     Route::get('students/create/multiple', [StudentController::class, 'createMultipleStudents']);
+    Route::get('students/retake-opportunities', [StudentController::class, 'retakeOpportunities'])->name('students.retake-opportunities');
     Route::resource('students', StudentController::class);
     Route::get('edit-student-info', [StudentController::class, 'editStudentInfo']);
 
