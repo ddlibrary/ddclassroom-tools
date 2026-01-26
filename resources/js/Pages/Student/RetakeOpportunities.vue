@@ -3,6 +3,7 @@
     <AuthenticatedLayout>
         <!-- Retake Opportunities List -->
         <div class="mb-2">
+
             <div class="space-y-9 divide-y divide-gray-200 mb-2">
                 <div class="mt-6 grid xs:grid-cols-2 gap-y-8 sm:grid-cols-6 md:grid-cols-6 sm:gap-x-6 lg:grid-cols-10 xl:gap-x-8 mr-2">
                     <!-- Search -->
@@ -53,6 +54,12 @@
                                 <option value="0">Failed</option>
                             </select>
                         </div>
+                    </div>
+                    <div class="float-right mb-2 sm:col-span-2">
+                        <button @click="exportReport"
+                            class="rounded-md bg-green-600 px-3 py-2 text-[0.8125rem] font-semibold leading-5 text-white hover:bg-green-500">
+                            Export
+                        </button>
                     </div>
                 </div>
             </div>
@@ -187,6 +194,25 @@
         subject_id: '',
         is_passed: ''
     });
+
+    function exportReport() {
+        const params = {
+            search: form.search,
+            sub_grade_id: form.sub_grade_id,
+            year_id: form.year_id,
+            subject_id: form.subject_id,
+            is_passed: form.is_passed
+        };
+
+        Object.keys(params).forEach(key => {
+            if (params[key] === '' || params[key] === null) {
+                delete params[key];
+            }
+        });
+
+        const queryString = new URLSearchParams(params).toString();
+        window.location.href = `/students/retake-opportunities/export?${queryString}`;
+    }
 
     watch(form, debounce(() => {
         router.get(route('students.retake-opportunities'), form, {
