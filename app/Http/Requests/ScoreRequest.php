@@ -31,7 +31,7 @@ class ScoreRequest extends FormRequest
             'attendance' => ['nullable', 'numeric', 'min:0'],
             'homework' => ['nullable', 'numeric', 'min:0'],
             'evaluation' => ['nullable', 'numeric', 'min:0'],
-            'chance' => ['nullable', 'string', 'in:first,second,third'],
+            'chance' => ['sometimes', 'nullable', 'string', 'in:first,second,third'],
         ];
     }
 }
