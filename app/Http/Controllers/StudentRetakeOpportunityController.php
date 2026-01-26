@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportRetakeOpportunities;
 use App\Models\StudentRetakeOpportunity;
 use App\Models\SubGrade;
 use App\Models\Subject;
 use App\Models\Year;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StudentRetakeOpportunityController extends Controller
 {
@@ -54,5 +56,13 @@ class StudentRetakeOpportunityController extends Controller
             'years' => $years,
             'subjects' => $subjects,
         ]);
+    }
+
+    public function export(Request $request)
+    {
+        return Excel::download(
+            new ExportRetakeOpportunities($request->all()),
+            'retake-opportunities-report.xlsx'
+        );
     }
 }
