@@ -64,6 +64,7 @@ Route::middleware(['auth', 'verified', '2fa'])->group(function () {
     
     Route::get('students/create/multiple', [StudentController::class, 'createMultipleStudents']);
     Route::get('students/retake-opportunities', [StudentRetakeOpportunityController::class, 'index'])->name('students.retake-opportunities');
+    Route::get('students/retake-opportunities/export', [StudentRetakeOpportunityController::class, 'export'])->name('students.retake-opportunities.export');
     Route::resource('students', StudentController::class);
     Route::get('edit-student-info', [StudentController::class, 'editStudentInfo']);
 
