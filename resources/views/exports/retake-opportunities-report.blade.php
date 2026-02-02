@@ -26,19 +26,19 @@
             <th style="text-align: center;border:1px solid #000 !important">Second Chance Date</th>
             <th style="text-align: center;border:1px solid #000 !important">Status</th>
         </tr>
-        @foreach ($retakeOpportunities as $index => $opportunity)
+        @foreach ($retakeOpportunities as $opportunity)
             <tr>
-                <td style="text-align: center;border:1px solid #000 !important">{{ $index + 1 }}</td>
-                <td style="text-align: right;border:1px solid #000 !important">{{ $opportunity->student->fa_name ?? '' }} {{ $opportunity->student->fa_father_name ?? '' }}</td>
-                <td style="text-align: left;border:1px solid #000 !important">{{ $opportunity->student->name ?? '' }} {{ $opportunity->student->father_name ?? '' }}</td>
-                <td style="text-align: left;border:1px solid #000 !important">{{ $opportunity->student->email ?? '' }}</td>
-                <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->student->id_number ?? '' }}</td>
-                <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->subGrade->full_name ?? '' }}</td>
-                <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->year->name ?? '' }}</td>
-                <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->subject->name ?? '' }}</td>
-                <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->score ?? '' }}</td>
-                <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->second_chance_score ?? '' }}</td>
-                <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->third_chance_score ?? '' }}</td>
+                <td style="text-align: center;border:1px solid #000 !important">{{ $loop->iteration }}</td>
+                <td style="text-align: right;border:1px solid #000 !important">{{ $opportunity->student->fa_name }} {{ $opportunity->student->fa_father_name }}</td>
+                <td style="text-align: left;border:1px solid #000 !important">{{ $opportunity->student->name}} {{ $opportunity->student?->father_name }}</td>
+                <td style="text-align: left;border:1px solid #000 !important">{{ $opportunity->student->email}}</td>
+                <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->student->id_number}}</td>
+                <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->subGrade->full_name}}</td>
+                <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->year->name}}</td>
+                <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->subject->name}}</td>
+                <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->score}}</td>
+                <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->second_chance_score}}</td>
+                <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->third_chance_score}}</td>
                 <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->first_chance_date ? \Carbon\Carbon::parse($opportunity->first_chance_date)->format('Y-m-d') : '' }}</td>
                 <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->second_chance_date ? \Carbon\Carbon::parse($opportunity->second_chance_date)->format('Y-m-d') : '' }}</td>
                 <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->is_passed ? 'Passed' : 'Failed' }}</td>
