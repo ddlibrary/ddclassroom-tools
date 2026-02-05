@@ -352,10 +352,14 @@
                                     <th class="text-start">Overall Result (Pass/Fail)</th>
                                     <th class="text-center">
                                         @if ($total2 > 0)
-                                            @if ($state == 'Passed')
-                                                {{ $total2 >= ($totalSubjectsSem2 * 100) / 2 ? 'Passed' : 'Failed' }}
+                                            @if($totalSubjectPassed < 11)
+                                                Failed
                                             @else
-                                                {{ $state }}
+                                                @if ($state == 'Passed')
+                                                    {{ $total2 >= ($totalSubjectsSem2 * 100) / 2 ? 'Passed' : 'Failed' }}
+                                                @else
+                                                    {{ $state }}
+                                                @endif
                                             @endif
                                         @else
                                             @if ($firstSemesterState == 'Passed')
