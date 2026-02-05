@@ -97,6 +97,35 @@
                         </div>
                     </div>
 
+                    <!-- Subject Filter -->
+                    <div class="sm:col-span-2">
+                        <label for="subject_id" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                        <div class="mt-1 rounded-md shadow-sm flex">
+                            <select
+                                name="subject_id"
+                                v-model="form.subject_id"
+                                class="focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
+                                <option value="">All Subjects</option>
+                                <option v-for="subject in subjects" :value="subject.id" :key="subject.id">{{ subject.name }}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Result Filter -->
+                    <div class="sm:col-span-2">
+                        <label for="result_status" class="block text-sm font-medium text-gray-700 mb-1">Result</label>
+                        <div class="mt-1 rounded-md shadow-sm flex">
+                            <select
+                                name="result_status"
+                                v-model="form.result_status"
+                                class="focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
+                                <option value="">All</option>
+                                <option value="passed">کامیاب (Passed)</option>
+                                <option value="failed">ناکام (Failed)</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <!-- Search Button -->
                     <div class="sm:col-span-2 flex items-end">
                         <button
@@ -119,7 +148,7 @@
                 <div class="flex flex-wrap justify-center items-center gap-6 mb-4">
                     <div class="text-center">
                         <p class="text-xs text-gray-600 mb-1">کامیاب (Successful)</p>
-                        <p class="text-2xl font-bold text-green-600">{{ totalKamyab || 0 }}</p>
+                        <p class="text-2xl font-bold text-gray-700">{{ totalKamyab || 0 }}</p>
                     </div>
                     <div class="text-center">
                         <p class="text-xs text-gray-600 mb-1">ناکام (Failed)</p>
@@ -142,88 +171,58 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Name</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Father Name</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Moodle ID</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sub Grade</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Semester 1</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Semester 2</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Final Result</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-50">#</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-50">Student Name</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Father Name</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Moodle ID</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sub Grade</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year</th>
+                            <th v-for="subject in (subjects || [])" :key="subject.id" scope="col" class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[80px]">
+                                {{ subject.name }}
+                            </th>
+                            <th scope="col" class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Final Result</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         <tr v-for="(result, index) in results.data" :key="result.student_result_id">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                {{ index + 1 }}
+                            <td class="px-4 py-3 whitespace-nowrap text-sm sticky left-0 bg-white">
+                                {{ index + 1 + (results.current_page - 1) * results.per_page }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                {{ result.student?.fa_name || result.student?.name }}
+                            <td class="px-4 py-3 whitespace-nowrap text-sm sticky left-0 bg-white">
+                                {{ result.student?.name }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                {{ result.student?.fa_father_name || result.student?.father_name }}
+                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                {{ result.student?.father_name }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                {{ result.student?.id_number || '-' }}
+                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                {{ result.student?.id_number }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                {{ result.student?.email || '-' }}
+                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                {{ result.student?.email }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                {{ result.sub_grade?.full_name || '-' }}
+                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                {{ result.sub_grade?.full_name }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm">
                                 {{ result.year }}
                             </td>
-                            <!-- Semester 1 -->
-                            <td class="px-6 py-4">
-                                <div class="text-sm">
-                                    <div class="font-semibold mb-1 text-blue-600">Semester 1:</div>
-                                    <div v-for="subject in result.semester1.subjects" :key="subject.subject_id" class="mb-1">
-                                        <span :class="subject.is_passed ? 'text-green-600' : 'text-red-600'">
-                                            {{ subject.subject_name }}: {{ subject.score || 0 }}
-                                            <span v-if="subject.is_passed" class="ml-1">✓</span>
-                                            <span v-else class="ml-1">✗</span>
-                                        </span>
-                                    </div>
-                                    <div class="mt-2 text-xs border-t pt-1">
-                                        <span class="text-green-600 font-semibold">Passed: {{ result.semester1.passed_count }}</span> /
-                                        <span class="text-red-600 font-semibold">Failed: {{ result.semester1.failed_count }}</span>
-                                        <span class="text-gray-600"> (Total: {{ result.semester1.total_subjects }})</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <!-- Semester 2 -->
-                            <td class="px-6 py-4">
-                                <div class="text-sm">
-                                    <div class="font-semibold mb-1 text-blue-600">Semester 2:</div>
-                                    <div v-for="subject in result.semester2.subjects" :key="subject.subject_id" class="mb-1">
-                                        <span :class="subject.is_passed ? 'text-green-600' : 'text-red-600'">
-                                            {{ subject.subject_name }}: {{ subject.score || 0 }}
-                                            <span v-if="subject.is_passed" class="ml-1">✓</span>
-                                            <span v-else class="ml-1">✗</span>
-                                        </span>
-                                    </div>
-                                    <div class="mt-2 text-xs border-t pt-1">
-                                        <span class="text-green-600 font-semibold">Passed: {{ result.semester2.passed_count }}</span> /
-                                        <span class="text-red-600 font-semibold">Failed: {{ result.semester2.failed_count }}</span>
-                                        <span class="text-gray-600"> (Total: {{ result.semester2.total_subjects }})</span>
-                                    </div>
-                                </div>
+                            <!-- All 11 subjects -->
+                            <td v-for="subject in (subjects || [])" :key="subject.id" class="px-3 py-3 text-center text-sm">
+                                <template v-if="result.all_subjects && result.all_subjects[subject.id]">
+                                    <span :class="result.all_subjects[subject.id].is_passed ? '' : 'text-red-600 font-semibold'" :title="result.all_subjects[subject.id].is_passed ? 'Passed' : 'Failed'">
+                                        {{ result.all_subjects[subject.id].score || 0 }}
+                                    </span>
+                                </template>
+                                <span v-else class="text-gray-400">-</span>
                             </td>
                             <!-- Final Result -->
-                            <td class="px-6 py-4">
-                                <div class="text-sm">
-                                    <div :class="result.final_result.is_passed ? 'text-green-600 font-bold text-lg mb-2' : 'text-red-600 font-bold text-lg mb-2'">
-                                        {{ result.final_result.result_name }}
-                                    </div>
-                                    <div class="text-xs text-gray-600 space-y-1">
-                                        <div>Total Subjects: <strong>{{ result.final_result.total_subjects }}</strong></div>
-                                        <div class="text-green-600">Passed: <strong>{{ result.final_result.passed_subjects }}</strong></div>
-                                        <div class="text-red-600">Failed: <strong>{{ result.final_result.failed_subjects }}</strong></div>
-                                    </div>
+                            <td class="px-4 py-3 text-center">
+                                <span :class="result.final_result.is_passed ? 'font-bold' : 'text-red-600 font-bold'">
+                                    {{ result.final_result.result_name }}
+                                </span>
+                                <div class="text-xs text-gray-600 mt-1">
+                                    {{ result.final_result.passed_subjects }}/{{ result.final_result.total_subjects }} passed
                                 </div>
                             </td>
                         </tr>
@@ -268,23 +267,27 @@ const exportUrl = computed(() => {
         subGradeIds.forEach(id => params.append('sub_grade_id[]', id));
     }
     if (form.year) params.append('year', form.year);
+    if (form.subject_id) params.append('subject_id', form.subject_id);
+    if (form.result_status) params.append('result_status', form.result_status);
     return route('reports.grade-9.export') + '?' + params.toString();
 });
 
-const props = defineProps(['results', 'subGrades', 'years', 'countries', 'totalKamyab', 'totalNakam', 'totalStudents']);
+const props = defineProps(['results', 'subGrades', 'years', 'countries', 'subjects', 'totalKamyab', 'totalNakam', 'totalStudents']);
 
 // Get query parameters from URL
 const getQueryParams = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const subGradeIds = urlParams.getAll('sub_grade_id[]').length > 0
-        ? urlParams.getAll('sub_grade_id[]').map(id => props.subGrades.find(sg => sg.id == id)).filter(Boolean)
-        : (urlParams.get('sub_grade_id') ? [props.subGrades.find(sg => sg.id == urlParams.get('sub_grade_id'))].filter(Boolean) : []);
+        ? urlParams.getAll('sub_grade_id[]').map(id => props.subGrades?.find(sg => sg.id == id)).filter(Boolean)
+        : (urlParams.get('sub_grade_id') ? [props.subGrades?.find(sg => sg.id == urlParams.get('sub_grade_id'))].filter(Boolean) : []);
     return {
         student_id: urlParams.get('student_id') || '',
         email: urlParams.get('email') || '',
         country_id: urlParams.get('country_id') || '',
         sub_grade_id: subGradeIds,
         year: urlParams.get('year') || new Date().getFullYear().toString(),
+        subject_id: urlParams.get('subject_id') || '',
+        result_status: urlParams.get('result_status') || '',
     };
 };
 
@@ -296,6 +299,8 @@ const form = reactive({
     country_id: '',
     sub_grade_id: [],
     year: currentYear,
+    subject_id: '',
+    result_status: '',
 });
 
 // Initialize form with URL query parameters on mount (but don't auto-fetch)
@@ -316,12 +321,14 @@ const goToPage = (url) => {
     });
     const finalParams = {
         ...params,
-        search: true, // Preserve search flag for pagination
+        search: true,
         student_id: form.student_id,
         email: form.email,
         country_id: form.country_id,
         sub_grade_id: form.sub_grade_id && form.sub_grade_id.length > 0 ? form.sub_grade_id.map(sg => sg.id || sg) : [],
         year: form.year,
+        subject_id: form.subject_id,
+        result_status: form.result_status,
         page: params.page || 1
     };
     router.get(route('reports.grade-9'), finalParams, {
@@ -337,12 +344,14 @@ const search = () => {
         return;
     }
     const params = {
-        search: true, // Flag to indicate search was clicked
+        search: true,
         student_id: form.student_id,
         email: form.email,
         country_id: form.country_id,
         sub_grade_id: form.sub_grade_id && form.sub_grade_id.length > 0 ? form.sub_grade_id.map(sg => sg.id || sg) : [],
-        year: form.year
+        year: form.year,
+        subject_id: form.subject_id,
+        result_status: form.result_status,
     };
     router.get(route('reports.grade-9'), params, {
         preserveState: true,
