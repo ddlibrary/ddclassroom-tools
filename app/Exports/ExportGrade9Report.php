@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use App\Models\Score;
 use App\Models\StudentResult;
+use App\Models\SubGrade;
 use App\Models\SubGradeSubjectSemester;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -18,15 +19,16 @@ class ExportGrade9Report implements FromView, ShouldAutoSize
     {
         $request = new Request($this->filters);
 
+        $grade9SubGradeIds = SubGrade::whereHas('grade', function ($q) {
+            $q->where('id', 9)->where('is_semester_based', true);
+        })
+            ->whereIsActive(true)
+            ->pluck('id')
+            ->toArray();
+
         $query = StudentResult::query()
-            ->with([
-                'student:id,name,father_name,country_id,fa_name,fa_father_name,uuid,id_number,email',
-                'subGrade:id,full_name,grade_id',
-                'subGrade.grade:id,name'
-            ])
-            ->whereHas('subGrade.grade', function ($q) {
-                $q->where('id', 9)->where('is_semester_based', true);
-            })
+            ->with(['student:id,name,father_name,country_id,id_number,email', 'subGrade:id,full_name'])
+            ->whereIn('sub_grade_id', $grade9SubGradeIds)
             ->whereHas('student', function ($q) {
                 $q->where('is_active', true);
             });
@@ -47,8 +49,7 @@ class ExportGrade9Report implements FromView, ShouldAutoSize
             });
         }
         if ($request->sub_grade_id) {
-            $subGradeIds = is_array($request->sub_grade_id) ? $request->sub_grade_id : [$request->sub_grade_id];
-            $subGradeIds = array_filter($subGradeIds);
+            $subGradeIds = array_filter((array) $request->sub_grade_id);
             if (!empty($subGradeIds)) {
                 $query->whereIn('sub_grade_id', $subGradeIds);
             }
@@ -58,6 +59,10 @@ class ExportGrade9Report implements FromView, ShouldAutoSize
         }
 
         $studentResults = $query->orderByDesc('id')->get();
+
+        if ($studentResults->isEmpty()) {
+            return view('exports.grade-9-report', ['results' => [], 'subjects' => $this->getGrade9Subjects($grade9SubGradeIds, $request->year)]);
+        }
 
         $results = [];
         foreach ($studentResults as $studentResult) {
@@ -76,11 +81,6 @@ class ExportGrade9Report implements FromView, ShouldAutoSize
                 ->where('year', $year)
                 ->with('subject:id,name')
                 ->get();
-
-            $allSubjectIds = $semester1Subjects->pluck('subject_id')
-                ->merge($semester2Subjects->pluck('subject_id'))
-                ->unique()
-                ->toArray();
 
             $semester1Scores = Score::where('student_id', $student->id)
                 ->where('sub_grade_id', $subGrade->id)
@@ -102,66 +102,54 @@ class ExportGrade9Report implements FromView, ShouldAutoSize
 
             $semester1Data = [];
             $semester1Passed = 0;
-            $semester1Failed = 0;
 
             foreach ($semester1Subjects as $semesterSubject) {
                 $score = $semester1Scores->get($semesterSubject->subject_id);
                 $totalScore = $score ? min($score->total, 100) : 0;
                 $isPassed = $totalScore >= 50;
-
+                if ($isPassed) {
+                    $semester1Passed++;
+                }
                 $semester1Data[] = [
+                    'subject_id' => $semesterSubject->subject_id,
                     'subject_name' => $semesterSubject->subject->name,
                     'score' => $totalScore,
                     'is_passed' => $isPassed,
                 ];
-
-                if ($isPassed) {
-                    $semester1Passed++;
-                } else {
-                    $semester1Failed++;
-                }
             }
 
             $semester2Data = [];
             $semester2Passed = 0;
-            $semester2Failed = 0;
 
             foreach ($semester2Subjects as $semesterSubject) {
                 $score = $semester2Scores->get($semesterSubject->subject_id);
                 $totalScore = $score ? min($score->total, 100) : 0;
                 $isPassed = $totalScore >= 50;
-
+                if ($isPassed) {
+                    $semester2Passed++;
+                }
                 $semester2Data[] = [
+                    'subject_id' => $semesterSubject->subject_id,
                     'subject_name' => $semesterSubject->subject->name,
                     'score' => $totalScore,
                     'is_passed' => $isPassed,
                 ];
-
-                if ($isPassed) {
-                    $semester2Passed++;
-                } else {
-                    $semester2Failed++;
-                }
             }
 
-            $totalSubjects = count($allSubjectIds);
+            $allSubjectsMap = [];
+            foreach (array_merge($semester1Data, $semester2Data) as $subjectData) {
+                $allSubjectsMap[$subjectData['subject_id']] = $subjectData;
+            }
+
+            $totalSubjects = count($allSubjectsMap);
             $totalPassed = $semester1Passed + $semester2Passed;
-            $isFinalPassed = ($totalPassed === $totalSubjects && $totalSubjects === 11);
+            $isFinalPassed = $totalPassed === $totalSubjects && $totalSubjects === 11;
 
             $results[] = [
                 'student' => $student,
                 'sub_grade' => $subGrade,
                 'year' => $year,
-                'semester1' => [
-                    'subjects' => $semester1Data,
-                    'passed_count' => $semester1Passed,
-                    'failed_count' => $semester1Failed,
-                ],
-                'semester2' => [
-                    'subjects' => $semester2Data,
-                    'passed_count' => $semester2Passed,
-                    'failed_count' => $semester2Failed,
-                ],
+                'all_subjects' => $allSubjectsMap,
                 'final_result' => [
                     'is_passed' => $isFinalPassed,
                     'result_name' => $isFinalPassed ? 'کامیاب' : 'ناکام',
@@ -172,10 +160,39 @@ class ExportGrade9Report implements FromView, ShouldAutoSize
             ];
         }
 
+        if ($request->subject_id) {
+            $results = array_values(array_filter($results, fn ($r) => isset($r['all_subjects'][$request->subject_id])));
+        }
+        if ($request->result_status === 'passed') {
+            $results = array_values(array_filter($results, fn ($r) => $r['final_result']['is_passed']));
+        } elseif ($request->result_status === 'failed') {
+            $results = array_values(array_filter($results, fn ($r) => !$r['final_result']['is_passed']));
+        }
+
         return view('exports.grade-9-report', [
             'results' => $results,
+            'subjects' => $this->getGrade9Subjects($grade9SubGradeIds, $request->year),
         ]);
     }
+
+    private function getGrade9Subjects(array $grade9SubGradeIds, ?string $year): array
+    {
+        if (empty($grade9SubGradeIds)) {
+            return [];
+        }
+        $yearForSubjects = $year ?: (string) now()->year;
+        $subjects = SubGradeSubjectSemester::whereIn('sub_grade_id', $grade9SubGradeIds)
+            ->where('year', $yearForSubjects)
+            ->whereIn('semester', [1, 2])
+            ->with('subject:id,name')
+            ->orderBy('semester')
+            ->orderBy('subject_id')
+            ->get()
+            ->unique('subject_id')
+            ->values()
+            ->map(fn ($s) => ['id' => $s->subject_id, 'name' => $s->subject->name])
+            ->toArray();
+
+        return $subjects;
+    }
 }
-
-

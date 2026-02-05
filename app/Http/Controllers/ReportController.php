@@ -534,11 +534,33 @@ class ReportController extends Controller
                 ['path' => $request->url(), 'query' => $request->query()]
             );
 
+            // Get Grade 9 subjects for column headers
+            $grade9SubGradeIds = $subGrades->pluck('id')->toArray();
+            $yearForSubjects = $request->year ?: Year::orderBy('id')->value('name') ?: (string) now()->year;
+            $sem1 = SubGradeSubjectSemester::whereIn('sub_grade_id', $grade9SubGradeIds)
+                ->where('year', $yearForSubjects)
+                ->where('semester', 1)
+                ->with('subject:id,name')
+                ->orderBy('subject_id')
+                ->get()
+                ->unique('subject_id')
+                ->values();
+            $sem2 = SubGradeSubjectSemester::whereIn('sub_grade_id', $grade9SubGradeIds)
+                ->where('year', $yearForSubjects)
+                ->where('semester', 2)
+                ->with('subject:id,name')
+                ->orderBy('subject_id')
+                ->get()
+                ->unique('subject_id')
+                ->values();
+            $grade9Subjects = $sem1->merge($sem2)->unique('subject_id')->values()->map(fn ($s) => ['id' => $s->subject_id, 'name' => $s->subject->name])->toArray();
+
             return inertia('Report/Grade9Report', [
                 'results' => $paginatedResults,
                 'subGrades' => $subGrades,
                 'years' => $years,
                 'countries' => $countries,
+                'subjects' => $grade9Subjects,
                 'totalKamyab' => 0,
                 'totalNakam' => 0,
                 'totalStudents' => 0,
@@ -576,12 +598,16 @@ class ReportController extends Controller
             });
         }
 
+        $grade9SubGradeIds = $subGrades->pluck('id')->toArray();
+
         if ($request->sub_grade_id) {
             $subGradeIds = is_array($request->sub_grade_id) ? $request->sub_grade_id : [$request->sub_grade_id];
             $subGradeIds = array_filter($subGradeIds);
             if (!empty($subGradeIds)) {
                 $query->whereIn('sub_grade_id', $subGradeIds);
             }
+        } else {
+            $query->whereIn('sub_grade_id', $grade9SubGradeIds);
         }
 
         if ($request->year) {
@@ -589,6 +615,26 @@ class ReportController extends Controller
         }
 
         $studentResults = $query->orderByDesc('id')->get();
+
+        // Get Grade 9 subjects for column headers (from sub_grades + year)
+        $yearForSubjects = $request->year ?: Year::orderBy('id')->value('name') ?: (string) now()->year;
+        $semester1Subjects = SubGradeSubjectSemester::whereIn('sub_grade_id', $grade9SubGradeIds)
+            ->where('year', $yearForSubjects)
+            ->where('semester', 1)
+            ->with('subject:id,name')
+            ->orderBy('subject_id')
+            ->get()
+            ->unique('subject_id')
+            ->values();
+        $semester2Subjects = SubGradeSubjectSemester::whereIn('sub_grade_id', $grade9SubGradeIds)
+            ->where('year', $yearForSubjects)
+            ->where('semester', 2)
+            ->with('subject:id,name')
+            ->orderBy('subject_id')
+            ->get()
+            ->unique('subject_id')
+            ->values();
+        $grade9Subjects = $semester1Subjects->merge($semester2Subjects)->unique('subject_id')->values()->map(fn ($s) => ['id' => $s->subject_id, 'name' => $s->subject->name])->toArray();
 
         $results = [];
         $totalKamyab = 0;
@@ -690,11 +736,17 @@ class ReportController extends Controller
                 $totalNakam++;
             }
 
+            $allSubjectsMap = [];
+            foreach (array_merge($semester1Data, $semester2Data) as $subjectData) {
+                $allSubjectsMap[$subjectData['subject_id']] = $subjectData;
+            }
+
             $results[] = [
                 'student_result_id' => $studentResult->id,
                 'student' => $student,
                 'sub_grade' => $subGrade,
                 'year' => $year,
+                'all_subjects' => $allSubjectsMap,
                 'semester1' => [
                     'subjects' => $semester1Data,
                     'passed_count' => $semester1Passed,
@@ -717,6 +769,24 @@ class ReportController extends Controller
             ];
         }
 
+        // Apply subject filter: show only students who have that subject
+        if ($request->subject_id) {
+            $results = array_values(array_filter($results, function ($r) use ($request) {
+                return isset($r['all_subjects'][$request->subject_id]);
+            }));
+        }
+
+        // Apply result filter: passed or failed
+        if ($request->result_status === 'passed') {
+            $results = array_values(array_filter($results, fn ($r) => $r['final_result']['is_passed']));
+        } elseif ($request->result_status === 'failed') {
+            $results = array_values(array_filter($results, fn ($r) => !$r['final_result']['is_passed']));
+        }
+
+        // Recalculate totals after filtering
+        $totalKamyab = count(array_filter($results, fn ($r) => $r['final_result']['is_passed']));
+        $totalNakam = count($results) - $totalKamyab;
+
         $currentPage = $request->get('page', 1);
         $perPage = 350;
         $total = count($results);
@@ -735,6 +805,7 @@ class ReportController extends Controller
             'subGrades' => $subGrades,
             'years' => $years,
             'countries' => $countries,
+            'subjects' => $grade9Subjects,
             'totalKamyab' => $totalKamyab,
             'totalNakam' => $totalNakam,
             'totalStudents' => $total,
