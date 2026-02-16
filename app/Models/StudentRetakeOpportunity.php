@@ -23,8 +23,8 @@ class StudentRetakeOpportunity extends Model
         'score',
         'second_chance_score',
         'third_chance_score',
-        'first_chance_date',
         'second_chance_date',
+        'third_chance_date',
         'is_passed',
     ];
 

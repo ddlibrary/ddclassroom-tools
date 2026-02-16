@@ -152,7 +152,7 @@ class ScoreController extends Controller
                 ])->first();
 
                 if ($retakeOpportunity) {
-                    if (is_null($retakeOpportunity->second_chance_date)) {
+                    if (is_null($retakeOpportunity->third_chance_date)) {
                         $selectedChance = 'second';
                     } else {
                         $selectedChance = 'third';
@@ -187,7 +187,7 @@ class ScoreController extends Controller
 
             $currentChance = 'first';
             if ($currentRetakeOpportunity) {
-                if (is_null($currentRetakeOpportunity->second_chance_date)) {
+                if (is_null($currentRetakeOpportunity->third_chance_date)) {
                     $currentChance = 'second';
                 } else {
                     $currentChance = 'third';
@@ -258,32 +258,35 @@ class ScoreController extends Controller
 
             $this->updateStudentResult($grade, $studentResultWhere, $type);
 
-            if ($requestedChance === 'second') {
-                if ($currentRetakeOpportunity) {
+            if($grade->id == 9 || $grade->id !=9 && $type == 2){
+                if ($requestedChance === 'second') {
+                    if ($currentRetakeOpportunity) {
+                        $currentRetakeOpportunity->update([
+                            'second_chance_score' => $score->total,
+                            'second_chance_date' => $currentRetakeOpportunity->second_chance_date ?? now(),
+                            'is_passed' => $score->is_passed,
+                        ]);
+                    } else {
+                        StudentRetakeOpportunity::create([
+                            'student_id' => $secondScore->student_id,
+                            'sub_grade_id' => $secondScore->sub_grade_id,
+                            'year_id' => $yearId,
+                            'subject_id' => $secondScore->subject_id,
+                            'score' => $mainScore,
+                            'second_chance_score' => $secondScore->total,
+                            'second_chance_date' => now(),
+                            'is_passed' => $secondScore->is_passed,
+                        ]);
+                    }
+                } elseif ($requestedChance === 'third' && $currentRetakeOpportunity) {
                     $currentRetakeOpportunity->update([
-                        'second_chance_score' => $score->total,
-                        'first_chance_date' => $currentRetakeOpportunity->first_chance_date ?? now(),
+                        'third_chance_score' => $score->total,
+                        'third_chance_date' => $currentRetakeOpportunity->third_chance_date ?? now(),
                         'is_passed' => $score->is_passed,
                     ]);
-                } else {
-                    StudentRetakeOpportunity::create([
-                        'student_id' => $secondScore->student_id,
-                        'sub_grade_id' => $secondScore->sub_grade_id,
-                        'year_id' => $yearId,
-                        'subject_id' => $secondScore->subject_id,
-                        'score' => $mainScore,
-                        'second_chance_score' => $secondScore->total,
-                        'first_chance_date' => now(),
-                        'is_passed' => $secondScore->is_passed,
-                    ]);
                 }
-            } elseif ($requestedChance === 'third' && $currentRetakeOpportunity) {
-                $currentRetakeOpportunity->update([
-                    'third_chance_score' => $score->total,
-                    'second_chance_date' => $currentRetakeOpportunity->second_chance_date ?? now(),
-                    'is_passed' => $score->is_passed,
-                ]);
             }
+
 
             DB::commit();
         } catch (Exception $exception) {

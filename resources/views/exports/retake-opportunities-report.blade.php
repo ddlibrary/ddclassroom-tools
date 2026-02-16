@@ -39,8 +39,8 @@
                 <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->score}}</td>
                 <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->second_chance_score}}</td>
                 <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->third_chance_score}}</td>
-                <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->first_chance_date ? \Carbon\Carbon::parse($opportunity->first_chance_date)->format('Y-m-d') : '' }}</td>
                 <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->second_chance_date ? \Carbon\Carbon::parse($opportunity->second_chance_date)->format('Y-m-d') : '' }}</td>
+                <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->third_chance_date ? \Carbon\Carbon::parse($opportunity->third_chance_date)->format('Y-m-d') : '' }}</td>
                 <td style="text-align: center;border:1px solid #000 !important">{{ $opportunity->is_passed ? 'Passed' : 'Failed' }}</td>
             </tr>
         @endforeach

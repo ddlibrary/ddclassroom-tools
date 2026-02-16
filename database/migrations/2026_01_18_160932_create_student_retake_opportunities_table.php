@@ -20,8 +20,8 @@ return new class extends Migration
             $table->unsignedDecimal('score')->nullable();
             $table->unsignedDecimal('second_chance_score')->nullable();
             $table->unsignedDecimal('third_chance_score')->nullable();
-            $table->date('first_chance_date')->nullable();
             $table->date('second_chance_date')->nullable();
+            $table->date('third_chance_date')->nullable();
             $table->boolean('is_passed')->default(false)->index();
             $table->timestamps();
 

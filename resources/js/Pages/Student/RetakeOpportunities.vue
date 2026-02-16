@@ -146,10 +146,10 @@
                             {{ opportunity.third_chance_score }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            {{ opportunity.first_chance_date }}
+                            {{ opportunity.second_chance_date }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            {{ opportunity.second_chance_date }}
+                            {{ opportunity.third_chance_date }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span :class="opportunity.is_passed ? 'text-green-600' : 'text-red-600'">
