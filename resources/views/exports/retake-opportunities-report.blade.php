@@ -22,8 +22,8 @@
             <th style="text-align: center;border:1px solid #000 !important">First Chance Score</th>
             <th style="text-align: center;border:1px solid #000 !important">Second Chance Score</th>
             <th style="text-align: center;border:1px solid #000 !important">Third Chance Score</th>
-            <th style="text-align: center;border:1px solid #000 !important">First Chance Date</th>
             <th style="text-align: center;border:1px solid #000 !important">Second Chance Date</th>
+            <th style="text-align: center;border:1px solid #000 !important">Third Chance Date</th>
             <th style="text-align: center;border:1px solid #000 !important">Status</th>
         </tr>
         @foreach ($retakeOpportunities as $opportunity)
