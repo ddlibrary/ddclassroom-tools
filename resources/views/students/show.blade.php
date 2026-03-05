@@ -82,7 +82,7 @@
                 </tr>
                 <tr>
                     <th>آدرس سایت درخت دانش</th>
-                    <th class="text-end">https://courses.darakhtdanesh.org/login/index.php</th>
+                    <th class="text-end">https://classroom.darakhtdanesh.org/login/index.php</th>
                 </tr>
                 <tr>
                     <th>نام سایت درخت دانش در مودل</th>
