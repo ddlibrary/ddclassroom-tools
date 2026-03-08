@@ -363,7 +363,9 @@
                             style="max-width:100%; height:auto; display:block;" width="400"></td>
                 </tr>
             </table>
-            <p style="margin-top:2em;">باتشکر<br>اسدالله «رحیمی»</p>
+            <p style="margin-top:2em;">باتشکر<br>
+                عزیزالله «سعیدی»
+            </p>
         </div>
     </div>
 </body>
