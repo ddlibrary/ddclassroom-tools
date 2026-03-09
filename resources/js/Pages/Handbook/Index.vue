@@ -6,7 +6,7 @@
         <!-- Student List -->
         <div class="mb-2">
             <button :disable="isEnabled" @click="emailHandbooks()"
-            v-if="form.username || form.country_id || form.grade_id"
+            v-if="form.username || ((form.country_id || form.grade_id) && form.year_id) "
                 class="pointer-events-auto ml-2 float-right mb-2 rounded-md bg-indigo-600 px-3 py-2 text-[0.8125rem] font-semibold leading-5 text-white hover:bg-indigo-500">
             {{ isEnabled ? 'Sending...' : 'Email Handbook'}}
             </button>
@@ -26,6 +26,15 @@
                                 class="focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
                                 <option value="">...</option>
                                 <option v-for="grade in grades" :value="grade.id" :key="grade">{{ grade.full_name }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <div class="mt-1 rounded-md shadow-sm flex">
+                            <select name="name" v-model="form.year_id"
+                                class="focus:ring-indigo-500 focus:border-indigo-500 flex-grow block w-full min-w-0 rounded-md sm:text-sm border-gray-300">
+                                <option value="">...</option>
+                                <option v-for="year in years" :value="year.id" :key="year">{{ year.name }}</option>
                             </select>
                         </div>
                     </div>
@@ -119,7 +128,7 @@
                 </template>
             </div>
         </div>
-       
+
     </AuthenticatedLayout>
 </template>
 <script setup>
@@ -145,7 +154,7 @@
     } from 'vue';
     import Swal from 'sweetalert2'
 
-    defineProps(['students', 'errors', 'grades']);
+    defineProps(['students', 'errors', 'grades', 'years']);
 
     const isEnabled = ref(false)
     function emailHandbooks() {
@@ -154,7 +163,7 @@
                 forceFormData: true,
                 onStart: () => (isEnabled.value = true),
                 onFinish: () => {
-                isEnabled.value = false; 
+                isEnabled.value = false;
                 Swal.fire(`Handbook`,`Email successfully has been sent.`)},
               });
         }
@@ -163,7 +172,8 @@
     const form = reactive({
         username : null,
         country_id : '',
-        grade_id : ''
+        grade_id : '',
+        year_id: ''
     });
 
     watch(form, debounce(() => {
