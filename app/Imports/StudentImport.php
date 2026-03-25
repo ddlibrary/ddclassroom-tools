@@ -23,6 +23,21 @@ class StudentImport implements ToModel, WithHeadingRow
             if (Student::whereIdNumber($moodleId)->exists()) {
                 info("This student already exist with moodle id: $moodleId");
 
+                $student = Student::whereIdNumber($moodleId)->update([
+                    'username' => $row['username'],
+                    'email' => $email,
+                    'sub_grade_id' => request()->grade_id,
+                    'is_active' => true,
+                ]);
+
+                Enrollment::updateOrCreate([
+                    'student_id' => $student->id,
+                    'sub_grade_id' => $student->sub_grade_id,
+                    'year' => request()->year,
+                ],[
+                    'user_id' => auth()->id(),
+                ]);
+
                 return [];
             }
 
@@ -55,6 +70,5 @@ class StudentImport implements ToModel, WithHeadingRow
                 'year' => request()->year,
             ]);
         }
-
     }
 }
