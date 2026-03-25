@@ -20,15 +20,15 @@ class StudentImport implements ToModel, WithHeadingRow
             if ($name == 'NULL' || $name == null) {
                 return [];
             }
-            if (Student::whereIdNumber($moodleId)->exists()) {
+            $student = Student::whereIdNumber($moodleId)->first();
+            if ($student) {
                 info("This student already exist with moodle id: $moodleId");
 
-                $student = Student::whereIdNumber($moodleId)->update([
-                    'username' => $row['username'],
-                    'email' => $email,
-                    'sub_grade_id' => request()->grade_id,
-                    'is_active' => true,
-                ]);
+                $student->username = $row['username'];
+                $student->email = $email;
+                $student->sub_grade_id = request()->grade_id;
+                $student->is_active = true;
+                $student->save();
 
                 Enrollment::updateOrCreate([
                     'student_id' => $student->id,
