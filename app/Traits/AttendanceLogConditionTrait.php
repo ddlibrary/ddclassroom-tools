@@ -22,7 +22,7 @@ trait AttendanceLogConditionTrait
             $query->where('first_term', $request->term == 1 ? true : false);
         }
 
-        if (isset($request->type) && $request->type) {
+        if (isset($request->type) && $request->type && $request->type >= 1 && $request->type <=3) {
             $query->where('first_term', $request->type == 1 ? true : false);
         }
 
