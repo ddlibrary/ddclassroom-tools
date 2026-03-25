@@ -191,7 +191,7 @@ class StudentController extends Controller
 
     public function storeMultipleStudents(CreateMultipleStudentsRequest $request)
     {
-        Excel::import(new StudentImport, $request->file);
+        Excel::import(new StudentImport($request->grade_id, $request->year, auth()->id()), $request->file);
     }
 
     public function updateStudentInfo(UpdateStudentInfoRequest $request)
